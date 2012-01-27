@@ -112,7 +112,10 @@ function debug($var = 'Th&F=xUFucreSp2*ezAhe=ApuPR*$axe', $bypass = true, $show_
 function load_class($class_name) {
 	$class_file = CLASSES_DIR.strtolower($class_name).'.class.php';
 
-	if (file_exists($class_file)) {
+	if (class_exists($class_name)) {
+		return true;
+	}
+	elseif (file_exists($class_file)) {
 		require_once $class_file;
 		return true;
 	}
@@ -137,7 +140,7 @@ function test_token($keep = false) {
 	call($_SESSION['token']);
 	call($_POST['token']);
 
-	if (DEBUG) {
+	if (DEBUG || ('games' == $_SERVER['HTTP_HOST'])) {
 		return;
 	}
 
@@ -184,5 +187,110 @@ function test_debug( ) {
 	$GLOBALS['_&_DEBUG_QUERY'] = '&DEBUG='.$_GET['DEBUG'];
 	$GLOBALS['_?_DEBUG_QUERY'] = '?DEBUG='.$_GET['DEBUG'];
 	return true;
+}
+
+
+
+/** function expandFEN
+ *		This function expands a packed FEN into a
+ *		string where each index is a valid location
+ *
+ * @param string packed FEN
+ * @return string expanded FEN
+ */
+function expandFEN($FEN)
+{
+	$FEN = preg_replace('/\s+/', '', $FEN); // remove spaces
+
+	$FEN = preg_replace_callback('/\d+/', 'replace_callback', $FEN); // unpack the 0s
+	$xFEN = str_replace('/', '', $FEN); // remove the row separators
+
+	return $xFEN;
+}
+function replace_callback($match) {
+	return (((int) $match[0]) ? str_repeat('0', (int) $match[0]) : $match[0]);
+}
+
+
+
+/** function packFEN
+ *		This function packs an expanded FEN into a
+ *		string that takes up less space
+ *
+ * @param string expanded FEN
+ * @param int [optional] length of rows
+ * @return string packed FEN
+ */
+function packFEN($xFEN, $row_length = 10)
+{
+	$xFEN = preg_replace('/\s+/', '', $xFEN); // remove spaces
+	$xFEN = preg_replace('/\//', '', $xFEN); // remove any row separators
+
+	$xFEN = trim(chunk_split($xFEN, $row_length, '/'), '/'); // add the row separators
+	$FEN = preg_replace('/(0+)/e', "strlen('\\1')", $xFEN); // pack the 0s
+
+	return $FEN;
+}
+
+
+
+/** function ife
+ *		if-else
+ *		This function returns the value if it exists (or is optionally not empty)
+ *		or a default value if it does not exist (or is empty)
+ *
+ * @param mixed var to test
+ * @param mixed optional default value
+ * @param bool optional allow empty value
+ * @param bool optional change the passed reference var
+ * @return mixed $var if exists (and not empty) or default otherwise
+ */
+function ife( & $var, $default = null, $allow_empty = true, $change_reference = false) {
+	if ( ! isset($var) || ( ! (bool) $allow_empty && empty($var))) {
+		if ((bool) $change_reference) {
+			$var = $default; // so it can also be used by reference
+		}
+
+		return $default;
+	}
+
+	return $var;
+}
+
+
+
+/** function ifer
+ *		if-else reference
+ *		This function returns the value if it exists (or is optionally not empty)
+ *		or a default value if it does not exist (or is empty)
+ *		It also changes the reference var
+ *
+ * @param mixed var to test
+ * @param mixed optional default value
+ * @param bool optional allow empty value
+ * @action updates/sets the reference var if needed
+ * @return mixed $var if exists (and not empty) or default otherwise
+ */
+function ifer( & $var, $default = null, $allow_empty = true) {
+	return ife($var, $default, $allow_empty, true);
+}
+
+
+
+/** function ifenr
+ *		if-else non-reference
+ *		This function returns the value if it is not empty
+ *		or a default value if it is empty
+ *
+ * @param mixed var to test
+ * @param mixed optional default value
+ * @return mixed $var if not empty or default otherwise
+ */
+function ifenr($var, $default = null) {
+	if (empty($var)) {
+		return $default;
+	}
+
+	return $var;
 }
 

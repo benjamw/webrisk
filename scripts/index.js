@@ -1,8 +1,9 @@
 
 // index javascript
 
-var timer = false;
-var timeout = 30001; // 1 minute
+var reload = true; // do not change this
+var refresh_timer = false;
+var refresh_timeout = 30001; // 30 seconds
 
 $(document).ready( function( ) {
 	// make the table row clicks work
@@ -22,12 +23,6 @@ $(document).ready( function( ) {
 
 	// blinky menu items
 	$('.blink').fadeOut( ).fadeIn( ).fadeOut( ).fadeIn( ).fadeOut( ).fadeIn( );
-//	var cur_background = $('.blink').css('backgroundColor');
-//	var high_color = $('.active a').css('backgroundColor');
-//	$('.blink')
-//		.animate({ backgroundColor: high_color }, 400).animate({ backgroundColor: cur_background }, 400)
-//		.animate({ backgroundColor: high_color }, 400).animate({ backgroundColor: cur_background }, 400)
-//		.animate({ backgroundColor: high_color }, 400).animate({ backgroundColor: cur_background }, 400);
 
 	// chat box functions
 	$('#chatbox form').submit( function( ) {
@@ -63,14 +58,16 @@ $(document).ready( function( ) {
 	});
 
 	// run the sounds
-	if (("#refresh" == document.location.hash) && turn_msg_count) {
-		$("#sounds").jPlayer({
+	if (('#refresh' == document.location.hash) && turn_msg_count) {
+		$('#sounds').jPlayer({
 			ready: function ( ) {
-				$(this).setFile('sounds/message.mp3', 'sounds/message.ogg').play( );
+				$(this).jPlayer('setMedia', {
+					mp3: 'sounds/message.mp3',
+					oga: 'sounds/message.ogg'
+				}).jPlayer('play');
 			},
-			volume: 100,
-			oggSupport: false,
-			swfPath: "scripts"
+			volume: 1,
+			swfPath: 'scripts'
 		});
 	}
 
@@ -79,50 +76,58 @@ $(document).ready( function( ) {
 
 	// set some things that will halt the timer
 	$('#chatbox form input').focus( function( ) {
-		clearTimeout(timer);
+		clearTimeout(refresh_timer);
 	});
 
 	$('#chatbox form input').blur( function( ) {
 		if ('' != $(this).val( )) {
-			timer = setTimeout('ajax_refresh( )', timeout);
+			refresh_timer = setTimeout('ajax_refresh( )', refresh_timeout);
 		}
 	});
 
 });
 
 
+var jqXHR = false;
 function ajax_refresh( ) {
 	// no debug redirect, just do it
-	$.ajax({
-		type: 'POST',
-		url: 'ajax_helper.php',
-		data: 'timer=1',
-		success: function(msg) {
-			if (('' != msg) && (msg != turn_msg_count)) {
-				// we don't want to play sounds when they hit the page manually
-				// so set a hash on the URL that we can test when we embed the sounds
-				// we don't care what the hash is, just refresh is there is a hash
-				// (the user may have silenced the sounds with #silent)
-				if ('' != window.location.hash) {
-					window.location.reload( );
-				}
-				else {
-					// stick the hash on the end of the URL
-					window.location = window.location.href+'#refresh'
-					window.location.reload( );
+
+	// only run this if the previous ajax call has completed
+	if (false == jqXHR) {
+		jqXHR = $.ajax({
+			type: 'POST',
+			url: 'ajax_helper.php',
+			data: 'timer=1',
+			success: function(msg) {
+				if (('' != msg) && (msg != turn_msg_count)) {
+					// we don't want to play sounds when they hit the page manually
+					// so set a hash on the URL that we can test when we embed the sounds
+					// we don't care what the hash is, just refresh if there is a hash
+					// (the user may have silenced the sounds with #silent)
+					if ('' != window.location.hash) {
+						if (reload) { window.location.reload( ); }
+					}
+					else {
+						// stick the hash on the end of the URL
+						window.location = window.location.href+'#refresh'
+						if (reload) { window.location.reload( ); }
+					}
 				}
 			}
-		}
-	});
+		}).always( function( ) {
+			jqXHR = false;
+		});
+	}
 
 	// successively increase the timeout time in case someone
 	// leaves their window open, don't poll the server every
 	// 30 seconds for the rest of time
-	if (0 == (timeout % 5)) {
-		timeout += Math.floor(timeout * 0.001) * 1000;
+	if (0 == (refresh_timeout % 5)) {
+		refresh_timeout += Math.floor(refresh_timeout * 0.001) * 1000;
 	}
 
-	++timeout;
+	++refresh_timeout;
 
-	timer = setTimeout('ajax_refresh( )', timeout);
+	refresh_timer = setTimeout('ajax_refresh( )', refresh_timeout);
 }
+

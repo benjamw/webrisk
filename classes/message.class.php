@@ -135,7 +135,7 @@ class Message
 	public function __get($property)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 2);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 2);
 		}
 
 		if ('_' === $property[0]) {
@@ -159,7 +159,7 @@ class Message
 	public function __set($property, $value)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 3);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 3);
 		}
 
 		if ('_' === $property[0]) {
@@ -308,7 +308,7 @@ class Message
 
 		// NOTE: DO NOT LOOK FOR SEND DATE
 
-		// grab all entries that were neither sent nor recieved by the current admin
+		// grab all entries that were neither sent nor received by the current admin
 		$query = "
 			SELECT G.*
 				, IF('' <> M.subject, M.subject, '<No Subject>') AS subject
@@ -496,7 +496,7 @@ class Message
 
 		try {
 			$message = $this->_get_message_data($message_id, true);
-			$data['subject'] = (0 === strpos($message['subject'], 'RE')) ? $message['subject'] : 'RE: '.$message['subject'];
+			$message['subject'] = (0 === strpos($message['subject'], 'RE')) ? $message['subject'] : 'RE: '.$message['subject'];
 		}
 		catch (MyExeption $e) {
 			throw $e;
@@ -522,7 +522,7 @@ class Message
 
 		try {
 			$message = $this->_get_message_data($message_id, false);
-			$data['subject'] = (0 === strpos($message['subject'], 'FW')) ? $message['subject'] : 'FW: '.$message['subject'];
+			$message['subject'] = (0 === strpos($message['subject'], 'FW')) ? $message['subject'] : 'FW: '.$message['subject'];
 		}
 		catch (MyExeption $e) {
 			throw $e;
@@ -670,7 +670,7 @@ class Message
 	 * @param array (or csv string) message recipient user ids
 	 * @param int optional message send date as unix timestamp (default: now)
 	 * @param int optional message expire date as unix timestamp (default: never)
-	 * @action saves all relelvant data to database
+	 * @action saves all relevant data to database
 	 * @return void
 	 */
 	public function send_message($subject, $message, $user_ids, $send_date = false, $expire_date = false)

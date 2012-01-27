@@ -85,6 +85,14 @@ class Player
 	protected $email;
 
 
+	/** protected property timezone
+	 *		Holds the player's timezone info
+	 *
+	 * @var string
+	 */
+	protected $timezone;
+
+
 	/** protected property is_admin
 	 *		Holds the player's admin state
 	 *
@@ -172,7 +180,7 @@ class Player
 	public function __get($property)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 2);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 2);
 		}
 
 		if ('_' === $property[0]) {
@@ -196,7 +204,7 @@ class Player
 	public function __set($property, $value)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 3);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 3);
 		}
 
 		if ('_' === $property[0]) {
@@ -228,8 +236,6 @@ class Player
 		{
 			$_SESSION['login_referrer'] = $_SERVER['REQUEST_URI'];
 		}
-		call( );
-		call(@$_SESSION['login_referrer']);
 
 		try {
 			$redirect = false;
@@ -254,14 +260,13 @@ class Player
 			}
 
 			if ($this->is_logged) {
-				call(@$_SESSION['login_referrer']);
-
 				$GLOBALS['Player'] = $this;
 				$this->_admin_log_in( );
 				$_SESSION['player_id'] = (int) $this->id;
 
 				if ($redirect) {
 					if ( ! empty($_SESSION['login_referrer'])) {
+						call($_SESSION['login_referrer']);
 						$login_referrer = $_SESSION['login_referrer'];
 						session_write_close( );
 						header('Location: '.$login_referrer);
@@ -354,6 +359,7 @@ class Player
 		$key_list = array_merge($required, array(
 			'first_name' ,
 			'last_name' ,
+			'timezone' ,
 		));
 
 		if ($_DATA = array_clean($_POST, $key_list, $required)) {
@@ -368,7 +374,7 @@ class Player
 				self::check_database($_DATA['username'], $_DATA['email']);
 			}
 			catch (MyException $e) {
-				// the data givin is already in the database
+				// the data given is already in the database
 				throw $e;
 			}
 
@@ -379,9 +385,7 @@ class Player
 			// fill the ident with a random string
 			$_DATA['ident'] = md5(uniqid(mt_rand( ), true));
 
-			if ('0' == Settings::read('approve_users')) {
-				$_DATA['is_approved'] = 1;
-			}
+			$_DATA['is_approved'] = (int) ! (bool) (int) Settings::read('approve_users');
 
 			// now check the password
 			if (empty($_POST['password'])) {
@@ -391,7 +395,7 @@ class Player
 			$this->id = $this->_mysql->insert(self::PLAYER_TABLE, $_DATA);
 
 			if ($this->id) {
-				if ('1' == Settings::read('approve_users')) {
+				if ((bool) (int) Settings::read('approve_users')) {
 					Email::send('register', explode(',', Settings::read('to_email')), array_merge(array('id' => $this->id), $_DATA));
 				}
 
@@ -423,6 +427,7 @@ class Player
 		$key_list = array_merge($required, array(
 			'first_name' ,
 			'last_name' ,
+			'timezone' ,
 		));
 
 		if ($_DATA = array_clean($_POST, $key_list, $required)) {
@@ -437,7 +442,7 @@ class Player
 				self::check_database('', $_DATA['email'], $this->id);
 			}
 			catch (MyException $e) {
-				// the data givin is already in the database
+				// the data given is already in the database
 				throw $e;
 			}
 
@@ -481,31 +486,31 @@ class Player
 	/** public function admin_approve
 	 *		Approves the given players registrations
 	 *
-	 * @param mixed csv or array of user ids
+	 * @param mixed csv or array of player ids
 	 * @action approves the players registration
 	 * @return void
 	 */
-	public function admin_approve($user_ids)
+	public function admin_approve($player_ids)
 	{
 		// make sure the user doing this is an admin
 		if ( ! $this->is_admin) {
 			throw new MyException(__METHOD__.': Player is not an admin');
 		}
 
-		array_trim($user_ids, 'int');
-		$user_ids[] = 0;
-		$user_ids = implode(',', $user_ids);
+		array_trim($player_ids, 'int');
+		$player_ids[] = 0;
+		$player_ids = implode(',', $player_ids);
 
-		$this->_mysql->insert(self::PLAYER_TABLE, array('is_approved' => 1), " WHERE player_id IN ({$user_ids}) ");
+		$this->_mysql->insert(self::PLAYER_TABLE, array('is_approved' => 1), " WHERE player_id IN ({$player_ids}) ");
 
-		Email::send('approved', $user_ids);
+		Email::send('approved', $player_ids);
 	}
 
 
 	/** public function admin_delete
 	 *		Deletes the given players from the players database
 	 *
-	 * @param mixed csv or array of user ids
+	 * @param mixed csv or array of player ids
 	 * @action deletes the players from the database
 	 * @return void
 	 */
@@ -533,24 +538,24 @@ class Player
 	/** public function admin_reset_pass
 	 *		Reset the password for the given players
 	 *
-	 * @param mixed csv or array of user ids
+	 * @param mixed csv or array of player ids
 	 * @action resets the password for the given players
 	 * @return void
 	 */
-	public function admin_reset_pass($user_ids)
+	public function admin_reset_pass($player_ids)
 	{
 		// make sure the user doing this is an admin
 		if ( ! $this->is_admin) {
 			throw new MyException(__METHOD__.': Player is not an admin');
 		}
 
-		array_trim($user_ids, 'int');
+		array_trim($player_ids, 'int');
 
 		$data = array(
 			'password' => self::hash_password(Settings::read('default_pass')),
 			'alt_pass' => self::hash_alt_pass(Settings::read('default_pass')),
 		);
-		$this->_mysql->insert(self::PLAYER_TABLE, $data, " WHERE player_id IN (0,".implode(',', $user_ids).") ");
+		$this->_mysql->insert(self::PLAYER_TABLE, $data, " WHERE player_id IN (0,".implode(',', $player_ids).") ");
 	}
 
 
@@ -569,6 +574,7 @@ class Player
 		$data['first_name'] = $this->firstname;
 		$data['last_name'] = $this->lastname;
 		$data['email'] = $this->email;
+		$data['timezone'] = $this->timezone;
 		$data['is_admin'] = ($this->is_admin) ? 1 : 0;
 
 		$where = " WHERE player_id = '{$this->id}' ";
@@ -583,7 +589,7 @@ class Player
 	 * @param string old password
 	 * @param string new password
 	 * @action checks current password for validity
-	 * @action stores new password hashs
+	 * @action stores new password hashes
 	 * @return bool success
 	 */
 	public function update_password($old_password, $new_password)
@@ -620,7 +626,7 @@ class Player
 	 *		Sets the player's password in the database
 	 *
 	 * @param string password
-	 * @action stores new password hashs
+	 * @action stores new password hashes
 	 * @return bool success
 	 */
 	protected function _set_password($password)
@@ -834,7 +840,7 @@ class Player
 		if ( ! $this->is_admin) {
 			unset($_SESSION['admin_id']);
 			unset($_SESSION['PID']);
-			throw new MyException(__METHOD__.': Non-admin trying to log in as another player');
+			throw new MyException(__METHOD__.': Non-admin (#'.$_SESSION['player_id'].') trying to log in as another player (#'.$_GET['PID'].')');
 		}
 
 		// store our admin id
@@ -870,6 +876,7 @@ class Player
 			$this->firstname = (string) $result['first_name'];
 			$this->lastname = (string) $result['last_name'];
 			$this->email = (string) $result['email'];
+			$this->timezone = (string) $result['timezone'];
 			$this->is_admin = (bool) $result['is_admin'];
 			$this->_ident = (string) $result['ident'];
 		}
@@ -1062,9 +1069,15 @@ class Player
 			$root_admin = (int) $Mysql->fetch_value($query);
 
 			if (in_array($root_admin, $player_ids)) {
-				unset($user_ids[array_search($root_admin, $player_ids)]);
+				unset($player_ids[array_search($root_admin, $player_ids)]);
 			}
 		}
+
+		// remove the player doing the deleting
+		unset($player_ids[array_search($_SESSION['player_id'], $player_ids)]);
+
+		// remove the admin doing the deleting
+		unset($player_ids[array_search($_SESSION['admin_id'], $player_ids)]);
 
 		return $player_ids;
 	}
@@ -1086,6 +1099,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `first_name` varchar(20) DEFAULT NULL,
   `last_name` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL DEFAULT '',
+  `timezone` varchar(255) NOT NULL DEFAULT '',
   `is_admin` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `password` varchar(32) NOT NULL DEFAULT '',
   `alt_pass` varchar(32) NOT NULL DEFAULT '',

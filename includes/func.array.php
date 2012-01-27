@@ -25,7 +25,10 @@ function array_trim( & $array, $type = null)
 		'object' ,
 	);
 
-	if ( ! $array) {
+	// if a non-empty string value comes through, don't erase it
+	// this is specifically for '0', but may work for others
+	$is_non_empty_string = (is_string($array) && strlen(trim($array)));
+	if ( ! $array && ! $is_non_empty_string) {
 		$array = array( );
 	}
 
@@ -66,12 +69,13 @@ function array_clean($array, $keys, $reqd = array( ))
 	}
 
 	array_trim($keys);
-
-	if (0 == count($keys)) {
-		throw new MyException(__FUNCTION__.': No keys given');
-	}
-
 	array_trim($reqd);
+
+	$keys = array_unique(array_merge($keys, $reqd));
+
+	if (empty($keys)) {
+		return array( );
+	}
 
 	$return = array( );
 	foreach ($keys as $key) {
@@ -200,13 +204,13 @@ function arraySumField($array, $key) { return array_sum_field($array, $key); }
  *		extra divider between key-value pairs
  *		Can be used to create URL GET strings from arrays
  *
- * @param string seperator between elements (for URL GET, use '&')
+ * @param string separator between elements (for URL GET, use '&')
  * @param string divider between key-value pairs (for URL GET, use '=')
  * @param array
  * @param bool optional URL encode flag
  * @return string
  */
-function implode_full($seperator, $divider, $array, $url = false)
+function implode_full($separator, $divider, $array, $url = false)
 {
 	if ( ! is_array($array) || (0 == count($array))) {
 		return $array;
@@ -214,10 +218,10 @@ function implode_full($seperator, $divider, $array, $url = false)
 
 	$str = '';
 	foreach ($array as $key => $val) {
-		$str .= $key.$divider.$val.$seperator;
+		$str .= $key.$divider.$val.$separator;
 	}
 
-	$str = substr($str, 0, -(strlen($seperator)));
+	$str = substr($str, 0, -(strlen($separator)));
 
 	if ($url) {
 		$str = url_encode($str);
@@ -225,7 +229,7 @@ function implode_full($seperator, $divider, $array, $url = false)
 
 	return $str;
 }
-function implodeFull($seperator, $divider, $array, $url = false) { return implode_full($seperator, $divider, $array, $url); }
+function implodeFull($separator, $divider, $array, $url = false) { return implode_full($separator, $divider, $array, $url); }
 
 
 /** function explode_full [explodeFull]
@@ -233,16 +237,16 @@ function implodeFull($seperator, $divider, $array, $url = false) { return implod
  *		extra divider between key-value pairs
  *		Can be used to create arrays from URL GET strings
  *
- * @param string seperator between elements (for URL GET, use '&')
+ * @param string separator between elements (for URL GET, use '&')
  * @param string divider between key-value pairs (for URL GET, use '=')
  * @param string
  * @param bool optional URL encode flag
  * @return array
  */
-function explode_full($seperator, $divider, $string, $url = false)
+function explode_full($separator, $divider, $string, $url = false)
 {
-	// explode the string about the seperator
-	$first = explode($seperator, $string);
+	// explode the string about the separator
+	$first = explode($separator, $string);
 
 	// now go through each element in the first array and explode each about the divider
 	foreach ($first as $element) {
@@ -252,7 +256,7 @@ function explode_full($seperator, $divider, $string, $url = false)
 
 	return $array;
 }
-function explodeFull($seperator, $divider, $string, $url = false) { return explode_full($seperator, $divider, $string, $url); }
+function explodeFull($separator, $divider, $string, $url = false) { return explode_full($separator, $divider, $string, $url); }
 
 
 /** function kshuffle
@@ -270,7 +274,7 @@ function kshuffle( & $array)
 
 /** function array_merge_plus
  *		Exactly the same as array_merge except this function
- *		alows entry of non-arrays without throwing errors
+ *		allows entry of non-arrays without throwing errors
  *		If an empty argument is encountered, it removes it.
  *		If a non-empty, non-array value is encountered,
  *		it appends it to the array in the order received.
@@ -346,7 +350,7 @@ function array_compare($array1, $array2) {
 		if ( ! array_key_exists($key, $array1)) {
 			$diff[1][$key] = $value;
 		}
-		// No direct comparsion because matching keys were compared in the
+		// No direct comparison because matching keys were compared in the
 		// left-to-right loop earlier, recursively.
 	}
 

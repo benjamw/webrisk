@@ -78,7 +78,7 @@ $(document).ready( function( ) {
 			data: 'keep_token=1&validity_test='+type+'&value='+$this.val( )+'&token='+$('#token').val( )+'&profile='+profile,
 			success: function(msg) {
 				if ('OK' == msg) {
-					// display a checkmark next to the input box
+					// display a check mark next to the input box
 					$('#'+type+'_check').empty( ).append(' <img src="images/tick.png" alt="OK" />');
 
 					// remove any previous errors from the errors field

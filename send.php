@@ -8,9 +8,9 @@ if (isset($_POST['submit'])) {
 	// clean the data
 	$subject = $_POST['subject'];
 	$message = $_POST['message'];
-	$user_ids = $_POST['user_ids'];
-	$send_date = ('' != $_POST['send_date']) ? $_POST['send_date'] : false;
-	$expire_date = ('' != $_POST['expire_date']) ? $_POST['expire_date'] : false;
+	$user_ids = (array) ife($_POST['user_ids'], array( ), false);
+	$send_date = ife($_POST['send_date'], false, false);
+	$expire_date = ife($_POST['expire_date'], false, false);
 
 	try {
 		$Message->send_message($subject, $message, $user_ids, $send_date, $expire_date);
@@ -93,12 +93,12 @@ echo get_header($meta);
 
 ?>
 
-	<div id="content">
+	<div id="content" class="msg">
 		<div class="link_date">
 			<a href="messages.php<?php echo $GLOBALS['_?_DEBUG_QUERY']; ?>">Return to Inbox</a>
 			<?php echo date(Settings::read('long_date')); ?>
 		</div>
-		<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"><div id="formdiv">
+		<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"><div class="formdiv">
 			<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" />
 			<ol>
 				<li>

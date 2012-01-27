@@ -24,7 +24,7 @@
 
 	there are two special cases for the format array
 		- if 'Header Text' contains 'SPECIAL_CLASS', then the second row contains a
-	snippit of code that should eval to true or false, this snippit of code can contain
+	snippet of code that should eval to true or false, this snippet of code can contain
 	anything that is allowed in the 'column data' field above (but does not need the leading ###
 	as it will always be eval'd).  if the code evals to true, the tr tag gets the class name contained
 	in the third array element, and if false, gets the class name contained in the fourth element
@@ -218,7 +218,7 @@ function get_table($table_format, $table_data, $meta = null)
 			}
 		}
 
-		if (0 != ($i % 2) && ! empty($opts['alt_class'])) {
+		if (0 == ($i % 2) && ! empty($opts['alt_class'])) {
 			$classes[] = $opts['alt_class'];
 		}
 
@@ -343,7 +343,7 @@ function print_table($table_format, $table_data, $meta = null) {
 }
 
 
-// sort_types can be a comma seperated list or an array of sort types
+// sort_types can be a comma separated list or an array of sort types
 function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_sort_column = null)
 {
 	if ( ! is_array($init_sort_column) || (0 == count($init_sort_column))) {
@@ -487,8 +487,9 @@ if ( ! function_exists('ifemptyor')) {
 }
 
 
-if ( ! function_exists('ife')) {
-	function ife($param, $or) {
+if ( ! function_exists('ifenr')) {
+	// if-else non-reference
+	function ifenr($param, $or = null) {
 		if (empty($param)) {
 			return $or;
 		}

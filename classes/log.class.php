@@ -53,7 +53,7 @@ class Log
 	/** static private property _instance
 	 *		Holds the instance of this object
 	 *
-	 * @var Flash object
+	 * @var Log object
 	 */
 	static private $_instance;
 
@@ -89,7 +89,7 @@ class Log
 	public function __get($property)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 2);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 2);
 		}
 
 		if ('_' === $property[0]) {
@@ -113,7 +113,7 @@ class Log
 	public function __set($property, $value)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 3);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 3);
 		}
 
 		if ('_' === $property[0]) {

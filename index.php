@@ -12,7 +12,7 @@ $turn_msg_count = $message_count + $turn_count;
 
 $meta['title'] = 'Game List';
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/jquery.jplayer.js"></script>
+	<script type="text/javascript" src="scripts/jquery.jplayer.min.js"></script>
 	<script type="text/javascript" src="scripts/index.js"></script>
 	<script type="text/javascript">//<![CDATA[
 		var turn_msg_count = '.$turn_msg_count.';
@@ -106,6 +106,7 @@ $hints = array(
 	'<span class="highlight">Colored entries</span> indicate that it is your turn.' ,
 	'Games that are displayed: <span class="highlight password">Waiting</span>, are password protected' ,
 	'<span class="warning">WARNING!</span><br />Games will be deleted after '.Settings::read('expire_games').' days of inactivity.' ,
+	'Finished games will be deleted after '.Settings::read('expire_finished_games').' days.' ,
 );
 
 echo get_header($meta);

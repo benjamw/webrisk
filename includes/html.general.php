@@ -115,10 +115,10 @@ function get_header($meta = null) {
 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<script type="text/javascript">//<![CDATA[
+	<script type="text/javascript">
 		{$debug_string}
 		{$query_strings}
-	/*]]>*/</script>
+	</script>
 
 	<script type="text/javascript" src="scripts/json.js"></script>
 	<script type="text/javascript" src="scripts/jquery-1.4.3.min.js"></script>
@@ -127,28 +127,30 @@ function get_header($meta = null) {
 	<!-- fancybox -->
 	<link rel="stylesheet" type="text/css" media="screen" href="scripts/jquery.fancybox/jquery.fancybox-1.3.3.css" />
 	<script type="text/javascript" src="scripts/jquery.fancybox/jquery.fancybox-1.3.3.pack.js"></script>
-	<script type="text/javascript">//<![CDATA[
+	<script type="text/javascript">
 		$(document).ready( function( ) {
+			// set fancybox defaults
+			$.fn.fancybox.defaults['overlayColor'] = '#000';
+
 			$('a.help').fancybox({
 				autoDimensions : false,
 				width: 500,
 				padding : 10,
-				overlayOpacity : 0.7,
 				hideOnContentClick : false
 			});
 		});
-	/*]]>*/</script>
+	</script>
 	<!-- hide the fancybox titles -->
-	<style type="text/css">/*<![CDATA[*/
+	<style type="text/css">
 		#fancy_title { display: none !important; }
-	/*]]>*/</style>
+	</style>
 
 	{$head_data}
+	{$flash}
 
 	<link rel="stylesheet" type="text/css" media="screen" href="css/layout.css" />
 	<link rel="stylesheet" type="text/css" media="screen" href="css/c_{$GLOBALS['_DEFAULT_COLOR']}.css" />
 
-	{$flash}
 	{$admin_css}
 
 </head>
@@ -255,7 +257,7 @@ function get_footer($meta = array( )) {
  */
 function get_item($contents, $hint, $title = '', $extra_html = '') {
 	$hint_html = "\n\t\t\t<p><strong>Welcome";
-	if (isset($GLOBALS['Player']) && (0 != $_SESSION['player_id'])) {
+	if ( ! empty($GLOBALS['Player']) && ! empty($_SESSION['player_id'])) {
 		$hint_html .= ", {$GLOBALS['Player']->username}";
 	}
 	$hint_html .= '</strong></p>';

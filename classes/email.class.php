@@ -73,7 +73,7 @@ class Email
 	protected function __construct( )
 	{
 		if ( ! $this->email_data && defined('INCLUDE_DIR')) {
-			require_once INCLUDE_DIR.'inc.email.php';
+			require INCLUDE_DIR.'inc.email.php';
 			$this->email_data = $GLOBALS['__EMAIL_DATA'];
 			unset($GLOBALS['__EMAIL_DATA']);
 		}
@@ -105,7 +105,7 @@ class Email
 
 			return $return;
 		}
-		// $to is an email address (or comma seperated email addresses)
+		// $to is an email address (or comma separated email addresses)
 		elseif (preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $to)) {
 			$email = $to;
 		}
@@ -134,7 +134,7 @@ class Email
 		$site_name = Settings::read('site_name');
 
 		if ( ! in_array($type, array_keys($this->email_data))) {
-			throw new MyException(__METHOD__.': Trying to send email with unsupprted type ('.$type.')');
+			throw new MyException(__METHOD__.': Trying to send email with unsupported type ('.$type.')');
 		}
 
 		$subject = $this->email_data[$type]['subject'];
@@ -154,6 +154,14 @@ class Email
 		$message = preg_replace(array_keys($replace), $replace, $message);
 
 		$subject = GAME_NAME.' - '.$subject;
+
+		if ( ! empty($data['game_id'])) {
+			$message .= "\n\n".'Game Link: '.$GLOBALS['_ROOT_URI'].'game.php?id='.(int) $data['game_id'];
+		}
+		elseif ( ! empty($data['page'])) {
+			$message .= "\n\n".'Direct Link: '.$GLOBALS['_ROOT_URI'].$data['page'];
+		}
+
 		$message .= '
 
 =============================================

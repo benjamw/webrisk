@@ -15,7 +15,11 @@
  * @param string field value
  * @return bool checked
  */
-function is_checked($value) {
+function is_checked( & $value) {
+	if (empty($value)) {
+		return false;
+	}
+
 	switch (strtolower($value)) {
 		case 'checked':
 		case 'true':

@@ -119,7 +119,7 @@ class Chat
 	public function __get($property)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 2);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 2);
 		}
 
 		if ('_' === $property[0]) {
@@ -143,7 +143,7 @@ class Chat
 	public function __set($property, $value)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 3);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 3);
 		}
 
 		if ('_' === $property[0]) {
@@ -193,7 +193,7 @@ class Chat
 	 *
 	 * @param string message
 	 * @param bool optional private message
-	 * @action saves all relelvant data to database
+	 * @action saves all relevant data to database
 	 * @return void
 	 */
 	public function send_message($message, $private = false, $lobby = false)

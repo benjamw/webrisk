@@ -3,7 +3,7 @@
 require_once 'includes/inc.global.php';
 
 // make sure we are an admin
-if ( ! isset($GLOBALS['Player']) || (true != $GLOBALS['Player']->is_admin)) {
+if ( ! isset($GLOBALS['Player']) || (true !== $GLOBALS['Player']->is_admin)) {
 	Flash::store('Nice try');
 }
 
@@ -39,7 +39,7 @@ if (isset($_POST['player_action'])) {
 				break;
 		}
 
-		Flash::store('Admin Update Successfull', true); // redirect kills form resubmission
+		Flash::store('Admin Update Successful', true); // redirect kills form resubmission
 	}
 	catch (MyException $e) {
 		Flash::store('Admin Update FAILED !', true); // redirect kills form resubmission
@@ -67,7 +67,7 @@ if (isset($_POST['game_action'])) {
 				break;
 		}
 
-		Flash::store('Admin Update Successfull', true); // redirect kills form resubmission
+		Flash::store('Admin Update Successful', true); // redirect kills form resubmission
 	}
 	catch (MyException $e) {
 		Flash::store('Admin Update FAILED !', true); // redirect kills form resubmission
@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
 
 		Settings::write_all($POST);
 
-		Flash::store('Admin Update Successfull', true); // redirect kills form resubmission
+		Flash::store('Admin Update Successful', true); // redirect kills form resubmission
 	}
 	catch (MyException $e) {
 		Flash::store('Admin Update FAILED !', true); // redirect kills form resubmission
@@ -104,9 +104,8 @@ $hints = array(
 
 $contents = '';
 
-// grab the lists
+// get the players
 $player_list = GamePlayer::get_list( );
-$game_list = Game::get_list( );
 
 // go through the player list and remove the root admin and ourselves
 foreach ($player_list as $key => $player) {
@@ -138,7 +137,7 @@ $table_format = array(
 	array('First Name', 'first_name') ,
 	array('Last Name', 'last_name') ,
 	array('Email', 'email') ,
-	array(array('Games', '(Total | Current | Turn)'), '[[[played]]] | [[[games]]] | [[[turn]]]') ,
+	array(array('Games', '(Total | Current | Turn)'), '[[[played]]]&nbsp;|&nbsp;[[[games]]]&nbsp;|&nbsp;[[[turn]]]') ,
 	array('Admin', '###(([[[full_admin]]] | [[[half_admin]]]) ? \'<span class="notice">Yes</span>\' : \'No\')') ,
 	array('Approved', '###(([[[is_approved]]]) ? \'Yes\' : \'<span class="notice">No</span>\')') ,
 	array('Last Online', '###date(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"') ,
@@ -164,6 +163,9 @@ if (false === strpos($table, 'NO_PLAYERS')) {
 else {
 	$contents = $table;
 }
+
+// get the games
+$game_list = Game::get_list( );
 
 $table_meta = array(
 	'sortable' => true ,

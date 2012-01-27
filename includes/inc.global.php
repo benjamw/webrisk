@@ -5,8 +5,6 @@ $debug = false;
 // set some ini stuff
 ini_set('register_globals', 0); // you really should have this off anyways
 
-date_default_timezone_set('UTC');
-
 // deal with those lame magic quotes
 if (get_magic_quotes_gpc( )) {
 	function stripslashes_deep($value) {
@@ -57,6 +55,9 @@ require_once INCLUDE_DIR.'html.tables.php';
 // MAKE SURE TO LOAD CLASS FILES BEFORE STARTING THE SESSION
 // OR YOU END UP WITH INCOMPLETE OBJECTS PULLED FROM SESSION
 spl_autoload_register('load_class');
+
+// set the proper timezone
+date_default_timezone_set($GLOBALS['_DEFAULT_TIMEZONE']);
 
 
 /**
@@ -116,7 +117,6 @@ $_SESSION['PWD'] = __FILE__;
 if ( ! isset($_SESSION['token'])) {
 	$_SESSION['token'] = md5(uniqid(rand( ), true));
 }
-call($_SESSION['token']);
 
 if ( ! defined('DEBUG')) {
 	if (test_debug( )) {
@@ -154,10 +154,10 @@ if (defined('DEBUG') && DEBUG) {
 	}
 }
 else { // do not edit the following
-#	ini_set('display_errors','Off');
-	error_reporting(E_ALL | E_STRICT);
-#	error_reporting(E_ALL & ~ E_NOTICE); // show errors, but not notices
+	ini_set('display_errors','Off');
+	error_reporting(E_ALL & ~ E_NOTICE); // show errors, but not notices
 }
+
 
 // log the player in
 if (( ! defined('LOGIN') || LOGIN) && isset($Mysql)) {
@@ -172,6 +172,11 @@ if (( ! defined('LOGIN') || LOGIN) && isset($Mysql)) {
 	// set the default color for the player
 	if (('' != $GLOBALS['Player']->color) && (in_array($GLOBALS['Player']->color, $GLOBALS['_COLORS']))) {
 		$GLOBALS['_DEFAULT_COLOR'] = $GLOBALS['Player']->color;
+	}
+
+	// set the default timezone for the player
+	if ('' !== $GLOBALS['Player']->timezone) {
+		date_default_timezone_set($GLOBALS['Player']->timezone);
 	}
 }
 

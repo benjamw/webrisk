@@ -16,7 +16,7 @@ $max_users_reached = (GamePlayer::get_count( ) >= Settings::read('max_users'));
 $not_admin = empty($GLOBALS['Player']) || ! $GLOBALS['Player']->is_admin;
 
 if ($not_admin && ($no_new_users || ($max_users_set && $max_users_reached))) {
-	Flash::store('Sorry, but we are not accepting new applications at this time.');
+	Flash::store('Sorry, but we are not accepting new registrations at this time.');
 }
 
 if ($not_admin && isset($_SESSION['player_id'])) {
@@ -41,7 +41,7 @@ if (isset($_POST['register'])) {
 		$Message = new Message($GLOBALS['Player']->id, $GLOBALS['Player']->is_admin);
 		$Message->grab_global_messages( );
 
-		Flash::store('Registration Successfull !', 'login.php');
+		Flash::store('Registration Successful !', 'login.php');
 	}
 	catch (MyException $e) {
 		if ( ! defined('DEBUG') || ! DEBUG) {
@@ -81,6 +81,7 @@ if (Settings::read('expire_users')) {
 }
 
 $contents = <<< EOF
+
 	<form method="post" action="{$_SERVER['REQUEST_URI']}"><div class="formdiv">
 		<input type="hidden" name="token" id="token" value="{$_SESSION['token']}" />
 		<input type="hidden" name="errors" id="errors" />

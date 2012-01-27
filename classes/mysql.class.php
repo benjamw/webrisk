@@ -120,10 +120,9 @@ class Mysql
 	 * @action close the mysql connection
 	 * @return void
 	 */
+/*
 	public function __destruct( )
 	{
-		call(__METHOD__);
-
 		$this->_log(__METHOD__.': '.$this->link_id);
 		$this->_log('===============================');
 
@@ -133,6 +132,7 @@ class Mysql
 		$this->link_id = null;
 		self::$_instance = null;
 	}
+*/
 
 
 	/** public function __get
@@ -146,7 +146,7 @@ class Mysql
 	public function __get($property)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MySQLException(__METHOD__.': Trying to access non-existant property ('.$property.')');
+			throw new MySQLException(__METHOD__.': Trying to access non-existent property ('.$property.')');
 		}
 
 		if ('_' === $property[0]) {
@@ -170,7 +170,7 @@ class Mysql
 	public function __set($property, $value)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MySQLException(__METHOD__.': Trying to access non-existant property ('.$property.')');
+			throw new MySQLException(__METHOD__.': Trying to access non-existent property ('.$property.')');
 		}
 
 		if ('_' === $property[0]) {
@@ -300,13 +300,13 @@ class Mysql
 	 */
 	public function set_error($val)
 	{
-		$this->_error_debug = (0 != (1 & $val)) ? true : false;
-		$this->_query_debug = (0 != (2 & $val)) ? true : false;
+		$this->_error_debug = (0 != (1 & $val));
+		$this->_query_debug = (0 != (2 & $val));
 	}
 
 
 	/** public function query
-	 *		Excute a database query
+	 *		Execute a database query
 	 *		If no query is passed, it executes the last saved query.
 	 *
 	 * @param string [optional] SQL query string
@@ -333,7 +333,7 @@ class Mysql
 		}
 
 		$done = true; // innocent until proven guilty
-		
+
 		// start time logging
 		$time = microtime_float( );
 		$this->result = @mysql_query($this->query, $this->link_id);
@@ -341,7 +341,12 @@ class Mysql
 
 		if ($this->_query_debug && empty($GLOBALS['AJAX'])) {
 			$this->query = trim(preg_replace('/\\s+/', ' ', $this->query));
-			echo "<div style='background:#FFF;color:#009;'><br /><strong>".basename($backtrace_file['file']).' on '.$backtrace_file['line']."</strong>- {$this->query} - <strong>Aff(".$this->affected_rows( ).") (".number_format($this->query_time, 5)." s)</strong></div>";
+			if (('cli' == php_sapi_name( )) && empty($_SERVER['REMOTE_ADDR'])) {
+				echo "\n\nMYSQL - ".basename($backtrace_file['file']).' on '.$backtrace_file['line']."- {$this->query} - Aff(".$this->affected_rows( ).") (".number_format($this->query_time, 5)." s)\n\n";
+			}
+			else {
+				echo "<div style='background:#FFF;color:#009;'><br /><strong>".basename($backtrace_file['file']).' on '.$backtrace_file['line']."</strong>- {$this->query} - <strong>Aff(".$this->affected_rows( ).") (".number_format($this->query_time, 5)." s)</strong></div>";
+			}
 		}
 
 		if ( ! $this->result) {
@@ -364,7 +369,13 @@ class Mysql
 			$this->_error_report( );
 
 			if ($this->_error_debug) {
-				echo "<div style='background:#900;color:#FFF;'>There was an error in your query{$extra}:<br />ERROR: {$this->error}<br />QUERY: {$this->query}</div>";
+				if (('cli' == php_sapi_name( )) && empty($_SERVER['REMOTE_ADDR'])) {
+					$extra = strip_tags($extra);
+					echo "\n\nMYSQL ERROR - There was an error in your query{$extra}:\nERROR: {$this->error}\nQUERY: {$this->query}\n\n";
+				}
+				else {
+					echo "<div style='background:#900;color:#FFF;'>There was an error in your query{$extra}:<br />ERROR: {$this->error}<br />QUERY: {$this->query}</div>";
+				}
 			}
 			else {
 				$this->error = 'There was a database error.';
@@ -375,7 +386,7 @@ class Mysql
 
 		if ($done) {
 			// if we just performed an insert, grab the insert_id and return it
-			if (preg_match('/^\s*(INSERT|REPLACE)/i', $this->query)) {
+			if (preg_match('/^\s*(?:INSERT|REPLACE)\b/i', $this->query)) {
 				$this->result = $this->fetch_insert_id( );
 			}
 
@@ -383,8 +394,14 @@ class Mysql
 			return $this->result;
 		}
 
-		// no result found
-		return false;
+		if (preg_match('/^\s*SELECT\b/i', $this->query)) {
+			// no result found
+			return false;
+		}
+		else {
+			// query performed successfully
+			return true;
+		}
 	}
 
 
@@ -447,7 +464,7 @@ class Mysql
 			$query = ' UPDATE ';
 		}
 
-		$query .= $table;
+		$query .= '`'.$table.'`';
 
 		if ( ! is_array($data_array)) {
 			throw new MySQLException(__METHOD__.': Trying to insert non-array data');
@@ -474,7 +491,7 @@ class Mysql
 		$this->query = $query;
 		$return = $this->query( );
 
-		if ('' != $where) {
+		if ('' == $where) {
 			return $this->fetch_insert_id( );
 		}
 		else {
@@ -495,7 +512,7 @@ class Mysql
 	 * @param string table name
 	 * @param array associative data array
 	 * @param bool [optional] whether or not we should replace values (true / false)
-	 * @action execute multiple mysql querys
+	 * @action execute multiple mysql queries
 	 * @return array insert ids for rows (with original keys preserved)
 	 */
 	public function multi_insert($table, $data_array, $replace = false)
@@ -529,13 +546,18 @@ class Mysql
 	{
 		$query = "
 			DELETE
-			FROM {$table}
+			FROM `{$table}`
 			{$where}
 		";
 
 		$this->query = $query;
 
-		return $this->query( );
+		try {
+			return $this->query( );
+		}
+		catch (MySQLException $e) {
+			throw $e;
+		}
 	}
 
 
@@ -561,7 +583,7 @@ class Mysql
 	 * @param mixed table name array or single string
 	 * @param mixed where clause array or single string
 	 * @param bool optional recursive (default false)
-	 * @action execute multiple mysql querys
+	 * @action execute multiple mysql queries
 	 * @return array results
 	 */
 	public function multi_delete($table_array, $where_array, $recursive = false)
@@ -611,7 +633,7 @@ class Mysql
 
 
 	/** public function fetch_object
-	 *		Excute a database query and return the next result row as object.
+	 *		Execute a database query and return the next result row as object.
 	 *		Each subsequent call to this method returns the next result row.
 	 *
 	 * @param string [optional] SQL query string
@@ -631,7 +653,7 @@ class Mysql
 
 
 	/** public function fetch_row
-	 *		Excute a database query and return result as an indexed array.
+	 *		Execute a database query and return result as an indexed array.
 	 *		Each subsequent call to this method returns the next result row.
 	 *
 	 * @param string [optional] SQL query string
@@ -656,7 +678,7 @@ class Mysql
 
 
 	/** public function fetch_assoc
-	 *		Excute a database query and return result as an associative array.
+	 *		Execute a database query and return result as an associative array.
 	 *		Each subsequent call to this method returns the next result row.
 	 *
 	 * @param string [optional] SQL query string
@@ -681,7 +703,7 @@ class Mysql
 
 
 	/** public function fetch_both
-	 *		Excute a database query and return result as both
+	 *		Execute a database query and return result as both
 	 *		an associative array and indexed array.
 	 *		Each subsequent call to this method returns the next result row.
 	 *
@@ -707,7 +729,7 @@ class Mysql
 
 
 	/** public function fetch_array
-	 *		Excute a database query and return result as
+	 *		Execute a database query and return result as
 	 *		an indexed array of both indexed and associative arrays.
 	 *		This method returns the entire result set in a single call.
 	 *
@@ -733,7 +755,7 @@ class Mysql
 
 
 	/** public function fetch_value
-	 *		Excute a database query and return result as
+	 *		Execute a database query and return result as
 	 *		a single result value.
 	 *		This method only returns the single value at index 0.
 	 *		Each subsequent call to this method returns the next value.
@@ -762,7 +784,7 @@ class Mysql
 
 
 	/** public function fetch_value_array
-	 *		Excute a database query and return result as
+	 *		Execute a database query and return result as
 	 *		an indexed array of single result values.
 	 *		This method returns the entire result set in a single call.
 	 *
@@ -788,7 +810,7 @@ class Mysql
 
 	/** public function paginate NOT TESTED
 	 *		Paginates a query result set based on supplied information
-	 *		NOTE: It is not nesecary to include the SQL_CALC_FOUND_ROWS
+	 *		NOTE: It is not necessary to include the SQL_CALC_FOUND_ROWS
 	 *		nor the LIMIT clause in the query, in fact, including the
 	 *		LIMIT clause in the query will probably break MySQL.
 	 *
@@ -1064,6 +1086,37 @@ class MySQLException
 		$message = preg_replace('/(?:\\w+::)+\\w+:\\s+/', '', $message);
 
 		return $message;
+	}
+
+
+	/** protected function _write_error
+	 *		writes the exception to the log file
+	 *
+	 * @param void
+	 * @action writes the exception to the log
+	 * @return void
+	 */
+	protected function _write_error( )
+	{
+		// first, lets make sure we can actually open and write to directory
+		// specified by the global variable... and lets also do daily logs for now
+		$log_name = 'mysql_exception_'.date('Ymd', time( )).'.log';
+
+		// okay, write our log message
+		$str = date('Y/m/d H:i:s')." == ({$this->code}) {$this->message} : {$this->file} @ {$this->line}\n";
+
+		if ($this->_backtrace) {
+			$str .= "---------- [ BACKTRACE ] ----------\n";
+			$str .= $this->getTraceAsString( )."\n";
+			$str .= "-------- [ END BACKTRACE ] --------\n\n";
+		}
+
+		if ($fp = @fopen(LOG_DIR.$log_name, 'a')) {
+			fwrite($fp, $str);
+			fclose($fp);
+		}
+
+		call($str, $bypass = false, $show_from = true, $new_window = false, $error = true);
 	}
 
 } // end of MySQLException class

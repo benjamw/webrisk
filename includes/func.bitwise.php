@@ -14,7 +14,7 @@
  *
  *
  * @param int value we are modifying
- * @param int value contianing the bits we wish to modify
+ * @param int value containing the bits we wish to modify
  * @param bool optional switch the bits on, or off
  * @param bool optional reverse the bits we wish to modify
  * @return int
@@ -59,7 +59,7 @@ function bitSet($val, $bit, $switch = true, $reverse = false) { return bit_set($
  *
  *
  * @param int value we are modifying
- * @param int value contianing the bits we wish to modify
+ * @param int value containing the bits we wish to modify
  * @param bool optional reverse the bits we wish to modify
  * @return int
  */
@@ -84,7 +84,7 @@ function bitOn($val, $bit, $reverse = false) { return bit_on($val, $bit, $revers
  *
  *
  * @param int value we are modifying
- * @param int value contianing the bits we wish to modify
+ * @param int value containing the bits we wish to modify
  * @param bool optional reverse the bits we wish to modify
  * @return int
  */
@@ -109,7 +109,7 @@ function bitOff($val, $bit, $reverse = false) { return bit_off($val, $bit, $reve
  *
  *
  * @param int value we are modifying
- * @param int value contianing the bits we wish to modify
+ * @param int value containing the bits we wish to modify
  * @param bool optional reverse the bits we wish to modify
  * @return int
  */

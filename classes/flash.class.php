@@ -78,6 +78,12 @@ class Flash
 	}
 
 
+	public function __toString( )
+	{
+		return 'FLASH- '.implode('; ', $this->_messages( )).' @ '.$this->_location;
+	}
+
+
 	/** public function reset_debug
 	 *		Resets the debug value
 	 *
@@ -145,7 +151,7 @@ class Flash
 	 *			'string' = redirect to given URL [default index.php]
 	 *
 	 * @param string message text
-	 * @param string optional redirect location or false to diable redirection
+	 * @param string optional redirect location or false to disable redirection
 	 * @action optionally redirects to given location and exits script
 	 * @return void
 	 */
