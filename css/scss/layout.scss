@@ -1,0 +1,604 @@
+
+/* WebRisk layout */
+
+/*
+	all the colors for the styles are listed in the
+	c_{color_name}.css file.  they are pulled out for
+	ease of customization.  set your color by entering
+	the name of the css file you wish to use in the
+	config.inc.php file.
+*/
+
+@import "reset";
+
+/* basic styles */
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	line-height: 1.5;
+	font-weight: normal;
+	font-family: sans-serif;
+}
+
+
+h1 {
+	height: 45px;
+	margin: 0 0 3px;
+	padding: 0;
+	font-size: 16px;
+	font-weight: bold;
+	text-indent: -9999em;
+	border-bottom: 2px solid #000;
+
+	a {
+		display: block;
+		text-decoration: none;
+		height: 100%;
+	}
+}
+
+
+a {
+	font-weight: bold;
+	text-decoration: underline;
+
+	&:hover {
+		text-decoration: none;
+	}
+
+	&.help {
+		border: 1px solid #777;
+		font-weight: bold;
+		padding: 0 2px;
+		text-decoration: none;
+
+		&:hover {
+			border: 1px solid #999;
+		}
+	}
+}
+
+
+abbr,
+acronym {
+	border-bottom: 1px dashed #777;
+	cursor: help;
+}
+
+
+hr.fancy {
+	height: 5px;
+	margin: 1em;
+	background-color: #999;
+	border: 1px solid #777;
+}
+
+
+p {
+	margin: 1em 0;
+	line-height: 1.2;
+}
+
+
+fieldset {
+	padding: 5px;
+	margin: 5px;
+	border: 1px solid #777;
+}
+
+
+legend {
+	font-weight: bold;
+	font-size: larger;
+}
+
+
+.warning, .warning * {
+	color: #C00;
+	font-weight: bold;
+}
+
+
+.notice, .notice * {
+	color: #CC0;
+	font-weight: bold;
+}
+
+
+.highlight, .highlight * {
+	color: #00C;
+	font-weight: bold;
+}
+
+
+.instruction, .instruction * {
+	color: #AAA;
+}
+
+
+.caption {
+	margin: 1ex 0;
+}
+
+
+#date {
+	font-size: 10px;
+	font-weight: bold;
+	white-space: nowrap;
+	text-align: right;
+}
+
+
+/* links */
+#links {
+	float: right;
+	margin: 1em;
+	font-weight: bold;
+	color: #EEE;
+
+	a {
+		text-decoration: none;
+		padding: 0.3ex 0.75ex;
+		border: 1px solid transparent;
+		background-color: transparent;
+		color: #333;
+
+		&:hover {
+			border-color: #000;
+			background-color: #555;
+			color: #EEE;
+		}
+	}
+}
+/* fix some stupid IE7 float bug */
+*:first-child+html #links {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 5;
+}
+
+
+/* wrapper */
+#wrapper {
+	margin: 0;
+	padding: 0;
+}
+
+
+/* menu */
+#menuholder {
+	width: 1px;
+	overflow: visible;
+	float: left;
+
+	div {
+		float: left;
+		margin: 3px;
+		margin-bottom: 2em;
+	}
+
+	#mygames_title {
+		margin: 0;
+		white-space: nowrap;
+	}
+}
+
+
+#menu ,
+#mygames {
+	border: 1px solid #777;
+
+	a {
+		text-align: right;
+		font-size: 10px;
+		padding: 6px 5px;
+		width: 160px;
+		white-space: nowrap;
+		margin: 0;
+		font-weight: bold;
+		text-decoration: none;
+		display: block;
+		color: #333;
+		background-color: #EEE;
+		border-bottom: 1px solid #555;
+
+		&:hover {
+			color: #DDD;
+			background-color: #555;
+		}
+
+		.notice {
+			color: #99F;
+		}
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+
+	li {
+		text-indent: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none outside none;
+
+		&.active {
+			a {
+				color: #DDD;
+				background-color: #333;
+				border-color: #333;
+			}
+		}
+
+		&:last-child a {
+			border-bottom: 0;
+		}
+	}
+}
+*:first-child+html #menu li {
+	margin-left: -1.25em;
+}
+
+
+#mygames {
+	a {
+		white-space: normal;
+	}
+}
+
+
+/* notes */
+#sidebar {
+	float: right;
+	width: 160px;
+	overflow: visible;
+
+	#chatbox {
+		float: right;
+		width: 160px;
+		padding: 5px;
+		margin: 3px;
+		background-color: #EEE;
+		border: 1px solid #777;
+
+		input {
+			width: 95%;
+		}
+	}
+
+	#chats {
+		height: 300px;
+	}
+
+	.active {
+		position: relative;
+		top: 0;
+		right: 0;
+		width: 500px;
+	}
+}
+
+
+#notes {
+	float: right;
+	width: 160px;
+	min-height: 300px;
+	padding: 5px;
+	margin: 3px;
+	background-color: #EEE;
+	border: 1px solid #777;
+}
+
+
+/* chats */
+#chatbox input[type=text] {
+	width: 90%;
+}
+
+
+#chats {
+	height: 200px;
+	overflow: auto;
+
+	dt {
+		background: transparent;
+		color: #000;
+		font-weight: bold;
+		padding: 0 3px;
+
+		span {
+			float: right;
+			font-size: 80%;
+		}
+	}
+
+	dd {
+		padding: 0 3px;
+		border-bottom: 1px solid #000;
+	}
+
+	img {
+		float: left;
+	}
+}
+
+
+/* main */
+h2 {
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 1ex;
+	border-bottom: 1px solid #777;
+}
+
+
+.type {
+	font-size: smaller;
+	padding-left: 2em;
+
+	.number {
+		font-weight: bold;
+		margin-right: 2em;
+	}
+
+	a {
+		margin: 0 2em;
+	}
+}
+
+
+#content {
+	margin: 3px 185px;
+
+	&.full {
+		margin: 5px;
+	}
+
+	.sidebar {
+		float: right;
+		width: 300px;
+		margin-top: 10px;
+	}
+
+	form {
+		.buttons {
+			#delete {
+				float: right;
+			}
+
+			.prevnext {
+				margin-bottom: 20px;
+
+				span {
+					padding: 0 10px;
+				}
+			}
+		}
+	}
+
+	#recipient_list {
+		margin-top: 20px;
+	}
+}
+
+
+.stats {
+	width: 150px;
+	float: left;
+	margin: 3px;
+}
+
+
+#index_page {
+	.tableholder {
+		max-height: 300px;
+		overflow-y: auto;
+	}
+
+	#chatbox {
+		border: 1px solid #777;
+
+		input[type=text] {
+			width: 99%;
+		}
+	}
+
+	#chats {
+		border-top: 1px solid #777;
+		height: 500px;
+
+		dt {
+			height: 50px;
+			width: 150px;
+			float: left;
+			border-bottom: 3px solid #777;
+			padding: 5px;
+			margin: 0 20px 5px 0;
+			position: relative;
+			text-align: right;
+			background: transparent;
+		}
+
+		dd {
+			min-height: 50px;
+			border-bottom: 1px solid #AAA;
+			padding: 5px 5px 6px 5px;
+			margin: 0 0 6px 0;
+		}
+
+		span {
+			position: absolute;
+			bottom: 5px;
+			right: 5px;
+		}
+	}
+}
+
+
+/* messages */
+h2.subject,
+p.message {
+	width: 70ex;
+}
+
+
+.sender {
+	margin-left: 3em;
+	font-size: smaller;
+}
+
+
+.link_date {
+	float: right;
+	text-align: right;
+	width: 300px;
+
+	a {
+		float: left;
+	}
+}
+
+
+#recipient_list {
+	ul {
+		margin:10px;
+	}
+
+	.unread {
+		font-weight: bold;
+	}
+
+	.deleted {
+		text-decoration: line-through;
+	}
+}
+
+
+.action select {
+	float: right;
+}
+
+
+/* footer */
+#footerspacer {
+	height: 100px; /* make sure nothing gets hidden behind the footer */
+	clear: both;
+}
+
+
+#footer {
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+	width: 100%;
+	line-height: 26px;
+	clear: both;
+	padding: 3px 0;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+	background: #FFF;
+	border-top: 1px solid #BBB;
+
+	span {
+		margin: 0 2em;
+	}
+
+	p {
+		margin: 0;
+		padding: 0;
+		line-height: 130%;
+	}
+}
+
+
+/* other basic styles */
+.notice {
+	font-weight: bold;
+}
+
+
+.afterthought {
+	font-size: 11px;
+	font-weight: normal;
+}
+
+
+.instruction {
+	margin: 0 0 10px 10px;
+	font-size: 11px;
+	line-height: 11px;
+}
+
+
+ul.settings {
+	li {
+		float: left;
+		width: 100%;
+	}
+
+	label {
+		clear: left;
+	}
+}
+
+
+#buttons {
+	float: right;
+	margin-right: 1px;
+
+	li {
+		float: left;
+		margin-left: 1px;
+	}
+
+	a {
+		display: block;
+		padding: 0 1em;
+		border: 1px solid #333;
+		border-width: 0 1px;
+		margin: 0 -1px;
+	}
+}
+
+
+.clone {
+	display: none;
+	visibility: hidden;
+}
+
+
+div.help {
+	padding: 10px;
+
+	ol,
+	ul {
+		text-indent: -1em;
+		margin: 0 0 1ex 2em;
+	}
+
+	li {
+		text-indent: -1em;
+		margin-bottom: 1ex;
+
+		strong {
+			color: #F00;
+		}
+	}
+
+	table {
+		width: auto;
+		margin: 0 auto;
+	}
+}
+
+
+@import "game_layout";
+@import "datatable";
+@import "forms";
+
+

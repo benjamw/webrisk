@@ -1,0 +1,149 @@
+
+#formdiv hr {
+	border: 0;
+	border-bottom: 2px solid #AAA;
+	width: 90%;
+	height: 1px;
+	margin: 0 auto;
+}
+
+.label {
+	font-weight: bold;
+}
+
+label {
+	margin-right: 1ex;
+	margin-top: 1px;
+	font-weight: bold;
+	float: left;
+	width: 120px;
+}
+
+label.unlabel,
+label.inside,
+label.inline {
+	float: none;
+	width: auto;
+	margin: 0;
+}
+
+label.unlabel {
+	font-weight: normal;
+}
+
+label.error {
+	display: none !important;
+	border: 0;
+}
+
+.error {
+	border: 1px solid #C00;
+}
+
+.info {
+	color: #999;
+}
+
+li.info {
+	margin-top: 1em;
+	color: inherit;
+}
+
+li.color {
+	margin-top: 1em;
+}
+
+div.info {
+	margin: 0 0 0 130px;
+	width: 400px;
+}
+
+.forminfo {
+	width: 400px;
+	color: #444;
+	margin-bottom: 1em;
+}
+
+.input,
+input,
+textarea,
+select {
+	margin: 1px;
+}
+
+.input {
+	line-height: 2;
+	font-weight: bold;
+}
+
+.input,
+input,
+select {
+	vertical-align: middle;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+	  margin: 3px 3px 3px 4px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+	border: 2px solid #848B97;
+}
+
+input[type="text"].error:focus,
+input[type="password"].error:focus,
+textarea.error:focus {
+	border-color: #C00;
+}
+
+.req:before {
+	content: '*';
+	font-size: larger;
+	color: #C00;
+	font-weight: bold;
+	padding-right: 2px;
+	vertical-align: middle;
+}
+
+#formdiv .submit {
+	border-top: 1px solid #AAA;
+	text-align: center;
+	padding: 10px;
+}
+
+#formdiv .errors {
+	border-top: 1px solid #AAA;
+	border-bottom: 1px dashed #AAA;
+	display: none;
+	color: #C00;
+	font-weight: bold;
+	font-size: 14px;
+	padding: 10px;
+	text-align: center;
+}
+
+.test img {
+	vertical-align: middle;
+}
+
+table.form {
+	width: auto;
+}
+
+/* overlabels */
+.overlabel-apply {
+	position: absolute;
+	top: 1px;
+	left: 5px;
+	z-index: 5;
+	color: #AAA;
+}
+
+.overlabel-float {
+	float: left;
+	margin: 2px;
+	position: relative;
+}

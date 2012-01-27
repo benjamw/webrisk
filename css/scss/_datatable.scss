@@ -1,0 +1,97 @@
+
+table {
+	border-collapse: collapse;
+	border: 1px solid #777;
+	height: 1px;
+	margin: 1em 0;
+	width: 100%;
+	line-height: 120%;
+}
+
+th {
+	font-weight: bold;
+	text-align: center;
+	vertical-align: bottom;
+	border-bottom: 2px solid #000;
+	border-right: 1px dashed #777;
+	padding: 2px 1ex 1px;
+	white-space: nowrap;
+}
+
+tr:hover > td ,
+tr.alt:hover > td {
+	background-color: #444;
+	color: #FFF;
+}
+
+td {
+	border-right: 1px dashed #777;
+	padding: 1px 1ex 2px;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.alt {
+	background-color: #DDD;
+}
+
+td.numeric {
+	text-align: right;
+}
+
+td.date,
+td.fortify {
+	white-space: nowrap;
+}
+
+td.join,
+td.remove,
+td.edit {
+	text-align: center;
+	vertical-align: middle;
+	width: 1px;
+}
+
+.highlight,
+.highlight td {
+	font-weight: bold;
+}
+
+.lowlight,
+.lowlight td {
+	color: #666;
+}
+
+th.remove {
+	width: 1px;
+}
+
+caption {
+	margin-top: 1em;
+	font-weight: bold;
+}
+
+
+/* sorted table styles */
+thead tr th {
+	background-color: #DDD;
+}
+
+thead tr .header {
+	cursor: pointer;
+}
+
+thead tr .headerSortDown,
+thead tr .headerSortUp {
+	background-color: #333;
+	color: #FFF;
+}
+
+thead tr .headerSortUp {
+	border-top: 2px solid #EEE;
+}
+
+thead tr .headerSortDown {
+	border-bottom: 2px solid #EEE;
+}
+

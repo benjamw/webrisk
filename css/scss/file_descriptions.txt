@@ -1,0 +1,30 @@
+
+	SCSS File Descriptions
+-------------------------------------------------------
+layout.scss - the main layout file for the script
+				this is here for my ease of syching styles between games
+				this does not include game page or game specific styles
+
+_game_layout.scss - the game specific layout for the script
+				this includes any styles that are game specifc
+				that are needed outside of the game page (invite page, etc)
+
+game.scss - the main layout file for the game page
+				this file is most likely game specific, but may have sections that
+				are used in other games with similar layouts
+
+_board.scss - the layout style for the main game board
+				this is game specific for obvious reasons
+
+_c_template.scss - the main color template for layout.scss
+
+_c_game_template.scss - the main color template for _game_layout.scss
+
+_c_game.scss - the main color template for game.scss
+
+_c_board.scss - the main color template for _board.scss
+
+there will also be several color theme files (c_red_black.scss, etc)
+and each contains sections for each of the template files in order
+from most reusable to least reusable (as shown above)
+

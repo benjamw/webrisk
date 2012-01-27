@@ -1,0 +1,34 @@
+/*
+	Game page specific CSS
+*/
+
+
+@import "board";
+
+
+#contents {
+	margin: 10px;
+}
+
+
+table.history td {
+	padding: 3px 5px;
+	font-size: 1.1em;
+	line-height: 150%;
+	border-bottom: 1px solid #222;
+
+	&.date {
+		width: 1%;
+		white-space: nowrap;
+	}
+}
+
+
+
+form#game {
+	clear: both;
+	text-align: center;
+	padding-top: 20px;
+}
+
+

@@ -1,0 +1,347 @@
+
+@import "compass/css3";
+
+
+// set our default values
+
+$back_grad: 0 !default; // set to 1 for a gradient on header and footer
+
+$color: #666BAB !default;
+$back: #FFF !default;
+$sub_back: #EEE !default;
+$text: #333 !default;
+$dark_text: #000 !default;
+$sub_text: #666 !default;
+
+$link: $text !default;
+$hover: $color !default;
+
+$border_dark: #000 !default;
+$border_med_dark: #555 !default;
+$border_med: #777 !default;
+$border_med_light: #999 !default;
+$border_light: #CCC !default;
+
+$header_border: $border_dark !default;
+
+$table_head_back: #DDD !default;
+$table_alt_back: #E7E7E7 !default;
+$table_hover_text: $back !default;
+$table_hover_back: $color !default;
+
+$lowlight: #666 !default;
+$highlight: #00D !default;
+
+$warning: #D00 !default;
+$notice: #DD0 !default;
+$instruction: #AAA !default;
+
+$finished: #999 !default;
+$playing: $warning !default;
+$my_turn: $notice !default;
+$none: $text !default;
+
+$nav_text: $text !default;
+$nav_notice: $warning !default;
+$nav_back: $sub_back !default;
+$nav_border: $border_light !default;
+$nav_hover_text: #30356F !default;
+$nav_hover_notice: $nav_notice !default;
+$nav_hover_back: #DDDFF3 !default;
+$nav_hover_border: $nav_border !default;
+$nav_active_text: $back !default;
+$nav_active_notice: $nav_active_text !default;
+$nav_active_back: $color !default;
+$nav_active_border: $nav_border !default;
+$nav_outer_border: $nav_active_back !default;
+
+$links_text: #DDD !default;
+$links_back: transparent !default;
+$links_border: transparent !default;
+$links_hover_text: $color !default;
+$links_hover_back: $back !default;
+$links_hover_border: $border_dark !default;
+
+$fancybox_back: #FFF !default;
+
+// start the styles
+
+/* basic styles */
+body {
+	color: $text;
+	background-color: $back;
+}
+
+
+h1 {
+	border-color: $header_border;
+	background-color: $color;
+	@if $back_grad == 1 {
+		@include linear-gradient(color-stops($color 0.1, $back 0.9), top);
+	}
+}
+
+
+a {
+	color: $link;
+
+	&:hover {
+		color: $hover;
+	}
+
+	&.help {
+		border-color: $border_med;
+
+		&:hover {
+			border-color: $border_dark;
+		}
+	}
+}
+
+
+abbr ,
+acronym {
+	border-color: $border_med;
+}
+
+
+hr.fancy {
+	background-color: $border_dark;
+	border-color: $border_med;
+}
+
+
+fieldset {
+	border-color: $border_med;
+}
+
+
+.warning ,
+.warning * {
+	color: $warning;
+}
+
+
+.notice ,
+.notice * {
+	color: $notice;
+}
+
+
+.highlight ,
+.highlight * {
+	color: $highlight;
+}
+
+
+.instruction ,
+.instruction * {
+	color: $instruction;
+}
+
+
+/* links */
+#links {
+	a {
+		border-color: $links_border;
+		background-color: $links_back;
+		color: $links_text;
+
+		&:hover {
+			border-color: $links_hover_border;
+			background-color: $links_hover_back;
+			color: $links_hover_text;
+		}
+	}
+}
+
+
+#menu ,
+#mygames {
+	border-color: $nav_outer_border;
+
+	a {
+		color: $nav_text;
+		background-color: $nav_back;
+		border-color: $nav_border;
+
+		&:hover {
+			color: $nav_hover_text;
+			background-color: $nav_hover_back;
+			border-color: $nav_hover_border;
+
+			.notice {
+				color: $nav_hover_notice;
+			}
+		}
+
+		.notice {
+			color: $nav_notice;
+		}
+	}
+
+	li {
+		&.active {
+			a {
+				color: $nav_active_text;
+				background-color: $nav_active_back;
+				border-color: $nav_active_border;
+
+				.notice {
+					color: $nav_active_notice;
+				}
+			}
+		}
+	}
+}
+
+
+#mygames {
+	.finished a { color: $finished; }
+	.playing a { color: $playing; }
+	.my_turn a { color: $my_turn; }
+	.none a { color: $none; }
+}
+
+
+/* notes */
+#sidebar {
+	#chatbox {
+		background-color: $nav_back;
+		border-color: $nav_border;
+	}
+}
+
+
+#notes {
+	background-color: $nav_back;
+	border-color: $nav_outer_border;
+}
+
+
+/* chats */
+#chats {
+	dt {
+		background: $border_med;
+		color: $dark_text;
+	}
+
+	dd {
+		border-color: $border_dark;
+	}
+}
+
+
+/* main */
+h2 {
+	border-color: $border_med;
+}
+
+
+#index_page {
+	#chatbox {
+		border-color: $border_med;
+	}
+
+	#chats {
+		dt {
+			border-color: $border_med;
+			background-color: transparent;
+		}
+
+		dd {
+			border-color: $border_med;
+		}
+	}
+}
+
+
+/* footer */
+#footer {
+	color: $links_text;
+	background-color: $color;
+	border-color: $header_border;
+	@if $back_grad == 1 {
+		@include linear-gradient(color-stops($color 0.1, $back 0.9), bottom);
+	}
+}
+
+
+/* other basic styles */
+#buttons {
+	a {
+		border-color: $border_med;
+	}
+}
+
+
+div.help {
+	li {
+		strong {
+			color: $warning;
+		}
+	}
+}
+
+
+/* datatable styles */
+table {
+	border-color: $border_med;
+}
+
+th {
+	border-bottom-color: $border_dark;
+	border-right-color: $border_med;
+}
+
+tr:hover > td ,
+tr:hover > td * ,
+tr.alt:hover > td ,
+tr.alt:hover > td * {
+	background-color: $table_hover_back;
+	color: $table_hover_text !important;
+}
+
+td {
+	border-right-color: $border_med;
+}
+
+tr.alt {
+	background-color: $table_alt_back;
+}
+
+.lowlight ,
+.lowlight td {
+	color: $sub_text;
+}
+
+
+/* sorted table styles */
+thead tr th {
+	background-color: $table_head_back;
+}
+
+thead tr .headerSortDown ,
+thead tr .headerSortUp {
+	background-color: $color;
+	color: $back;
+}
+
+thead tr .headerSortUp {
+	border-top-color: $back;
+}
+
+thead tr .headerSortDown {
+	border-bottom-color: $back;
+}
+
+
+/* fancybox overrides */
+#fancybox-content {
+	background-color: $fancybox_back;
+}
+
+
+
+@import "c_game_template"
+

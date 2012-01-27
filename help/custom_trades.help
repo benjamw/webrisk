@@ -1,0 +1,94 @@
+<div class="help">
+
+	<h3>Custom Trades</h3>
+
+	<p>The custom trades section allows you to make trade algorithms besides just the usual.</p>
+
+	<p>There are 4 parts to each array, and you can have as many arrays as you'd like to get the desired trade values</p>
+
+	<ol>
+		<li><strong>Start</strong>: The Start is the starting value for the array. This number is required, and if missing, the whole array will be ignored. This value must be positive.  0 (zero) is allowed in the first entry only.</li>
+		<li><strong>End</strong>: The End is the ending value for the array.  If this value is missing, the Start value of the next array will be used as this array's ending value. (Or in the case of an infinitly recursing value, will go on forever).  This value must be positive.</li>
+		<li><strong>Step</strong>: The Step value is what increments to use to get from Start to End.  If this value is missing, it will make one large jump from Start to End. This value can be negative.  In the case of a negative Step with no End point, the value will decrease to 0 where it will stop.</li>
+		<li><strong>Times</strong>: This value is like a repeater.  If End and Step are empty, and this value is set, the Start value will repeat the number of Times shown. For instance, if this value is 3, the Start value will repeat 3 times.</li>
+	</ol>
+
+	<p>A few things to be aware of:</p>
+
+	<ul>
+		<li>If any values are negative (except for Step), they will be ignored</li>
+		<li>End and/or Step will invalidate Times, if either are set, the Times value will have no effect</li>
+		<li>If End is in the wrong direction from Step (for instance, Step = -1, but End is larger than Start), Step will be ignored.</li>
+	</ul>
+
+	<p>Here are a few examples:</p>
+
+	<hr />
+
+	<p>The normal trade values are 4, 6, 8, 10, 12, 15, 20, 25, 30, etc. and the arrays to create this are as follows:</p>
+
+	<table>
+		<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>
+		<tr class="alt"><td>4</td><td>12</td><td>2</td><td>0</td></tr>
+		<tr><td>15</td><td>0</td><td>5</td><td>0</td></tr>
+	</table>
+
+	<p>Note the missing End value for the last array, this means the value will increase by 5 every trade for the rest of the game.</p>
+
+	<p>Also note that the End value for the first array does not necessarily have to match the Start value for the second array.  If the End value for one array is given as well as a Start value for the next array, both vlaues will be used, even if they are the same.</p>
+
+	<hr />
+
+	<p>An example of repeating values:</p>
+
+	<table>
+		<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>
+		<tr class="alt"><td>4</td><td>0</td><td>0</td><td>5</td></tr>
+		<tr><td>10</td><td>0</td><td>5</td><td>5</td></tr>
+		<tr class="alt"><td>50</td><td>0</td><td>-10</td><td>0</td></tr>
+	</table>
+
+	<p>The preceding array will give the following trade values: 4, 4, 4, 4, 4, 10, 15, 20, ..., 40, 45, 50, 40, 30, 20, 10, 0, 0, 0, ...</p>
+
+	<p>If you'll note in the second array, the Times value was ignored, and in the third array, no End value was given, so the trade value dropped to 0 and stayed.</p>
+
+	<hr />
+
+	<p>An example showing start and end value behavior</p>
+
+	<table>
+		<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>
+		<tr class="alt"><td>4</td><td>10</td><td>2</td><td>0</td></tr>
+		<tr><td>10</td><td>50</td><td>10</td><td>0</td></tr>
+		<tr class="alt"><td>50</td><td>100</td><td>0</td><td>0</td></tr>
+	</table>
+
+	<p>This array set will give the following trade values: 4, 6, 8, 10, 10, 20, 30, 40, 50, 50, 100, 100, 100, ...</p>
+
+	<p>Notice the duplicated 10 and 50 value.  This is because there is an End value and Start value next to each other.  If you only want one, you can omit the End value, and it will only use the 10 and 50 once.  Example:</p>
+
+	<table>
+		<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>
+		<tr class="alt"><td>4</td><td>0</td><td>2</td><td>0</td></tr>
+		<tr><td>10</td><td>0</td><td>10</td><td>0</td></tr>
+		<tr class="alt"><td>50</td><td>100</td><td>0</td><td>0</td></tr>
+	</table>
+
+	<p>This array set will give the following trade values: 4, 6, 8, 10, 20, 30, 40, 50, 100, 100, 100, ...</p>
+
+	<p>Note that 10 and 50 are used only once in the second values shown.</p>
+
+	<p>Also note the single large jump from 50 to 100. As well as the fact that the value stays at 100 for the rest of the game.</p>
+
+	<hr />
+
+	<p>If you set the first Start value to 0 (zero), the trade values will start at 0.  This is the only place you can set a 0 Start value.  You can also leave all other entries blank with a 0 Start value, and this will turn off trading as follows:</p>
+
+	<table>
+		<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>
+		<tr class="alt"><td>0</td><td></td><td></td><td></td></tr>
+	</table>
+
+	<p>If you have any questions about this, please contact me. I'd be happy to help you out.  Or feel free to play around with it. You can click on the "Show Custom Trades Table" link, and it will show the trade values for the given arrays.</p>
+
+</div>

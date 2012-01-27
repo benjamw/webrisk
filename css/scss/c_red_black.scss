@@ -1,0 +1,82 @@
+
+/* Game colors */
+/* red-black created by Benjam Welker */
+
+/*
+	all the layout for the webpages are specified in the layout.css
+	file.  the colors have been seperated out for ease of customization
+*/
+
+
+$back_grad: 1; // set to 1 for a gradient on header and footer
+
+$color: #C00;
+$back: #000;
+$sub_back: #111;
+$text: #DDD;
+$dark_text: #FFF;
+$sub_text: #888;
+
+$link: $text;
+$hover: $color;
+
+$border_dark: #777;
+$border_med_dark: #777;
+$border_med: #777;
+$border_med_light: #555;
+$border_light: #333;
+
+$header_border: #000;
+
+$table_head_back: #000;
+$table_alt_back: #222;
+$table_hover_text: $text;
+$table_hover_back: #800;
+
+$lowlight: #888;
+$highlight: #B00;
+
+$warning: #D00;
+$notice: #DD0;
+$instruction: #555;
+
+$finished: #555;
+$playing: $warning;
+$my_turn: $notice;
+$none: $text;
+
+$nav_text: $text;
+$nav_notice: $warning;
+$nav_back: $sub_back;
+$nav_border: $border_light;
+$nav_hover_text: $dark_text;
+$nav_hover_notice: $warning;
+$nav_hover_back: #400;
+$nav_hover_border: $nav_border;
+$nav_active_text: $dark_text;
+$nav_active_notice: $nav_active_text;
+$nav_active_back: #900;
+$nav_active_border: $nav_border;
+$nav_outer_border: $nav_active_back;
+
+$links_text: #DDD;
+$links_back: transparent;
+$links_border: transparent;
+$links_hover_text: $color;
+$links_hover_back: #FFF;
+$links_hover_border: #000;
+
+$fancybox_back: #000 !default;
+
+
+$history_table_border: $border_med;
+$history_active_back: #444;
+
+$review_border: #888;
+$review_hover_border: #BBB;
+$review_disabled_text: #555;
+$review_disabled_border: #444;
+
+
+@import "c_template";
+

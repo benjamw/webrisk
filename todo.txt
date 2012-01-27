@@ -1,0 +1,194 @@
+FEATURE FREEZE FOR 1.0 ------
+      _______
+_____/ FIXES \____________
+
+- Got a "Game Start FAILED" but game still started properly ???
+
+- Adjust for DST
+
+- Showing warning about skipping turn when form is filled out
+	might not be working on attack form...
+
+- don't show success messages if email is not sent
+
+- Notice: Undefined index: in /home/content/b/w/e/bwelker/html/webrisk/classes/game.class.php on line 1466 (1471)
+	possibly due to being sent out of current state and skipping turn because of
+	hitting conquer limit at exact end of game ???
+	or some other forced end of turn situation at exact end of game ???
+
+- do some general FoW testing and cleanup:
+	when game is over, remove the fog
+	make sure RA shows what it's supposed to be showing
+		and knows what it's supposed to know (and nothing more)
+		especially when one value is shown, and the other isn't
+	check for bugs just after placement, for first player can
+		see flash of unit placement, etc.
+	there's a bug when a player resigns, he is visible to all
+
+- maybe find a way to functionize the conquer limit table
+	as well as the trade value table
+
+- look for TODO and fix all found
+
+      __________
+_____/ FEATURES \____________
+
+- add nudge button when placing as well
+
+- fog of war on cards
+
+- build an install/update script
+
+
+
+TODO
+------------------
+      _______
+_____/ FIXES \____________
+
+- clean up foreach loop queries in game list, and message list
+	and anywhere else they might be
+
+- general query optimisation, esp. in message center
+
+- refactor to remove all require/include_once calls
+	make some includes into classes so they get auto included
+	when needed
+
+- remove view data from classes
+
+- separate game class into model and controller
+	then there will in essence be two 'models'
+	a DB model, and a game 'model'
+	the DB model will pull and save all game data
+	and the controller will perform all the in-between stuff
+
+- maybe separate the other classes out into models
+	and controllers as well
+
+- check all the methods one by one for the game
+	and gameplayer classes and make sure they
+	are as close to in sync as possible
+
+- figure out the cleanest method for Game::get_list
+	and propogate to all scripts
+
+- refactor classes and includes to be less dependant
+	on each other
+
+- break various class css into pieces for easier
+	drag and drop into other scripts
+	eg.- messaging, chat, etc.
+	and then copy over to battleship, and pentago
+
+- search for TODO and fix all found
+
+      __________
+_____/ FEATURES \____________
+
+- ability to set starting number of armies
+
+- have pre-set custom games, one click sets all relevant settings for
+	that game
+	- ability for users to create/save/edit their own, and have a big drop down list of them
+
+- possible additions for subsequent players to alleviate first player
+	advantage e.g.- second player gets 2 extra armies, thrid gets 3 extra
+	etc.  but it stops after the first round (or optionally not)
+	and placed either manually, or randomly
+
+- add admin ability to delete lobby comments
+
+- add game time limit, so players must take their turn
+	in the specified time (in hours)
+	if players do not take their turn in the specified time,
+	it will be made for them.
+	after three missed turns, they will be resigned.
+
+- when deleting a message, don't go back to the
+	message list, go to the next oldest message
+	in whichever box you are in
+
+- private chat with other players in game...
+	maybe run an IRC style chat?
+
+- implement a better random.org solution
+	possibly grab a huge chunk of data
+	split up and store in multiple little files
+	(to save on memory when rolling dice)
+	and read/edit little files, then grab a new huge
+	chunk when little files drop below 20 or so
+	use built in method if dice file not found
+
+- convert all Mysql NOW( ) and timestamps to UTC
+	and convert all php date functions to convert UTC to current TZ
+	maybe allow player to set own timezone...
+
+- make sure while surfing the site as another player- admin style
+	it doesn't do anything destructive, like mark posts read, etc.
+
+- make a game backup and restore button on the game page
+	backup grabs all the database info for the game as it is
+	at that moment, and restore puts it all back
+
+- maybe implement some of the other rule variations
+
+- make an email confirmation something or other to validate email
+	addresses
+
+- send links with emails to take the user directly to the game
+
+- work on an invitation system add-on where they can send emails to
+	people not registered with the system
+
+- new maps including current map
+
+- possibly set up an invitation table to avoid invitation flooding
+
+- make admin controls to move armies, change players, give cards etc
+	from within the game
+
+- allow for different game methods (secret mission risk, 2-player
+	buffer, capital risk, etc)
+
+- change the colors to black, purple, red, yellow, blue, green (brown to purple, and
+	change colors to be brighter)
+
+- more ajax (allow for ajax occupy, so no page refresh between
+	subsequent attacks)
+
+- move all color type CSS to a color sheet, and consolidate the layout CSS
+
+- write up list of required classes, etc, at top of each class file (see email)
+
+- Continent Bonus multiplier - A variant so continents get a multiplier of how many
+	armies a player gets by owning one. EG: If '3 x' and N.A. is owned, player gets
+	15 instead of 5 only. Making '0' a possible multiplier would turn off continent
+	ownership bonuses.
+
+- "Team Play" A 4 or 6 player variant whereby players 1 and 3 (and 5) are partners
+	and cannot attack each other and 2 and 4 (and 6) are the other 'team'. Stats
+	could be turned off for these maybe or adjusted maybe.
+	Maybe players could pass through allied occupied territory when attacking and/or
+	fortifying
+
+- "Big Bang" - Add a Multiplier for getting armies - EG: If a player is to get 3 at
+	the start of a turn, a game setting can increase that using a variant. If a game
+	setting was say '5 times' he would then get 15 instead of only 3 for example.
+	This can make for insanely large armies. A low conquer rate here would be good.
+
+- "End of Days" Add a variant so that players get their armies at the 'end' of their
+	turns. EG: If at the beginning of a turn, a player is to receive 6 armies, these
+	are held until the fortification stage. This will aid defenses.
+
+- "The Dead man" Add an extra player in a game who gets territories and even armies
+	each turn but he cannot attack. (It would equate to a resigned players armies and
+	cards. The 'Dead' player could start with a few cards or automatically get cards
+	every 'turn'. Other players could choose to attack him to try and get territories
+	or his cards.
+	An easy way to add this player would be to just have him as a player, then auto
+	insert his armies, and then just 'retire' him. A card each round for him or just
+	a few cards when he is created would be a bonus to try and eliminate him. This
+	variant should be easy and would be the closest one for a 'bot' with little effort.
+
+- Game Variant Suggestions - "The Flop"  - All players cards are shown instead of hidden.

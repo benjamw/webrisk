@@ -1,0 +1,161 @@
+
+/* WebChess 2.0 colors */
+/* green-white created by Benjam Welker */
+
+/*
+	all the layout for the webpages are specified in the layout.css
+	file.  the colors have been seperated out for ease of customization
+*/
+
+
+
+/* body background */
+body {
+	background: #FFF;
+}
+
+
+/* text color */
+body , a , #menu a {
+	color: #222;
+}
+
+a:hover {
+	color: #0C0;
+}
+
+h1 {
+	background: #000 url(../images/bg_green_black.gif) top center repeat-x;
+}
+
+
+/* main (basic) */
+.warning {
+	color: #090;
+	background-color: #000;
+}
+
+h2 {
+	border-bottom: 1px solid #777;
+}
+
+table , .notable {
+	border: 1px solid #777;
+}
+
+th {
+	border-bottom: 2px solid #777;
+}
+
+td {
+	border-right: 1px dashed #BBB;
+	background-color: #FFF;
+	color: #222;
+}
+
+.alt td {
+	background-color: #DDD;
+}
+
+tr[onclick]:hover td {
+	background-color: #008F00;
+	color: #FFF;
+}
+
+.mine ,
+.mine *,
+.notice ,
+.notice *,
+.myturn td,
+.myturn td * {
+	color: #090;
+}
+
+#menu li.active .notice {
+	color: #000;
+}
+
+.instruction {
+	color: #555;
+}
+
+abbr,
+acronym {
+	border-color: #AAA;
+}
+
+a.help {
+	border-color: #777;
+	color: #090;
+}
+
+a.help:hover {
+	border-color: #090;
+}
+
+hr.fancy {
+	background-color: #040;
+	border: 1px solid #060;
+}
+
+fieldset {
+	border: 1px solid #008F00;
+}
+
+
+/* footer */
+#footer,
+#FENblock {
+	background: #000 url(../images/bg_green_black.gif) top center repeat-x;
+	border-top: 1px solid #000;
+	color: #FFF;
+}
+
+
+/* links */
+#links a , #footer a {
+	color: #DDD;
+}
+
+#links a:hover {
+	background-color: #FFF;
+	color: #008F00;
+	border: 1px solid #000;
+}
+
+
+/* menu */
+#menu ,
+#menuholder {
+	border: 1px solid #060;
+}
+
+#menu a {
+	color: #222;
+	background-color: #EEE;
+	border-bottom: 1px solid #CCC;
+}
+
+#menu a:hover {
+	color: #000;
+	background-color: #DED;
+}
+
+#menu li.active a {
+	color: #FFF;
+	background-color: #009F00;
+	border-color: #CCC;
+}
+
+
+/* notes */
+#notes {
+	background-color: #EEE;
+	border: 1px solid #060;
+}
+
+
+/* messages */
+.messageheader {
+	border-bottom: 1px solid #090;
+}

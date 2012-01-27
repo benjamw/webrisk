@@ -1,0 +1,153 @@
+
+
+/* WebRisk specific */
+
+/*
+	this file holds the styles that are specific to webrisk
+*/
+
+h1 {
+	a {
+		background: transparent url(../images/Webrisk.png) no-repeat scroll 15px center;
+	}
+}
+
+
+#mygames {
+	.dead a { color: #999; }
+	.placing a { color: #F00; }
+	.playing a { color: #FF0; }
+	.none a { color: #FFF; }
+}
+
+
+#joined {
+	width: 140px;
+
+	li {
+		text-align: left;
+		border: 1px solid #777;
+		margin-bottom: 2px;
+		padding: 2px 3px;
+		font-size: 12px;
+		font-weight: bold;
+		list-style: none outside none;
+	}
+}
+
+
+.game_info {
+	width: auto;
+	max-width: 300px;
+	float: right;
+	margin: 1px;
+	background: #FFF;
+	color: #000;
+
+	th,
+	td {
+		vertical-align: middle;
+		padding: 5px;
+		border-bottom: 1px solid #666;
+	}
+
+	th {
+		text-align: right;
+	}
+}
+
+
+#conquer_limits input {
+	width: auto;
+}
+
+#conquer_limits input.skip {
+	border: 2px solid red;
+}
+#conquer_limits span.skip,
+caption span.skip {
+	font-weight: bold;
+	color: red;
+}
+
+.conquer_limits tr.skip td {
+	font-weight: bold;
+	color: red;
+}
+
+#conquer_limits input.conquests_per {
+	border: 2px solid blue;
+}
+#conquer_limits span.conquests_per,
+caption span.conquests_per {
+	font-weight: bold;
+	color: blue;
+}
+
+#conquer_limits input.per_number {
+	border: 2px solid yellow;
+}
+#conquer_limits span.per_number,
+caption span.per_number {
+	font-weight: bold;
+	color: yellow;
+}
+
+.conquer_limits tr.group {
+	border-top: 1px solid yellow;
+}
+
+#conquer_limits input.start_at {
+	border: 2px solid green;
+}
+#conquer_limits span.start_at,
+caption span.start_at {
+	font-weight: bold;
+	color: green;
+}
+
+.conquer_limits, .custom_trades {
+	float: left;
+	width: 300px;
+	margin: 10px;
+}
+
+.conquer_limits td, .custom_trades td  {
+	text-align: right;
+}
+
+.custom_trades {
+	width: 100px;
+}
+
+.conquer_limits tr.skip td + td {
+	font-weight: normal;
+	color: inherit;
+}
+
+.conquer_limits tr.max td + td {
+	font-weight: bold;
+	color: cyan;
+}
+
+.conquer_limits tr.min td + td {
+	font-weight: bold;
+	color: cyan;
+}
+
+
+.red { background-color: #E22; color: #FFF; }
+.blu { background-color: #36F; color: #FFF; }
+.bla { background-color: #333; color: #FFF; }
+.bro { background-color: #963; color: #FFF; }
+.gre { background-color: #090; color: #FFF; }
+.yel { background-color: #DD3; color: #000; }
+.pur { background-color: #609; color: #FFF; }
+.pin { background-color: #F9F; color: #000; }
+.aqu { background-color: #0CC; color: #000; }
+
+
+#fancybox-content {
+	background-color: #000 !important;
+}
+

@@ -1,0 +1,16 @@
+/.sass-cache
+/config
+/old_css
+/testpages
+
+*.epp
+*.err
+
+/games/*
+/logs/*
+
+/includes/config.php
+/scripts/ba-debug.js
+
+!/logs/.htaccess
+

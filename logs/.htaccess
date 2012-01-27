@@ -1,0 +1,5 @@
+Order Allow, Deny
+Deny from all
+
+# Prevents directory listing
+Options -Indexes
