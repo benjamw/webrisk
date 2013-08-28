@@ -138,14 +138,14 @@ function load_class($class_name) {
  */
 function test_token($keep = false) {
 	call($_SESSION['token']);
-	call($_POST['token']);
+	call($_REQUEST['token']);
 
 	if (DEBUG || ('games' == $_SERVER['HTTP_HOST'])) {
 		return;
 	}
 
-	if ( ! isset($_SESSION['token']) || ! isset($_POST['token'])
-		|| (0 !== strcmp($_SESSION['token'], $_POST['token'])))
+	if ( ! isset($_SESSION['token']) || ! isset($_REQUEST['token'])
+		|| (0 !== strcmp($_SESSION['token'], $_REQUEST['token'])))
 	{
 		die('Hacking attempt detected.<br /><br />If you have reached this page in error, please go back,<br />clear your cache, refresh the page, and try again.');
 	}
@@ -184,8 +184,6 @@ function test_debug( ) {
 		return false;
 	}
 
-	$GLOBALS['_&_DEBUG_QUERY'] = '&DEBUG='.$_GET['DEBUG'];
-	$GLOBALS['_?_DEBUG_QUERY'] = '?DEBUG='.$_GET['DEBUG'];
 	return true;
 }
 

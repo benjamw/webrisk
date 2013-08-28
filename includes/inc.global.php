@@ -125,6 +125,17 @@ if ( ! defined('DEBUG')) {
 	else {
 		define('DEBUG', (bool) $debug); // set to true for output of debugging code
 	}
+
+	if (DEBUG) {
+		if (isset($_GET['DEBUG'])) {
+			$GLOBALS['_&_DEBUG_QUERY'] = '&DEBUG='.$_GET['DEBUG'];
+			$GLOBALS['_?_DEBUG_QUERY'] = '?DEBUG='.$_GET['DEBUG'];
+		}
+		else {
+			$GLOBALS['_&_DEBUG_QUERY'] = '';
+			$GLOBALS['_?_DEBUG_QUERY'] = '?z';
+		}
+	}
 }
 
 $GLOBALS['_LOGGING'] = DEBUG; // do not change, rather, change debug value
