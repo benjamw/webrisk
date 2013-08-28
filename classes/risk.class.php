@@ -2111,7 +2111,7 @@ class Risk
 			// and then just grab the dice i need below
 			// so i would recommend you do the same
 
-			// use random.orgs truely random number generator
+			// use random.orgs truly random number generator
 			case 'random' :
 				$rolls = array( );
 
@@ -2124,7 +2124,7 @@ class Risk
 				if (5 > count($rolls)) {
 					$rolls = array( );
 					for ($i = 0; $i < 5; ++$i) {
-						$rolls[] = (int) mt_rand(1,6);
+						$rolls[] = (int) mt_rand(1, 6);
 					}
 				}
 
@@ -2139,7 +2139,7 @@ class Risk
 			default :
 				$rolls = array( );
 				for ($i = 0; $i < 5; ++$i) {
-					$rolls[] = (int) mt_rand(1,6);
+					$rolls[] = (int) mt_rand(1, 6);
 				}
 				break;
 		}
