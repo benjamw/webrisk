@@ -650,7 +650,7 @@ class Risk
 		$this->_extra_info = array_merge_plus(self::$EXTRA_INFO_DEFAULTS, $extra_info);
 
 		// the update trade value function depends on the extra info
-		$this->_update_trade_value($next = false);
+		$this->_update_trade_value($log = false);
 
 		if ('none' != $this->_extra_info['conquer_type']) {
 			// the conquer limit calculation depends on the trade value info and extra info
@@ -2303,14 +2303,14 @@ class Risk
 	 *		Updates the number of armies
 	 *		available for the next turn in
 	 *
-	 * @param bool optional grab the next value
+	 * @param bool optional log the next value
 	 * @action updates next turn in value
 	 * @return void
 	 */
-	protected function _update_trade_value($next = true)
+	protected function _update_trade_value($log = true)
 	{
 		call(__METHOD__);
-		call($next);
+		call($log);
 
 		if ( ! $this->_trade_values) {
 			throw new MyException(__METHOD__.': Missing trade values');
@@ -2322,15 +2322,16 @@ class Risk
 		call($trades);
 
 		// grab the key we need
-		$key = $this->_extra_info['trade_number'] + (int) $next;
+		call($this->_extra_info['trade_number']);
+		$key = $this->_extra_info['trade_number'];
 		call($key);
 
 		// test our key and if found, use that
 		// else, calculate by extrapolating from our current value
-		if (isset($trades[$key]) && ! in_array($trades[$key][0], array('+','-'))) {
+		if (isset($trades[$key]) && ! in_array($trades[$key]{0}, array('+', '-'))) {
 			$value = $trades[$key];
 		}
-		elseif (in_array($trades[$count - 1][0], array('+','-'))) {
+		elseif (in_array($trades[$count - 1]{0}, array('+', '-'))) {
 			// grab the second to last value
 			$value = $trades[$count - 2];
 			$increment = $trades[$count - 1];
@@ -2346,13 +2347,13 @@ class Risk
 		}
 		else {
 			// the trade value is no longer changing
-			$value = $trades[count($trades) - 1];
+			$value = end($trades);
 		}
 		call($value);
 
 		$this->_next_trade = (int) $value;
 
-		if ($next && ($value != $prev_value)) {
+		if ($log) {
 			$this->_log('V '.$this->_next_trade);
 		}
 	}
