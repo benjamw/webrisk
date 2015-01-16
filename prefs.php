@@ -58,7 +58,8 @@ $contents = <<< EOF
 			<div><label for="invite_opt_out" class="inline">{$invite_opt_out_cb}Opt out of the game invitations</label></div>
 			<div><label for="max_games">Max concurrent games</label><input type="text" id="max_games" name="max_games" size="3" maxlength="3" value="{$GLOBALS['Player']->max_games}" /></div>
 			{$color_select}
-			<div><input type="submit" name="submit" value="Update Preferences" /></div>
+			<hr />
+			<div><input type="submit" name="submit" value="Save Preferences" /></div>
 		</div>
 
 	</div></form>
