@@ -513,7 +513,7 @@ class Mysql
 	 * @param array associative data array
 	 * @param bool [optional] whether or not we should replace values (true / false)
 	 * @action execute multiple mysql queries
-	 * @return array insert ids for rows (with original keys preserved)
+	 * @return array insert IDs for rows (with original keys preserved)
 	 */
 	public function multi_insert($table, $data_array, $replace = false)
 	{
@@ -1047,6 +1047,8 @@ class Mysql
 
 class MySQLException
 	extends Exception {
+
+	protected $_backtrace = true;
 
 	/**
 	 *		METHODS
