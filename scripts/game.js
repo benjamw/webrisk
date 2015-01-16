@@ -556,12 +556,16 @@ $(document).ready( function( ) {
 	});
 
 	// tha fancybox stuff
+	var fb_width = Math.ceil( ($(document).width( ) * 80) / 100 );
+	var fb_height = Math.ceil( ($(document).height( ) * 80) / 100 );
 	$("a.fancybox").fancybox({
 		autoDimensions : false,
-		width : '80%',
-		height : '80%',
-		onStart : function( ) {
-			$('#game_info').show( );
+		width : fb_width,
+		height : fb_height,
+		onStart : function(elem) {
+			if ( ! $(elem[0]).parent( ).is('#history')) {
+				$('#game_info').show( );
+			}
 		},
 		onCleanup : function( ) {
 			$('#game_info').hide( );
