@@ -84,8 +84,8 @@ if (class_exists('Settings') && Settings::test( )) {
 }
 
 if ('' == $GLOBALS['_DEFAULT_COLOR']) {
-	if (in_array('blue_white', $GLOBALS['_COLORS'])) {
-		$GLOBALS['_DEFAULT_COLOR'] = 'blue_white';
+	if (in_array('yellow_black', $GLOBALS['_COLORS'])) {
+		$GLOBALS['_DEFAULT_COLOR'] = 'yellow_black';
 	}
 	elseif ($GLOBALS['_COLORS']) {
 		$GLOBALS['_DEFAULT_COLOR'] = $GLOBALS['_COLORS'][0];
