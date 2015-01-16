@@ -164,11 +164,6 @@ if (defined('DEBUG') && DEBUG) {
 		$Mysql->set_error(3);
 	}
 }
-else { // do not edit the following
-	ini_set('display_errors','Off');
-	error_reporting(E_ALL & ~ E_NOTICE); // show errors, but not notices
-}
-
 
 // log the player in
 if (( ! defined('LOGIN') || LOGIN) && isset($Mysql)) {
