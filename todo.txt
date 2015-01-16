@@ -88,6 +88,9 @@ _____/ FEATURES \____________
 
 - ability to set starting number of armies
 
+- ability to set how many cards equals a forced trade after conquering
+	a player and collecting their cards, can be either 5 or 6
+
 - have pre-set custom games, one click sets all relevant settings for
 	that game
 	- ability for users to create/save/edit their own, and have a big drop down list of them

@@ -298,6 +298,7 @@ class Game
 		// save anything changed to the database
 		// BUT... only if PHP didn't die because of an error
 		$error = error_get_last( );
+		call($error);
 
 		if (0 == ((E_ERROR | E_WARNING | E_PARSE) & $error['type'])) {
 			try {

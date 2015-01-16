@@ -23,6 +23,7 @@ elseif ( ! isset($_SESSION['game_id'])) {
 // always refresh the game data, there may be more than one person online
 try {
 	$Game = new Game((int) $_SESSION['game_id']);
+	call($Game);
 
 	if ('Waiting' == $Game->state) {
 		if ( ! defined('DEBUG') || ! DEBUG) {
