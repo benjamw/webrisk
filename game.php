@@ -481,6 +481,10 @@ echo get_header($meta);
 
 			</div> <!-- #game_info -->
 
+			<script type="text/javascript">
+				$('#game_info').hide( );
+			</script>
+
 		</div> <!-- #contents -->
 
 		<map id="gamemap" name="gamemap">
