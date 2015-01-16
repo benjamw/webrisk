@@ -112,6 +112,10 @@ class Email
 		else { // $to is a single player id
 			$player_id = (int) $to;
 
+			if ( ! $player_id) {
+				return false;
+			}
+
 			// test if this user accepts emails
 			$query = "
 				SELECT P.email
@@ -143,13 +147,22 @@ class Email
 		// replace the meta vars
 		$replace = array(
 			'/\[\[\[GAME_NAME\]\]\]/' => GAME_NAME,
-			'/\[\[\[game_name\]\]\]/' => @$data['name'],
 			'/\[\[\[site_name\]\]\]/' => $site_name,
 			'/\[\[\[extra_text\]\]\]/' => $this->_strip(@$_POST['extra_text']),
-			'/\[\[\[sender\]\]\]/' => @$data['player'],
-			'/\[\[\[winner\]\]\]/' => @$data['winner'],
 			'/\[\[\[export_data\]\]\]/' => var_export($data, true),
 		);
+
+		$extras = array(
+			'name' => 'game_name',
+			'player' => 'sender',
+			'winner' => 'winner',
+		);
+
+		foreach ($extras as $extra => $text) {
+			if ( ! empty($data[$extra])) {
+				$replace['/\[\[\['.$text.'\]\]\]/'] = $data[$extra];
+			}
+		}
 
 		$message = preg_replace(array_keys($replace), $replace, $message);
 

@@ -396,7 +396,7 @@ class Player
 
 			if ($this->id) {
 				if ((bool) (int) Settings::read('approve_users')) {
-					Email::send('register', explode(',', Settings::read('to_email')), array_merge(array('id' => $this->id), $_DATA));
+					Email::send('register', explode(',', Settings::read('to_email')), array_merge(array('page' => 'admin.php', 'id' => $this->id), $_DATA));
 				}
 
 				return $this->_set_password($_POST['password']);

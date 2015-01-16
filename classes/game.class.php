@@ -728,7 +728,7 @@ class Game
 		}
 
 		// send the emails
-		Email::send('invite', $player_ids, array('id' => $this->id, 'name' => $this->name, 'extra_text' => htmlentities($_POST['extra_text'], ENT_QUOTES, 'ISO-8859-1', false)));
+		Email::send('invite', $player_ids, array('game_id' => $this->id, 'name' => $this->name, 'extra_text' => htmlentities($_POST['extra_text'], ENT_QUOTES, 'ISO-8859-1', false)));
 
 		return $player_ids;
 	}
@@ -808,7 +808,7 @@ class Game
 			$this->_test_placing( );
 		}
 		else {
-			Email::send('start', $player_ids, array('id' => $this->id, 'name' => $this->name));
+			Email::send('start', $player_ids, array('game_id' => $this->id, 'name' => $this->name));
 		}
 
 		return true;
@@ -971,7 +971,7 @@ class Game
 			if ('Dead' == $this->_risk->players[$defend_id]['state']) {
 				$this->_players[$defend_id]['object']->add_loss( );
 				$this->_players[$player_id]['object']->add_kill( );
-				Email::send('defeated', $defend_id, array('id' => $this->id, 'name' => $this->name, 'player' => $this->_players[$player_id]['object']->username));
+				Email::send('defeated', $defend_id, array('game_id' => $this->id, 'name' => $this->name, 'player' => $this->_players[$player_id]['object']->username));
 			}
 
 			$this->_test_winner( );
@@ -1305,7 +1305,7 @@ class Game
 		// we must find all players who are not waiting or dead and send to all of them
 		$nudgable = $this->_test_nudge( );
 		if (count($nudgable)) {
-			Email::send('nudge', $nudgable, array('id' => $this->id, 'name' => $this->name, 'player' => $nudger));
+			Email::send('nudge', $nudgable, array('game_id' => $this->id, 'name' => $this->name, 'player' => $nudger));
 			$Mysql->delete(self::GAME_NUDGE_TABLE, " WHERE game_id = '{$this->id}' ");
 
 			$data = array( );
@@ -2628,7 +2628,7 @@ class Game
 
 		// send an email if we have to
 		if ($this->_risk->new_player) {
-			Email::send('turn', $this->_risk->current_player, array('id' => $this->id, 'name' => $this->name));
+			Email::send('turn', $this->_risk->current_player, array('game_id' => $this->id, 'name' => $this->name));
 		}
 
 		// make sure we don't have a MySQL error here, it may be causing the issues
@@ -2985,7 +2985,7 @@ class Game
 		if (1 == $count) {
 			$this->state = 'Finished';
 			$this->_players[$alive[0]]['object']->add_win( );
-			Email::send('finished', array_keys($this->_players), array('id' => $this->id, 'name' => $this->name, 'winner' => $this->_players[$alive[0]]['object']->username));
+			Email::send('finished', array_keys($this->_players), array('game_id' => $this->id, 'name' => $this->name, 'winner' => $this->_players[$alive[0]]['object']->username));
 
 			self::write_game_file($this->id);
 		}
@@ -3092,7 +3092,7 @@ class Game
 
 		$player_id = $this->_risk->begin( );
 
-		Email::send('turn', $player_id, array('id' => $this->id, 'name' => $this->name));
+		Email::send('turn', $player_id, array('game_id' => $this->id, 'name' => $this->name));
 	}
 
 
