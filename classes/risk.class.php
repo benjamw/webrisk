@@ -1848,6 +1848,7 @@ class Risk
 
 			$this->players[$defend_id]['cards'] = array( );
 
+// TODO: if I want to make the forced value optional between 5 and 6, here is where I can do that
 			if (6 <= count($this->players[$attack_id]['cards'])) {
 				$this->players[$attack_id]['extra_info']['forced'] = true;
 			}
@@ -2129,6 +2130,14 @@ class Risk
 				}
 
 				array_trim($rolls, 'int');
+				break;
+
+			case 'hotbits' :
+				$rolls = array( );
+
+				// TODO: https://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=2048&fmt=bin
+				// then convert hex triples to base 8, and disregard any 0s or 7s, using only 1-6
+
 				break;
 
 			// quick and easy built-in pseudo-random method
