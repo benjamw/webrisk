@@ -77,7 +77,7 @@ h1 {
 	border-color: $header_border;
 	background-color: $color;
 	@if $back_grad == 1 {
-		@include linear-gradient(color-stops($color 0.1, $back 0.9), top);
+		@include background-image(linear-gradient(to bottom, $color 0.1, $back 0.9));
 	}
 }
 
@@ -262,7 +262,7 @@ h2 {
 	background-color: $color;
 	border-color: $header_border;
 	@if $back_grad == 1 {
-		@include linear-gradient(color-stops($color 0.1, $back 0.9), bottom);
+		@include background-image(linear-gradient(to bottom, $color 0.1, $back 0.9));
 	}
 }
 

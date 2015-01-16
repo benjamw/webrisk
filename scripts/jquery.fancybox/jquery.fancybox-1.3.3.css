@@ -78,7 +78,7 @@
 	padding: 0;
 	outline: none;
 	position: relative;
-	overflow: hidden;
+	overflow: auto;
 	z-index: 1102;
 	border: 0px solid #fff;
 }
