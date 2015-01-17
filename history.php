@@ -44,7 +44,7 @@ try {
 
 		foreach ($logs as & $log) {
 			// wrap the first all uppercase word in a class of the same name
-			$log['message'] = preg_replace('/^([ -]*)([A-Z]+)/e', '(\'$1<span class="\'.strtolower(\'$2\').\'">$2</span>\')', $log['message']);
+			$log['message'] = preg_replace_callback('/^([ -]*)([A-Z]+)/', 'make_class', $log['message']);
 
 			// add outcome class to attack outcome
 			if (' - - ' == substr($log['message'], 0, 5)) {
@@ -104,3 +104,8 @@ catch (MyExecption $e) {
 echo $history;
 #echo get_footer( );
 
+
+function make_class($matches) {
+	// '(\'$1<span class="\'.strtolower(\'$2\').\'">$2</span>\')'
+	return $matches[1].'<span class="'.strtolower($matches[2]).'">'.$matches[2].'</span>';
+}
