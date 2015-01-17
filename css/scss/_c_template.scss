@@ -287,6 +287,7 @@ div.help {
 /* datatable styles */
 table {
 	border-color: $border_med;
+	background-color: $back;
 }
 
 th {
@@ -306,7 +307,8 @@ td {
 	border-right-color: $border_med;
 }
 
-tr.alt {
+tr.alt,
+tr:nth-child(2n-1) {
 	background-color: $table_alt_back;
 }
 
@@ -337,11 +339,21 @@ thead tr .headerSortDown {
 
 
 /* fancybox overrides */
-#fancybox-content {
-	background-color: $fancybox_back;
+.fancybox-inner {
+	color: $text;
+	background-color: $back;
 }
 
+.game_info {
+	background: $back;
+	color: $text;
 
+	th,
+	td {
+		border-bottom: 1px solid $border_med_dark;
+	}
+
+}
 
 @import "c_game_template"
 

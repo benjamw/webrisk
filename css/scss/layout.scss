@@ -318,6 +318,7 @@ legend {
 	dd {
 		padding: 0 3px;
 		border-bottom: 1px solid #000;
+		word-wrap: break-word;
 	}
 
 	img {
@@ -427,6 +428,7 @@ h2 {
 			border-bottom: 1px solid #AAA;
 			padding: 5px 5px 6px 5px;
 			margin: 0 0 6px 0;
+			word-wrap: break-word;
 		}
 
 		span {
@@ -515,6 +517,12 @@ p.message {
 	}
 }
 
+@media (max-height: 600px) {
+	#footer {
+		position: static;
+	}
+}
+
 
 /* other basic styles */
 .notice {
@@ -594,6 +602,13 @@ div.help {
 		width: auto;
 		margin: 0 auto;
 	}
+}
+
+#conquer_limits,
+#conquer_limit_table,
+#custom_trades,
+#custom_trades_table {
+	display: none;
 }
 
 
