@@ -434,7 +434,7 @@ echo get_header($meta);
 							$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
 
 							++$idx;
-							$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0 ...</td></tr>\n";
+							$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 						}
 						elseif('+' == $value[0]) {
 							// if plus, go for three then append plus value
@@ -445,7 +445,7 @@ echo get_header($meta);
 								++$idx;
 							}
 
-							$value = '('.$value.') ...';
+							$value = '('.$value.')';
 							$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 						}
 						else {
@@ -463,7 +463,7 @@ echo get_header($meta);
 						$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 
 						++$idx;
-						$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value} ...</td></tr>\n";
+						$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 					}
 				?>
 				<table class="datatable custom_trades">

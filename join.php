@@ -280,7 +280,7 @@ foreach ($trade_array as $trade => $value) {
 		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
 
 		++$idx;
-		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0 ...</td></tr>\n";
+		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 	}
 	elseif('+' == $value[0]) {
 		// if plus, go for three then append plus value
@@ -291,7 +291,7 @@ foreach ($trade_array as $trade => $value) {
 			++$idx;
 		}
 
-		$value = '('.$value.') ...';
+		$value = '('.$value.')';
 		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 	}
 	else {
@@ -309,7 +309,7 @@ if ( ! in_array($trade_array[count($trade_array) - 1][0], array('+','-'))) {
 	$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 
 	++$idx;
-	$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value} ...</td></tr>\n";
+	$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 }
 
 $contents = '

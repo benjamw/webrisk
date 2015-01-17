@@ -105,7 +105,7 @@ if (isset($_POST['custom_trades'])) {
 			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
 
 			++$idx;
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0 ...</td></tr>\n";
+			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 		}
 		elseif('+' == $value[0]) {
 			// if plus, go for three then append plus value
@@ -116,7 +116,7 @@ if (isset($_POST['custom_trades'])) {
 				++$idx;
 			}
 
-			$value = '('.$value.') ...';
+			$value = '('.$value.')';
 			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 		}
 		else {
@@ -134,7 +134,7 @@ if (isset($_POST['custom_trades'])) {
 		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 
 		++$idx;
-		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value} ...</td></tr>\n";
+		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 	}
 
 	echo $table;
