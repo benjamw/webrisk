@@ -2,9 +2,11 @@
 /config
 /old_css
 /testpages
+/.idea
 
 *.epp
 *.err
+*.orig
 
 /games/*
 /logs/*
