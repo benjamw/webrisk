@@ -123,7 +123,7 @@ $contents = <<< EOF
 			</fieldset>
 
 			<fieldset>
-				<legend><label class="inline"><input type="checkbox" name="custom_trades_box" id="custom_trades_box" class="fieldset_box" />Custom Trades</label> <a href="help/custom_trades.help" class="help">?</a></legend>
+				<legend><label class="inline"><input type="checkbox" name="custom_trades_box" id="custom_trades_box" class="fieldset_box" />Custom Trades</label> <a href="help/custom_trades.html" class="help">?</a></legend>
 				<div id="custom_trades">
 
 					<div><label for="trade_card_bonus">Trade Card Bonus</label><input type="text" id="trade_card_bonus" name="trade_card_bonus" maxlength="4" size="4" value="2" /> <span class="info">The bonus armies received for trading an occupied territory card</span></div>
