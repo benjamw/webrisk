@@ -196,7 +196,7 @@ echo get_header($meta);
 			</div> <!-- #controls -->
 
 			<div id="history">
-				<a href="history.php" class="fancybox">Click for History</a>
+				<a href="history.php" data-fancybox-type="ajax" class="fancybox">Click for History</a>
 			</div> <!-- #history -->
 
 			<div id="game_info">

@@ -120,23 +120,23 @@ function get_header($meta = null) {
 		{$query_strings}
 	</script>
 
-	<script type="text/javascript" src="scripts/json.js"></script>
-	<script type="text/javascript" src="scripts/jquery-1.4.3.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.2.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.js"></script>
 	<script type="text/javascript" src="scripts/jquery.tablesorter.js"></script>
 
 	<!-- fancybox -->
-	<link rel="stylesheet" type="text/css" media="screen" href="scripts/jquery.fancybox/jquery.fancybox-1.3.3.css" />
-	<script type="text/javascript" src="scripts/jquery.fancybox/jquery.fancybox-1.3.3.pack.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="scripts/jquery.fancybox/jquery.fancybox.css" />
+	<script type="text/javascript" src="scripts/jquery.fancybox/jquery.fancybox.js"></script>
 	<script type="text/javascript">
 		$(document).ready( function( ) {
 			// set fancybox defaults
-			$.fn.fancybox.defaults['overlayColor'] = '#000';
+//			$.fn.fancybox.defaults['overlayColor'] = '#000';
 
 			$('a.help').fancybox({
-				autoDimensions : false,
+				type: 'ajax',
+				autoSize: false,
 				width: 500,
-				padding : 10,
-				hideOnContentClick : false
+				padding: 10
 			});
 		});
 	</script>

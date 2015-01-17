@@ -1,4 +1,4 @@
-<div class="help">
+<div id="custom_trades" class="help">
 
 	<h3>Custom Trades</h3>
 
@@ -8,7 +8,8 @@
 
 	<ol>
 		<li><strong>Start</strong>: The Start is the starting value for the array. This number is required, and if missing, the whole array will be ignored. This value must be positive.  0 (zero) is allowed in the first entry only.</li>
-		<li><strong>End</strong>: The End is the ending value for the array.  If this value is missing, the Start value of the next array will be used as this array's ending value. (Or in the case of an infinitly recursing value, will go on forever).  This value must be positive.</li>
+		<li><strong>End</strong>: The End is the ending value for the array.  If this value is missing, the Start value
+			of the next array will be used as this array's ending value. (Or in the case of an infinitely recursing value, will go on forever).  This value must be positive.</li>
 		<li><strong>Step</strong>: The Step value is what increments to use to get from Start to End.  If this value is missing, it will make one large jump from Start to End. This value can be negative.  In the case of a negative Step with no End point, the value will decrease to 0 where it will stop.</li>
 		<li><strong>Times</strong>: This value is like a repeater.  If End and Step are empty, and this value is set, the Start value will repeat the number of Times shown. For instance, if this value is 3, the Start value will repeat 3 times.</li>
 	</ol>

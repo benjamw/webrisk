@@ -38,7 +38,7 @@
 
 
 		//add click handler for show-plain link(s)
-		$('.'+opts.show_class).live('click', function( ) {
+		$('.'+opts.show_class).on('click', function( ) {
 			//cache selector
 			var $input = $(this).prev( );
 
@@ -80,7 +80,7 @@
 		});
 
 		//add click handler for show-plain link(s)
-		$('.'+opts.hide_class).live('click', function( ) {
+		$('.'+opts.hide_class).on('click', function( ) {
 			//cache selector
 			var $input = $(this).prev();
 

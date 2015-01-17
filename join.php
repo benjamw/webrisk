@@ -95,21 +95,21 @@ $meta['head_data'] = '
 	<script type="text/javascript">//<![CDATA[
 		$(document).ready( function( ) {
 			$("#show_conquer_limit_table").fancybox({
-				titleShow : false,
-				onStart : function( ) {
+				title: null,
+				beforeLoad: function( ) {
 					$("#conquer_limit_table").show( );
 				},
-				onCleanup : function( ) {
+				afterClose: function( ) {
 					$("#conquer_limit_table").hide( );
 				}
 			});
 
 			$("#show_custom_trades_table").fancybox({
-				titleShow : false,
-				onStart : function( ) {
+				title: null,
+				beforeLoad: function( ) {
 					$("#custom_trades_table").show( );
 				},
-				onCleanup : function( ) {
+				afterClose: function( ) {
 					$("#custom_trades_table").hide( );
 				}
 			});

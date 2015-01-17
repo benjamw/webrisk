@@ -5,7 +5,7 @@ var custom_trades_index = 1;
 
 function test_fortify_radio( ) {
 	var $input = $('input[name=fortify]:checked');
-	$input.parent( ).parent( ).find('input[type=checkbox]').attr('disabled', ('no' == $input.val( )));
+	$input.parent( ).parent( ).find('input[type=checkbox]').prop('disabled', ('no' == $input.val( )));
 }
 
 function check_fieldset_box( ) {
@@ -13,7 +13,7 @@ function check_fieldset_box( ) {
 		var $this = $(this);
 		var id = $this.attr('id').slice(0,-4);
 
-		if ($this.attr('checked')) {
+		if ($this.prop('checked')) {
 			$('div#'+id).show( );
 		}
 		else {
@@ -145,21 +145,21 @@ function build_custom_trades_table( ) {
 $(document).ready( function( ) {
 	// do the fancybox things
 	$("#show_conquer_limit_table").fancybox({
-		onStart : function( ) {
+		beforeLoad : function( ) {
 			build_conquer_table( );
 			$('#conquer_limit_table').show( );
 		},
-		onCleanup : function( ) {
+		afterClose : function( ) {
 			$('#conquer_limit_table').hide( );
 		}
 	});
 
 	$("#show_custom_trades_table").fancybox({
-		onStart : function( ) {
+		beforeLoad : function( ) {
 			build_custom_trades_table( );
 			$('#custom_trades_table').show( );
 		},
-		onCleanup : function( ) {
+		afterClose : function( ) {
 			$('#custom_trades_table').hide( );
 		}
 	});
