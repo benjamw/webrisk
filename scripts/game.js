@@ -148,7 +148,7 @@ $(document).ready( function( ) {
 	}
 
 	// submit the form
-	$('#submit').on('click', function( ) {
+	$(document).on('click', '#submit', function( ) {
 		var go = true;
 		var reenable = false;
 		var clear_form = false;
