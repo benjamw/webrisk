@@ -495,7 +495,7 @@ class Game
 
 		call($extra_info);
 		if ( ! empty($extra_info)) {
-			$_P['extra_info'] = serialize($extra_info);
+			$_P['extra_info'] = json_encode($extra_info);
 		}
 
 		// create the game
@@ -2385,7 +2385,7 @@ class Game
 			$this->paused = (bool) $result['paused'];
 			$this->passhash = (string) $result['password'];
 
-			$this->_extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, unserialize($result['extra_info']));
+			$this->_extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($result['extra_info'], true));
 
 			// pull the player data
 			try {
@@ -2462,7 +2462,7 @@ class Game
 			throw new MyException(__METHOD__.': Missing player ID');
 		}
 
-		$player['extra_info'] = array_merge_plus(self::$_PLAYER_EXTRA_INFO_DEFAULTS, unserialize($player['extra_info']));
+		$player['extra_info'] = array_merge_plus(self::$_PLAYER_EXTRA_INFO_DEFAULTS, json_decode($player['extra_info'], true));
 
 		if ( ! empty($player['cards'])) {
 			array_trim($player['cards'], 'int');
@@ -2681,7 +2681,7 @@ class Game
 		$update_game['extra_info'] = $diff[0];
 		ksort($update_game['extra_info']);
 
-		$update_game['extra_info'] = serialize($update_game['extra_info']);
+		$update_game['extra_info'] = json_encode($update_game['extra_info']);
 
 		if ('a:0:{}' == $update_game['extra_info']) {
 			$update_game['extra_info'] = null;
@@ -2730,7 +2730,7 @@ class Game
 
 			$update_player['extra_info'] = array_diff_assoc($this->_risk->players[$new_player_id]['extra_info'], self::$_PLAYER_EXTRA_INFO_DEFAULTS);
 			ksort($update_player['extra_info']);
-			$update_player['extra_info'] = serialize($update_player['extra_info']);
+			$update_player['extra_info'] = json_encode($update_player['extra_info']);
 
 			if ('a:0:{}' == $update_player['extra_info']) {
 				$update_player['extra_info'] = null;
@@ -2780,7 +2780,7 @@ class Game
 
 			$risk_player['extra_info'] = array_diff_assoc($risk_player['extra_info'], self::$_PLAYER_EXTRA_INFO_DEFAULTS);
 			ksort($risk_player['extra_info']);
-			$risk_player['extra_info'] = serialize($risk_player['extra_info']);
+			$risk_player['extra_info'] = json_encode($risk_player['extra_info']);
 
 			if ('a:0:{}' == $risk_player['extra_info']) {
 				$risk_player['extra_info'] = null;
@@ -3344,7 +3344,7 @@ class Game
 					$game['username'] = '';
 				}
 
-				$extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, unserialize($game['extra_info']));
+				$extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($game['extra_info'], true));
 
 				foreach ($extra_info as $field => $value) {
 					$game[$field] = $value;
