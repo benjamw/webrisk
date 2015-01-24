@@ -2380,12 +2380,18 @@ class Game
 			$this->state = $result['state'];
 			$this->capacity = (int) $result['capacity'];
 			$this->_host_id = (int) $result['host_id'];
-			$this->create_date = strtotime($result['create_date']);
-			$this->modify_date = strtotime($result['modify_date']);
 			$this->paused = (bool) $result['paused'];
 			$this->passhash = (string) $result['password'];
 
 			$this->_extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($result['extra_info'], true));
+
+			$cur_tz = date_default_timezone_get( );
+			date_default_timezone_set('UTC');
+
+			$this->create_date = strtotime($result['create_date']);
+			$this->modify_date = strtotime($result['modify_date']);
+
+			date_default_timezone_set($cur_tz);
 
 			// pull the player data
 			try {
