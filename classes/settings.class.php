@@ -443,7 +443,7 @@ CREATE TABLE IF NOT EXISTS `wr_settings` (
 
   UNIQUE KEY `setting` (`setting`),
   KEY `sort` (`sort`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 --
 -- Dumping data for table `wr_settings`

@@ -35,10 +35,10 @@ try {
 	$message = $Message->get_message($_GET['id'], $GLOBALS['Player']->is_admin);
 	$message['message'] = str_replace("\t", ' &nbsp; &nbsp;', $message['message']);
 	$message['message'] = str_replace('  ', ' &nbsp;', $message['message']);
-	$message['message'] = htmlentities($message['message'], ENT_QUOTES, 'ISO-8859-1', false);
+	$message['message'] = htmlentities($message['message'], ENT_QUOTES, 'UTF-8', false);
 	$message['message'] = nl2br($message['message']);
 
-	$message['subject'] = htmlentities($message['subject'], ENT_QUOTES, 'ISO-8859-1', false);
+	$message['subject'] = htmlentities($message['subject'], ENT_QUOTES, 'UTF-8', false);
 
 	// find out if we're reading an inbox message, or an outbox message
 	if ($message['inbox']) {

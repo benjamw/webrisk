@@ -54,9 +54,9 @@ if (isset($_POST['invite'])) {
 		$player_ids = $Game->invite( );
 
 		// send the messages
-		$message = 'You have been invited to join the game "'.htmlentities($Game->name, ENT_QUOTES, 'ISO-8859-1', false).'".'."\n\n".'If you wish to play in this game, please join it from the home page.';
-		$message .= "\n\n==== Message ===========================================\n\n".htmlentities($_POST['extra_text'], ENT_QUOTES, 'ISO-8859-1', false);
-		$Message->send_message('Invitation to "'.htmlentities($Game->name, ENT_QUOTES, 'ISO-8859-1', false).'"', $message, $player_ids, false, date('m/d/Y', strtotime('1 week')));
+		$message = 'You have been invited to join the game "'.htmlentities($Game->name, ENT_QUOTES, 'UTF-8', false).'".'."\n\n".'If you wish to play in this game, please join it from the home page.';
+		$message .= "\n\n==== Message ===========================================\n\n".htmlentities($_POST['extra_text'], ENT_QUOTES, 'UTF-8', false);
+		$Message->send_message('Invitation to "'.htmlentities($Game->name, ENT_QUOTES, 'UTF-8', false).'"', $message, $player_ids, false, ldate('m/d/Y', strtotime('1 week')));
 
 		Flash::store('Game Invitations Sent Successfully');
 	}
@@ -314,7 +314,7 @@ if ( ! in_array($trade_array[count($trade_array) - 1][0], array('+','-'))) {
 
 $contents = '
 
-	<h2>Game #'.$_GET['id'].': '.htmlentities($Game->name, ENT_QUOTES, 'ISO-8859-1', false).'</h2>
+	<h2>Game #'.$_GET['id'].': '.htmlentities($Game->name, ENT_QUOTES, 'UTF-8', false).'</h2>
 	<table class="game_info">
 		<tbody>
 			<tr>
@@ -352,7 +352,7 @@ $contents = '
 				<td>'.$Game->get_conquer_limit( ).'</td>
 			</tr><tr>
 				<th>Custom Rules</th>
-				<td>'.htmlentities($Game->get_custom_rules( ), ENT_QUOTES, 'ISO-8859-1', false).'</td>
+				<td>'.htmlentities($Game->get_custom_rules( ), ENT_QUOTES, 'UTF-8', false).'</td>
 			</tr>
 		</tbody>
 	</table> <!-- .game_info -->

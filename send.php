@@ -109,8 +109,8 @@ echo get_header($meta);
 				</li>
 				<li><label for="send_date">Send Date</label><input type="text" name="send_date" id="send_date" /> <span class="info">Leave blank to send now</span></li>
 				<li><label for="expire_date">Expiration Date</label><input type="text" name="expire_date" id="expire_date" /> <span class="info">Leave blank to never expire</span></li>
-				<li><label for="subject">Subject</label><input type="text" name="subject" id="subject" value="<?php echo htmlentities($message['subject'], ENT_QUOTES, 'ISO-8859-1', false); ?>" size="50" maxlength="255" /></li>
-				<li><label for="message">Message</label><textarea name="message" id="message" rows="15" cols="50"><?php echo htmlentities($message['message'], ENT_QUOTES, 'ISO-8859-1', false); ?></textarea></li>
+				<li><label for="subject">Subject</label><input type="text" name="subject" id="subject" value="<?php echo htmlentities($message['subject'], ENT_QUOTES, 'UTF-8', false); ?>" size="50" maxlength="255" /></li>
+				<li><label for="message">Message</label><textarea name="message" id="message" rows="15" cols="50"><?php echo htmlentities($message['message'], ENT_QUOTES, 'UTF-8', false); ?></textarea></li>
 				<li><label>&nbsp;</label><input type="submit" name="submit" value="Send Message" /></li>
 			</ol>
 		</div></form>

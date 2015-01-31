@@ -2733,7 +2733,7 @@ class Risk
 					}
 
 					$var = 'player'.$i;
-					${$var} = htmlentities($GLOBALS['_PLAYERS'][$data[$i]], ENT_QUOTES, 'ISO-8859-1', false);
+					${$var} = htmlentities($GLOBALS['_PLAYERS'][$data[$i]], ENT_QUOTES, 'UTF-8', false);
 					if ('' == ${$var}) {
 						${$var} = '[deleted]';
 					}
@@ -3111,7 +3111,7 @@ CREATE TABLE IF NOT EXISTS `wr_game_log` (
   `microsecond` int(10) unsigned NOT NULL DEFAULT '0',
 
   KEY `game_id` (`game_id`,`create_date`,`microsecond`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -3129,7 +3129,7 @@ CREATE TABLE IF NOT EXISTS `wr_roll_log` (
   `defend_2` tinyint(1) unsigned DEFAULT NULL,
 
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 */
 

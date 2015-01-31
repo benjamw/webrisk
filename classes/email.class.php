@@ -221,7 +221,7 @@ and should not be replied to.
 			$value = preg_replace($search, '', $value);
 		}
 
-		return htmlentities($value, ENT_QUOTES, 'ISO-8859-1', false);
+		return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
 	}
 
 

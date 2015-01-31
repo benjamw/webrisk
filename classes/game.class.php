@@ -377,7 +377,7 @@ class Game
 		$_P['name'] = ('' != $_P['name']) ? $_P['name'] : '<No Name>';
 
 		// translate (filter/sanitize) the data
-		$_P['name'] = htmlentities($_P['name'], ENT_QUOTES, 'ISO-8859-1', false);
+		$_P['name'] = htmlentities($_P['name'], ENT_QUOTES, 'UTF-8', false);
 		$_P['host_id'] = (int) $_P['player_id'];
 		$_P['time_limit'] = (int) @$_P['time_limit'];
 		$_P['allow_kibitz'] = (int) (isset($_P['allow_kibitz']) && ('yes' == $_P['allow_kibitz']));
@@ -480,7 +480,7 @@ class Game
 			'conquer_start_at' => (int) $_P['conquer_start_at'],
 			'conquer_minimum' => (int) $_P['conquer_minimum'],
 			'conquer_maximum' => (int) $_P['conquer_maximum'],
-			'custom_rules' => htmlentities($_P['custom_rules'], ENT_QUOTES, 'ISO-8859-1', false),
+			'custom_rules' => htmlentities($_P['custom_rules'], ENT_QUOTES, 'UTF-8', false),
 		);
 		call($extra_info);
 
@@ -729,7 +729,7 @@ class Game
 		}
 
 		// send the emails
-		Email::send('invite', $player_ids, array('game_id' => $this->id, 'name' => $this->name, 'extra_text' => htmlentities($_POST['extra_text'], ENT_QUOTES, 'ISO-8859-1', false)));
+		Email::send('invite', $player_ids, array('game_id' => $this->id, 'name' => $this->name, 'extra_text' => htmlentities($_POST['extra_text'], ENT_QUOTES, 'UTF-8', false)));
 
 		return $player_ids;
 	}
@@ -3361,8 +3361,8 @@ class Game
 				$game['get_fog_of_war_armies'] = $game['get_fog_of_war']['armies'];
 				$game['get_fog_of_war_colors'] = $game['get_fog_of_war']['colors'];
 
-				$game['clean_name'] = htmlentities($game['name'], ENT_QUOTES, 'ISO-8859-1', false);
-				$game['clean_custom_rules'] = htmlentities($game['get_custom_rules'], ENT_QUOTES, 'ISO-8859-1', false);
+				$game['clean_name'] = htmlentities($game['name'], ENT_QUOTES, 'UTF-8', false);
+				$game['clean_custom_rules'] = htmlentities($game['get_custom_rules'], ENT_QUOTES, 'UTF-8', false);
 
 				$game['in_game'] = isset($states[$game['game_id']]);
 				$game['highlight'] = $game['in_game'] && ('Finished' != $game['state']) && ! in_array($states[$game['game_id']], array('Waiting', 'Resigned', 'Dead'));
@@ -3863,7 +3863,7 @@ CREATE TABLE IF NOT EXISTS `wr_game` (
   `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
 
   PRIMARY KEY (`game_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -3879,7 +3879,7 @@ CREATE TABLE IF NOT EXISTS `wr_game_land` (
   `armies` smallint(5) unsigned NOT NULL DEFAULT '0',
 
   UNIQUE KEY `game_land` (`game_id`,`land_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -3894,7 +3894,7 @@ CREATE TABLE IF NOT EXISTS `wr_game_nudge` (
   `nudged` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   UNIQUE KEY `game_player` (`game_id`,`player_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -3915,7 +3915,7 @@ CREATE TABLE IF NOT EXISTS `wr_game_player` (
   `move_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
 
   UNIQUE KEY `game_player` (`game_id`,`player_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 */
 

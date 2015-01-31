@@ -704,8 +704,8 @@ class Message
 		}
 
 		// clean the message bits
-		$subject = htmlentities($subject, ENT_QUOTES, 'ISO-8859-1', false);
-		$message = htmlentities($message, ENT_QUOTES, 'ISO-8859-1', false);
+		$subject = htmlentities($subject, ENT_QUOTES, 'UTF-8', false);
+		$message = htmlentities($message, ENT_QUOTES, 'UTF-8', false);
 
 		// save the message so we can grab the id
 		$message_id = $this->_mysql->insert(self::MESSAGE_TABLE, array('subject' => $subject, 'message' => $message));
@@ -882,7 +882,7 @@ CREATE TABLE IF NOT EXISTS `wr_message` (
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   PRIMARY KEY (`message_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -907,7 +907,7 @@ CREATE TABLE IF NOT EXISTS `wr_message_glue` (
   KEY `inbox` (`to_id`,`message_id`),
   KEY `created` (`create_date`),
   KEY `expire_date` (`expire_date`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 */
 

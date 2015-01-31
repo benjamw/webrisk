@@ -1111,7 +1111,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   PRIMARY KEY (`player_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 */
 

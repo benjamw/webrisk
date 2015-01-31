@@ -429,7 +429,7 @@ function replace_meta($row, $data) {
 		foreach ($matches[1] as $match) {
 			if (in_array($match, array_keys($row))) {
 				// clean up the data coming from the database, so we don't get more [[[meta]]] and ###code things
-				$row[$match] = htmlentities($row[$match], ENT_QUOTES, 'ISO-8859-1', false); // do this first, so we don't convert the &'s below
+				$row[$match] = htmlentities($row[$match], ENT_QUOTES, 'UTF-8', false); // do this first, so we don't convert the &'s below
 				$row[$match] = str_replace('###', '&#35;&#35;&#35;', $row[$match]);
 				$row[$match] = str_replace('[', '&#91;', $row[$match]);
 				$row[$match] = str_replace(']', '&#93;', $row[$match]);

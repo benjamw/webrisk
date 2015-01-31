@@ -686,7 +686,7 @@ CREATE TABLE IF NOT EXISTS `wr_wr_player` (
   `last_online` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
 
   UNIQUE KEY `id` (`player_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 */
 

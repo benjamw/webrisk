@@ -198,7 +198,7 @@ EOF;
 			foreach ($game_data as $game) {
 
 				$html .= '
-				<li class="'.strtolower($game['my_state']).'"><a href="game.php?id='.$game['game_id'].$GLOBALS['_&_DEBUG_QUERY'].'">'.htmlentities($game['name'], ENT_QUOTES, 'ISO-8859-1', false).'</a></li>';
+				<li class="'.strtolower($game['my_state']).'"><a href="game.php?id='.$game['game_id'].$GLOBALS['_&_DEBUG_QUERY'].'">'.htmlentities($game['name'], ENT_QUOTES, 'UTF-8', false).'</a></li>';
 			}
 
 			$html .= '

@@ -198,7 +198,7 @@ switch($step) {
 <p>You can create the <code>config.php</code> manually and paste the following text into it.</p>
 <textarea cols="98" rows="15" class="code"><?php
 		foreach ($config_file as $line) {
-			echo htmlentities($line, ENT_COMPAT, 'ISO-8859-1');
+			echo htmlentities($line, ENT_COMPAT, 'UTF-8');
 		}
 ?></textarea>
 <p>After you've done that, click "Run the install."</p>

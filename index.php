@@ -88,7 +88,7 @@ $lobby = '
 
 			$lobby .= '
 				<dt>'.$grav_img.'<span>'.ldate(Settings::read('short_date'), strtotime($chat['create_date'])).'</span> '.$chat['username'].'</dt>
-				<dd>'.htmlentities($chat['message'], ENT_QUOTES, 'ISO-8859-1', false).'</dd>';
+				<dd>'.htmlentities($chat['message'], ENT_QUOTES, 'UTF-8', false).'</dd>';
 		}
 
 		$lobby .= '

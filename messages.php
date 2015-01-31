@@ -46,7 +46,7 @@ $table_format = array(
 	array('SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"') ,
 
 	array('Id', 'message_id') ,
-	array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\', ENT_QUOTES), 25), ENT_QUOTES, \'ISO-8859-1\', false)') ,
+	array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\', ENT_QUOTES), 25), ENT_QUOTES, \'UTF-8\', false)') ,
 	array('From', '###\'[[[sender]]]\'.(([[[global]]]) ? \' <span class="highlight">(<abbr title="GLOBAL">G</abbr>)</span>\' : \'\')') ,
 	array('Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))') ,
 	array('Date Read', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[view_date]]]\'), \'Never\')') ,
@@ -86,7 +86,7 @@ $table_format = array(
 	array('SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"') ,
 
 	array('Id', 'message_id') ,
-	array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'ISO-8859-1\', false)') ,
+	array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)') ,
 	array('To', 'recipients') ,
 	array('Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))') ,
 	array('Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')') ,
@@ -124,7 +124,7 @@ if (false && $GLOBALS['Player']->is_admin) {
 		array('SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"') ,
 
 		array('Id', 'message_id') ,
-		array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'ISO-8859-1\', false)') ,
+		array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)') ,
 		array('From', 'sender') ,
 		array('To', 'recipients') ,
 		array('Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))') ,

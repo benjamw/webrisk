@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   PRIMARY KEY (`player_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `wr_chat` (
   KEY `game_id` (`game_id`),
   KEY `private` (`private`),
   KEY `from_id` (`from_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -75,15 +75,15 @@ CREATE TABLE IF NOT EXISTS `wr_game` (
   `capacity` tinyint(1) unsigned NOT NULL DEFAULT '2',
   `time_limit` tinyint(2) unsigned DEFAULT NULL,
   `allow_kibitz` tinyint(1) NOT NULL DEFAULT '0',
-  `game_type` varchar(255) COLLATE latin1_general_ci DEFAULT 'Original',
+  `game_type` varchar(255) COLLATE utf8_general_ci DEFAULT 'Original',
   `next_bonus` tinyint(3) unsigned NOT NULL DEFAULT '4',
   `state` enum('Waiting','Placing','Playing','Finished') NOT NULL DEFAULT 'Waiting',
-  `extra_info` text COLLATE latin1_general_ci,
+  `extra_info` text COLLATE utf8_general_ci,
   `paused` tinyint(1) NOT NULL DEFAULT '0',
   `create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`game_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `wr_game_land` (
   `player_id` int(10) unsigned NOT NULL DEFAULT '0',
   `armies` smallint(5) unsigned NOT NULL DEFAULT '0',
   UNIQUE KEY `game_land` (`game_id`,`land_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 -- --------------------------------------------------------
 
@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `wr_game_log` (
   `create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `microsecond` int(10) unsigned NOT NULL DEFAULT '0',
   KEY `game_id` (`game_id`,`create_date`,`microsecond`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `wr_game_nudge` (
   `player_id` int(10) unsigned NOT NULL DEFAULT '0',
   `nudged` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `game_player` (`game_id`,`player_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 -- --------------------------------------------------------
 
@@ -146,10 +146,10 @@ CREATE TABLE IF NOT EXISTS `wr_game_player` (
   `state` enum('Waiting','Trading','Placing','Attacking','Occupying','Fortifying','Resigned','Dead') NOT NULL DEFAULT 'Waiting',
   `get_card` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `forced` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `extra_info` text COLLATE latin1_general_ci,
+  `extra_info` text COLLATE utf8_general_ci,
   `move_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY `game_player` (`game_id`,`player_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `wr_message` (
   `message` text NOT NULL,
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`message_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `wr_message_glue` (
   KEY `expire_date` (`expire_date`),
   KEY `inbox` (`to_id`,`from_id`,`send_date`,`deleted`),
   KEY `message_id` (`message_id`,`to_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 -- --------------------------------------------------------
 
@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `wr_roll_log` (
   `defend_1` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `defend_2` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
 -- --------------------------------------------------------
 
@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `wr_settings` (
   `sort` smallint(5) unsigned NOT NULL DEFAULT '0',
   UNIQUE KEY `setting` (`setting`),
   KEY `sort` (`sort`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 --
 -- Dumping data for table `wr_settings`
@@ -270,4 +270,4 @@ CREATE TABLE IF NOT EXISTS `wr_wr_player` (
   `losses` smallint(5) unsigned NOT NULL DEFAULT '0',
   `last_online` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   UNIQUE KEY `id` (`player_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;

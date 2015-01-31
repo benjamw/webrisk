@@ -199,7 +199,7 @@ class Chat
 	public function send_message($message, $private = false, $lobby = false)
 	{
 		// run through htmlentities first (no html allowed)
-		$message = htmlentities($message, ENT_QUOTES, 'ISO-8859-1', false);
+		$message = htmlentities($message, ENT_QUOTES, 'UTF-8', false);
 
 		// check the lobby
 		if ( ! (bool) $lobby && ! $this->_game_id) {
@@ -248,7 +248,7 @@ CREATE TABLE IF NOT EXISTS `wr_chat` (
   KEY `game_id` (`game_id`),
   KEY `private` (`private`),
   KEY `from_id` (`from_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
 
 */
 

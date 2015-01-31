@@ -80,7 +80,7 @@ if ( ! $Game->watch_mode || $GLOBALS['Player']->is_admin) {
 			}
 
 			// preserve spaces in the chat text
-			$chat['message'] = htmlentities($chat['message'], ENT_QUOTES, 'ISO-8859-1', false);
+			$chat['message'] = htmlentities($chat['message'], ENT_QUOTES, 'UTF-8', false);
 			$chat['message'] = str_replace("\t", '    ', $chat['message']);
 			$chat['message'] = str_replace('  ', ' &nbsp;', $chat['message']);
 
@@ -95,7 +95,7 @@ if ( ! $Game->watch_mode || $GLOBALS['Player']->is_admin) {
 			</div> <!-- #chatbox -->';
 }
 
-$meta['title'] = htmlentities($Game->name, ENT_QUOTES, 'ISO-8859-1', false).' - #'.$_SESSION['game_id'];
+$meta['title'] = htmlentities($Game->name, ENT_QUOTES, 'UTF-8', false).' - #'.$_SESSION['game_id'];
 $meta['show_menu'] = false;
 $meta['head_data'] = '
 	<link rel="stylesheet" type="text/css" media="screen" href="css/game.css" />
@@ -153,7 +153,7 @@ echo get_header($meta);
 				<li><a href="index.php<?php echo $GLOBALS['_?_DEBUG_QUERY']; ?>">Main Page</a></li>
 				<li><a href="game.php<?php echo $GLOBALS['_?_DEBUG_QUERY']; ?>">Reload Game Board</a></li>
 			</ul>
-			<h2>Game #<?php echo $_SESSION['game_id'].': '.htmlentities($Game->name, ENT_QUOTES, 'ISO-8859-1', false); ?> <span class="type"><a href="#game_info" class="fancybox">Game Info</a> <?php echo $state_info; ?></span></h2>
+			<h2>Game #<?php echo $_SESSION['game_id'].': '.htmlentities($Game->name, ENT_QUOTES, 'UTF-8', false); ?> <span class="type"><a href="#game_info" class="fancybox">Game Info</a> <?php echo $state_info; ?></span></h2>
 
 			<div id="board">
 				<div id="pathmarkers">
@@ -291,7 +291,7 @@ echo get_header($meta);
 							<td><?php echo $Game->get_conquer_limit( ); ?></td>
 						</tr><tr>
 							<th>Custom Rules</th>
-							<td><?php echo htmlentities($Game->get_custom_rules( ), ENT_QUOTES, 'ISO-8859-1', false); ?></td>
+							<td><?php echo htmlentities($Game->get_custom_rules( ), ENT_QUOTES, 'UTF-8', false); ?></td>
 						</tr>
 					</tbody>
 				</table> <!-- .game_info -->
