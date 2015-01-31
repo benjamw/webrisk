@@ -256,9 +256,12 @@ class Game
 	 *		Class constructor
 	 *		Sets all outside data
 	 *
-	 * @param int optional game id
+	 * @param int $id optional game id
+	 *
 	 * @action instantiates object
-	 * @return void
+	 *
+	 * @return Game Object reference
+	 * @throws MyException
 	 */
 	public function __construct($id = 0)
 	{
@@ -316,8 +319,10 @@ class Game
 	 *		Returns the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
+	 * @param string $property name
+	 *
 	 * @return mixed property value
+	 * @throws MyException
 	 */
 	public function __get($property)
 	{
@@ -338,10 +343,13 @@ class Game
 	 *		Sets the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
-	 * @param mixed property value
+	 * @param string $property name
+	 * @param mixed $value property value
+	 *
 	 * @action optional validation
+	 *
 	 * @return bool success
+	 * @throws MyException
 	 */
 	public function __set($property, $value)
 	{
@@ -361,8 +369,11 @@ class Game
 	 *		Creates a new Risk game
 	 *
 	 * @param void
+	 *
 	 * @action inserts a new game into the database
-	 * @return insert id
+	 *
+	 * @return int insert id
+	 * @throws MyException
 	 */
 	public function create( )
 	{
@@ -2353,8 +2364,11 @@ class Game
 	 *		Pulls all game data from the database
 	 *
 	 * @param void
+	 *
 	 * @action pulls the game data
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _pull( )
 	{
@@ -2617,8 +2631,11 @@ fix_extra_info($player['extra_info']);
 	 *		Saves all changed data to the database
 	 *
 	 * @param void
+	 *
 	 * @action saves the game data
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _save( )
 	{
