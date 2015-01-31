@@ -2727,6 +2727,7 @@ class Risk
 				$data = explode(':', substr($row['data'], 2));
 #				call($data);
 
+				$player = array( );
 				for ($i = 0; $i < 3; ++$i) {
 					if ( ! isset($data[$i])) {
 						break;
@@ -2736,10 +2737,9 @@ class Risk
 						continue;
 					}
 
-					$var = 'player'.$i;
-					${$var} = htmlentities($GLOBALS['_PLAYERS'][$data[$i]], ENT_QUOTES, 'UTF-8', false);
-					if ('' == ${$var}) {
-						${$var} = '[deleted]';
+					$player[$i] = htmlentities($GLOBALS['_PLAYERS'][$data[$i]], ENT_QUOTES, 'UTF-8', false);
+					if ('' == $player[$i]) {
+						$player[$i] = '[deleted]';
 					}
 				}
 
@@ -2760,7 +2760,7 @@ if (isset($data[7])) {
 						// we add a few log messages here, but make them in reverse
 						// add the outcome
 						list($attack_lost, $defend_lost) = explode(',', $data[5]);
-						$message = " - - ATTACK: {$player0} [{$data[0]}] lost {$attack_lost}, {$player2} [{$data[2]}] lost {$defend_lost}";
+						$message = " - - ATTACK: {$player[0]} [{$data[0]}] lost {$attack_lost}, {$player[2]} [{$data[2]}] lost {$defend_lost}";
 
 						if ( ! empty($data[6])) {
 							$message .= ' and was defeated';
@@ -2785,7 +2785,7 @@ if (isset($data[7])) {
 						);
 
 						// make the attack announcement (gets saved below)
-						$message = "ATTACK: {$player0} [{$data[0]}] with ".strlen($attack_roll)." ".plural(strlen($attack_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[1]][NAME])." [{$data[1]}], attacked {$player2} [{$data[2]}] with ".strlen($defend_roll)." ".plural(strlen($defend_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+						$message = "ATTACK: {$player[0]} [{$data[0]}] with ".strlen($attack_roll)." ".plural(strlen($attack_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[1]][NAME])." [{$data[1]}], attacked {$player[2]} [{$data[2]}] with ".strlen($defend_roll)." ".plural(strlen($defend_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
 						break;
 
 					case 'I' : // Initialization
@@ -2793,15 +2793,15 @@ if (isset($data[7])) {
 						break;
 
 					case 'P' : // Placing
-						$message = "PLACE: {$player0} [{$data[0]}] placed {$data[1]} ".plural($data[1], 'army', 'armies')." in ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}]";
+						$message = "PLACE: {$player[0]} [{$data[0]}] placed {$data[1]} ".plural($data[1], 'army', 'armies')." in ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}]";
 						break;
 
 					case 'N' : // Next player
-						$message = str_repeat('=', 5)." NEXT: {$player0} [{$data[0]}] is the next player ".str_repeat('=', 40);
+						$message = str_repeat('=', 5)." NEXT: {$player[0]} [{$data[0]}] is the next player ".str_repeat('=', 40);
 						break;
 
 					case 'R' : // Reinforcements
-						$message = "REINFORCE: {$player0} [{$data[0]}] was given {$data[1]} ".plural($data[1], 'army', 'armies')." for {$data[2]} territories";
+						$message = "REINFORCE: {$player[0]} [{$data[0]}] was given {$data[1]} ".plural($data[1], 'army', 'armies')." for {$data[2]} territories";
 						if (isset($data[3])) {
 							$data[3] = explode(',', $data[3]);
 
@@ -2817,23 +2817,23 @@ if (isset($data[7])) {
 						break;
 
 					case 'O' : // Occupy
-						$message = "OCCUPY: {$player0} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+						$message = "OCCUPY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
 						break;
 
 					case 'C' : // Card
-						$message = "CARD: {$player0} [{$data[0]}] was given a card";
+						$message = "CARD: {$player[0]} [{$data[0]}] was given a card";
 						break;
 
 					case 'F' : // Fortify
-						$message = "FORTIFY: {$player0} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+						$message = "FORTIFY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
 						break;
 
 					case 'Q' : // Quit (resign)
-						$message = str_repeat('+ ', 5)."RESIGN: {$player0} [{$data[0]}] resigned the game";
+						$message = str_repeat('+ ', 5)."RESIGN: {$player[0]} [{$data[0]}] resigned the game";
 						break;
 
 					case 'T' : // Trade
-						$message = "TRADE: {$player0} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
+						$message = "TRADE: {$player[0]} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
 
 						if (0 != $data['3']) {
 							$message .= " and got 2 bonus armies on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
@@ -2845,7 +2845,7 @@ if (isset($data[7])) {
 						break;
 
 					case 'E' : // Eradicated (killed)
-						$message = str_repeat('+ ', 5)."KILLED: {$player0} [{$data[0]}] eradicated {$player1} [{$data[1]}] from the board";
+						$message = str_repeat('+ ', 5)."KILLED: {$player[0]} [{$data[0]}] eradicated {$player[1]} [{$data[1]}] from the board";
 
 						if ('' != $data[2]) {
 							$message .= ' and recieved '.count(explode(',', $data[2])).' cards';
@@ -2853,7 +2853,7 @@ if (isset($data[7])) {
 						break;
 
 					case 'D' : // Done (game over)
-						$message = str_repeat('=', 10)." GAME OVER: {$player0} [{$data[0]}] wins !!! ".str_repeat('=', 10);
+						$message = str_repeat('=', 10)." GAME OVER: {$player[0]} [{$data[0]}] wins !!! ".str_repeat('=', 10);
 						break;
 				}
 
