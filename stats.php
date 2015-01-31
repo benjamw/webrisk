@@ -68,7 +68,7 @@ $contents .= '
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
+		<tr class="alt">
 			<th colspan="1" rowspan="5">Defend</th>
 			<th colspan="1" rowspan="2">1</th>
 			<th>Attack</th>
@@ -76,26 +76,26 @@ $contents .= '
 			<td>'.perc($actual['2v1']['attack']).'</td>
 			<td>'.perc($actual['3v1']['attack']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th class="lower">Defend</th>
 			<td class="lower">'.perc($actual['1v1']['defend']).'</td>
 			<td class="lower">'.perc($actual['2v1']['defend']).'</td>
 			<td class="lower">'.perc($actual['3v1']['defend']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th colspan="1" rowspan="3">2</th>
 			<th>Attack</th>
 			<td>'.perc($actual['1v2']['attack']).'</td>
 			<td>'.perc($actual['2v2']['attack']).'</td>
 			<td>'.perc($actual['3v2']['attack']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th>Defend</th>
 			<td>'.perc($actual['1v2']['defend']).'</td>
 			<td>'.perc($actual['2v2']['defend']).'</td>
 			<td>'.perc($actual['3v2']['defend']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th>Both</th>
 			<td> -- </td>
 			<td>'.perc($actual['2v2']['both']).'</td>
@@ -119,7 +119,7 @@ $contents .= '
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
+		<tr class="alt">
 			<th colspan="1" rowspan="5" class="header">Defend</th>
 			<th colspan="1" rowspan="2">1</th>
 			<th>Attack</th>
@@ -127,26 +127,26 @@ $contents .= '
 			<td>'.perc($theor['2v1']['attack']).'</td>
 			<td>'.perc($theor['3v1']['attack']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th class="lower">Defend</th>
 			<td class="lower">'.perc($theor['1v1']['defend']).'</td>
 			<td class="lower">'.perc($theor['2v1']['defend']).'</td>
 			<td class="lower">'.perc($theor['3v1']['defend']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th colspan="1" rowspan="3">2</th>
 			<th>Attack</th>
 			<td>'.perc($theor['1v2']['attack']).'</td>
 			<td>'.perc($theor['2v2']['attack']).'</td>
 			<td>'.perc($theor['3v2']['attack']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th>Defend</th>
 			<td>'.perc($theor['1v2']['defend']).'</td>
 			<td>'.perc($theor['2v2']['defend']).'</td>
 			<td>'.perc($theor['3v2']['defend']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th>Both</th>
 			<td> -- </td>
 			<td>'.perc($theor['2v2']['both']).'</td>
@@ -171,7 +171,7 @@ $contents .= '
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
+		<tr class="alt">
 			<th colspan="1" rowspan="7">Defend</th>
 			<th colspan="1" rowspan="3">1</th>
 			<th>Attack</th>
@@ -180,21 +180,21 @@ $contents .= '
 			<td>'.$values['3v1']['attack'].'</td>
 			<td>'.($values['1v1']['attack'] + $values['2v1']['attack'] + $values['3v1']['attack']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th>Defend</th>
 			<td class="lower">'.$values['1v1']['defend'].'</td>
 			<td class="lower">'.$values['2v1']['defend'].'</td>
 			<td class="lower">'.$values['3v1']['defend'].'</td>
 			<td class="lower">'.($values['1v1']['defend'] + $values['2v1']['defend'] + $values['3v1']['defend']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th>Total</th>
 			<td class="lower">'.$count['1v1'].'</td>
 			<td class="lower">'.$count['2v1'].'</td>
 			<td class="lower">'.$count['3v1'].'</td>
 			<td class="lower">'.($count['1v1'] + $count['2v1'] + $count['3v1']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th colspan="1" rowspan="4">2</th>
 			<th>Attack</th>
 			<td>'.$values['1v2']['attack'].'</td>
@@ -202,28 +202,28 @@ $contents .= '
 			<td>'.$values['3v2']['attack'].'</td>
 			<td>'.($values['1v2']['attack'] + $values['2v2']['attack'] + $values['3v2']['attack']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th>Defend</th>
 			<td>'.$values['1v2']['defend'].'</td>
 			<td>'.$values['2v2']['defend'].'</td>
 			<td>'.$values['3v2']['defend'].'</td>
 			<td>'.($values['1v2']['defend'] + $values['2v2']['defend'] + $values['3v2']['defend']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th>Both</th>
 			<td class="lower"> -- </td>
 			<td class="lower">'.$values['2v2']['both'].'</td>
 			<td class="lower">'.$values['3v2']['both'].'</td>
 			<td class="lower">'.($values['2v2']['both'] + $values['3v2']['both']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th>Total</th>
 			<td class="lower">'.$count['1v2'].'</td>
 			<td class="lower">'.$count['2v2'].'</td>
 			<td class="lower">'.$count['3v2'].'</td>
 			<td class="lower">'.($count['1v2'] + $count['2v2'] + $count['3v2']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th colspan="3" rowspan="1">Total</th>
 			<td>'.($count['1v1'] + $count['1v2']).'</td>
 			<td>'.($count['2v1'] + $count['2v2']).'</td>
@@ -248,7 +248,7 @@ $contents .= '
 		</tr>
 	</thead>
 	<tbody class="color">
-		<tr>
+		<tr class="alt">
 			<th colspan="1" rowspan="5" class="header">Defend</th>
 			<th colspan="1" rowspan="2">1</th>
 			<th>Attack</th>
@@ -256,26 +256,26 @@ $contents .= '
 			<td>'.perc($actual['2v1']['attack'] - $theor['2v1']['attack']).'</td>
 			<td>'.perc($actual['3v1']['attack'] - $theor['3v1']['attack']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th class="lower">Defend</th>
 			<td class="lower">'.perc($actual['1v1']['defend'] - $theor['1v1']['defend']).'</td>
 			<td class="lower">'.perc($actual['2v1']['defend'] - $theor['2v1']['defend']).'</td>
 			<td class="lower">'.perc($actual['3v1']['defend'] - $theor['3v1']['defend']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th colspan="1" rowspan="3">2</th>
 			<th>Attack</th>
 			<td>'.perc($actual['1v2']['attack'] - $theor['1v2']['attack']).'</td>
 			<td>'.perc($actual['2v2']['attack'] - $theor['2v2']['attack']).'</td>
 			<td>'.perc($actual['3v2']['attack'] - $theor['3v2']['attack']).'</td>
 		</tr>
-		<tr class="alt">
+		<tr>
 			<th>Defend</th>
 			<td>'.perc($actual['1v2']['defend'] - $theor['1v2']['defend']).'</td>
 			<td>'.perc($actual['2v2']['defend'] - $theor['2v2']['defend']).'</td>
 			<td>'.perc($actual['3v2']['defend'] - $theor['3v2']['defend']).'</td>
 		</tr>
-		<tr>
+		<tr class="alt">
 			<th>Both</th>
 			<td> -- </td>
 			<td>'.perc($actual['2v2']['both'] - $theor['2v2']['both']).'</td>

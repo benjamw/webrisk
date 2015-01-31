@@ -218,7 +218,7 @@ function get_table($table_format, $table_data, $meta = null)
 			}
 		}
 
-		if (0 == ($i % 2) && ! empty($opts['alt_class'])) {
+		if (0 !== ($i % 2) && ! empty($opts['alt_class'])) {
 			$classes[] = $opts['alt_class'];
 		}
 
@@ -344,8 +344,7 @@ function print_table($table_format, $table_data, $meta = null) {
 
 
 // sort_types can be a comma separated list or an array of sort types
-function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_sort_column = null)
-{
+function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_sort_column = null) {
 	if ( ! is_array($init_sort_column) || (0 == count($init_sort_column))) {
 		$init_sort_column = null;
 	}
@@ -371,7 +370,7 @@ function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_
 				$("#'.$table_id.'").tablesorter({
 					textExtraction: "complex",
 					widgets: ["zebra"],
-					widgetZebra: {css: ["","'.$alt_class.'"]},
+					widgetZebra: {css: ["'.$alt_class.'",""]},
 					headers: {';
 
 	if ('' != $sort_types) {
