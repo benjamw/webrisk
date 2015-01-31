@@ -1810,31 +1810,6 @@ class Game
 		}
 
 		foreach ($players as $player_id => & $player) {
-			$cards = $this->get_players_cards($player_id, $observer_id);
-
-			if (false !== $cards) {
-				$player['cards'] = $cards;
-				$player['card_count'] = count($player['cards']);
-
-				if (3 > $player['card_count']) {
-					$player['trade_perc'] = '0.0 %';
-				}
-				elseif (3 == $player['card_count']) {
-					$player['trade_perc'] = '42.3 %';
-				}
-				elseif (4 == $player['card_count']) {
-					$player['trade_perc'] = '81.7 %';
-				}
-				else {
-					$player['trade_perc'] = '100.0 %';
-				}
-			}
-			else {
-				$player['cards'] = array( );
-				$player['card_count'] = '???';
-				$player['trade_perc'] = '??? %';
-			}
-
 			// continents
 			$player['conts'] = $this->get_players_visible_continents($player_id, $observer_id);
 
@@ -1881,6 +1856,34 @@ class Game
 						$player['cont_list'] = preg_replace('/(\d) - ([a-z, ]+)/i', '$1 + ? - $2, ???', $player['cont_list']);
 					}
 				}
+			}
+
+			// cards
+			$cards = $this->get_players_cards($player_id, $observer_id);
+
+			if (false !== $cards) {
+				$player['cards'] = $cards;
+				$player['card_count'] = count($player['cards']);
+
+				if (3 > $player['card_count']) {
+					$player['trade_perc'] = '0.0 %';
+					$player['next_armies_trade'] = '--';
+				}
+				elseif (3 == $player['card_count']) {
+					$player['trade_perc'] = '42.3 %';
+				}
+				elseif (4 == $player['card_count']) {
+					$player['trade_perc'] = '81.7 %';
+				}
+				else {
+					$player['trade_perc'] = '100.0 %';
+				}
+			}
+			else {
+				$player['cards'] = array( );
+				$player['card_count'] = '???';
+				$player['trade_perc'] = '??? %';
+				$player['next_armies_trade'] = '???';
 			}
 
 			// visible armies
