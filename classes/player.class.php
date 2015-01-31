@@ -941,7 +941,7 @@ class Player
 		if ('' != $email) {
 			// make sure it's a valid email address
 			if ( ! preg_match('/^[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$/i', $email)) {
-				throw new MyException(__METHOD__.': The email address ('.$username.') is not a valid email address', 303);
+				throw new MyException(__METHOD__.': The email address ('.$email.') is not a valid email address', 303);
 			}
 
 			$query = "
