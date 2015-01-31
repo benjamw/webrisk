@@ -2385,6 +2385,8 @@ class Game
 			$this->paused = (bool) $result['paused'];
 			$this->passhash = (string) $result['password'];
 
+// temp fix for old serialized data
+fix_extra_info($result['extra_info']);
 			$this->_extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($result['extra_info'], true));
 
 			// pull the player data
@@ -2462,6 +2464,8 @@ class Game
 			throw new MyException(__METHOD__.': Missing player ID');
 		}
 
+// temp fix for old serialized data
+fix_extra_info($player['extra_info']);
 		$player['extra_info'] = array_merge_plus(self::$_PLAYER_EXTRA_INFO_DEFAULTS, json_decode($player['extra_info'], true));
 
 		if ( ! empty($player['cards'])) {
@@ -2683,7 +2687,7 @@ class Game
 
 		$update_game['extra_info'] = json_encode($update_game['extra_info']);
 
-		if ('a:0:{}' == $update_game['extra_info']) {
+		if ('[]' == $update_game['extra_info']) {
 			$update_game['extra_info'] = null;
 		}
 
@@ -2732,7 +2736,7 @@ class Game
 			ksort($update_player['extra_info']);
 			$update_player['extra_info'] = json_encode($update_player['extra_info']);
 
-			if ('a:0:{}' == $update_player['extra_info']) {
+			if ('[]' == $update_player['extra_info']) {
 				$update_player['extra_info'] = null;
 			}
 			call($update_player);
@@ -2782,7 +2786,7 @@ class Game
 			ksort($risk_player['extra_info']);
 			$risk_player['extra_info'] = json_encode($risk_player['extra_info']);
 
-			if ('a:0:{}' == $risk_player['extra_info']) {
+			if ('[]' == $risk_player['extra_info']) {
 				$risk_player['extra_info'] = null;
 			}
 
@@ -3344,6 +3348,8 @@ class Game
 					$game['username'] = '';
 				}
 
+// temp fix for old serialized data
+fix_extra_info($game['extra_info']);
 				$extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($game['extra_info'], true));
 
 				foreach ($extra_info as $field => $value) {
