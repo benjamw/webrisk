@@ -281,6 +281,7 @@ function kshuffle( & $array)
  *
  * @param mixed item to merge into array
  * @param ...
+ *
  * @return array merged array
  */
 function array_merge_plus($array1) {
@@ -299,59 +300,39 @@ function array_merge_plus($array1) {
 		$args[$key] = (array) $arg;
 	}
 
-	// generate an eval string to pass the clean arguments to array_merge
-	$eval_string = '$return = array_merge(';
-	foreach ($args as $key => $null) {
-		$eval_string .= '$args['.$key.'],';
-	}
-	$eval_string = substr($eval_string, 0, -1).');';
-
-	$return = false;
-	eval($eval_string);
+	$return = call_user_func_array('array_merge', $args);
 
 	return $return;
 }
 
 
-function array_compare($array1, $array2) {
-	$diff = array(array( ), array( ));
+/**
+ * Runs array_diff recursively
+ *
+ * @param array $array1
+ * @param array $array2
+ *
+ * @return array of elements in $array1 that are different from $array2
+ */
+function array_diff_recursive($array1, $array2) {
+	$diff = array( );
 
-	// Left-to-right
 	foreach ($array1 as $key => $value) {
-		if ( ! array_key_exists($key, $array2)) {
-			$diff[0][$key] = $value;
-		}
-		elseif (is_array($value)) {
-			if ( ! is_array($array2[$key])) {
-				$diff[0][$key] = $value;
-				$diff[1][$key] = $array2[$key];
-			}
-			else {
-				$new = array_compare($value, $array2[$key]);
-				if ($new !== false) {
-					if (isset($new[0])) {
-						$diff[0][$key] = $new[0];
-					}
+		if (array_key_exists($key, $array2)) {
+			if (is_array($value)) {
+				$recursive_diff = array_diff_recursive($value, $array2[$key]);
 
-					if (isset($new[1])) {
-						$diff[1][$key] = $new[1];
-					}
+				if (count($recursive_diff)) {
+					$diff[$key] = $recursive_diff;
 				}
 			}
+			elseif ($value != $array2[$key]) { // change to !== to use exact match
+				$diff[$key] = $value;
+			}
 		}
-		elseif ($array2[$key] !== $value) {
-			$diff[0][$key] = $value;
-			$diff[1][$key] = $array2[$key];
+		else {
+			$diff[$key] = $value;
 		}
-	}
-
-	// Right-to-left
-	foreach ($array2 as $key => $value) {
-		if ( ! array_key_exists($key, $array1)) {
-			$diff[1][$key] = $value;
-		}
-		// No direct comparison because matching keys were compared in the
-		// left-to-right loop earlier, recursively.
 	}
 
 	return $diff;

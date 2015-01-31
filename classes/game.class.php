@@ -487,8 +487,7 @@ class Game
 			$extra_info['conquer_minimum'] = 1;
 		}
 
-		$diff = array_compare($extra_info, self::$_EXTRA_INFO_DEFAULTS);
-		$extra_info = $diff[0];
+		$extra_info = array_diff_recursive($extra_info, self::$_EXTRA_INFO_DEFAULTS);
 		ksort($extra_info);
 
 		call($extra_info);
@@ -2681,8 +2680,7 @@ fix_extra_info($player['extra_info']);
 			$update_game['state'] = $this->state;
 		}
 
-		$diff = array_compare($this->_extra_info, self::$_EXTRA_INFO_DEFAULTS);
-		$update_game['extra_info'] = $diff[0];
+		$update_game['extra_info'] = array_diff_recursive($this->_extra_info, self::$_EXTRA_INFO_DEFAULTS);
 		ksort($update_game['extra_info']);
 
 		$update_game['extra_info'] = json_encode($update_game['extra_info']);
