@@ -96,7 +96,7 @@ echo get_header($meta);
 	<div id="content" class="msg">
 		<div class="link_date">
 			<a href="messages.php<?php echo $GLOBALS['_?_DEBUG_QUERY']; ?>">Return to Inbox</a>
-			<?php echo date(Settings::read('long_date')); ?>
+			<?php echo ldate(Settings::read('long_date')); ?>
 		</div>
 		<form method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>"><div class="formdiv">
 			<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" />

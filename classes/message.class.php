@@ -609,7 +609,10 @@ class Message
 
 			 	// test and see if the message is from this user
 			 	if ($result['from_id'] == $this->_user_id) {
-			 		if (strtotime($result['send_date']) > time( )) {
+					// in case the DB server has a different time
+					$now = strtotime($this->_mysql->fetch_value(" SELECT NOW( ); "));
+
+					if (strtotime($result['send_date']) > $now) {
 			 			// the message has not been sent yet, delete them all
 			 			// (use actual deletions here)
 						$this->_mysql->multi_delete(array(self::GLUE_TABLE, self::MESSAGE_TABLE), " WHERE message_id = '{$message_id}' ");
@@ -785,7 +788,7 @@ class Message
 
 		$message['from'] = Player::get_username($message['recipients'][0]['from_id']);
 		$message['date'] = (empty($message['send_date']) ? $message['create_date'] : $message['send_date']);
-		$message['date'] = date(Settings::read('long_date'), strtotime($message['date']));
+		$message['date'] = ldate(Settings::read('long_date'), strtotime($message['date']));
 		$message['subject'] = ('' == $message['subject']) ? '<No Subject>' : $message['subject'];
 		$message['message'] = "\n\n\n".str_repeat('=', 50)."\n\n{$message['from']} said: ({$message['date']})\n".str_repeat('-', 50)."\n{$message['message']}";
 

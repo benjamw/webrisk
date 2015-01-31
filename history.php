@@ -15,7 +15,7 @@ try {
 
 	$table_format = array(
 		array('SPECIAL_CLASS', true, '[[[class]]]') ,
-		array('Date', '###@date(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', false, '', 'class="date"') ,
+		array('Date', '###@ldate(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', false, '', 'class="date"') ,
 		array('Message', 'message') ,
 	);
 	$table_meta = array(

@@ -280,7 +280,7 @@ function get_item($contents, $hint, $title = '', $extra_html = '') {
 	$html = '
 		<div id="sidebar">
 			<div id="notes">
-				<div id="date">'.date($long_date).'</div>
+				<div id="date">'.ldate($long_date).'</div>
 				'.$hint_html.'
 			</div>
 			'.$extra_html.'

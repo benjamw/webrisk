@@ -226,6 +226,9 @@ class Mysql {
 		}
 
 		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		// set the DB server timezone to UTC
+		$this->conn->query(" SET time_zone = '+00:00'; ");
 	}
 
 
@@ -985,10 +988,10 @@ class MySQLException extends Exception {
 	protected function logError( ) {
 		// first, lets make sure we can actually open and write to directory
 		// specified by the global variable... and lets also do daily logs for now
-		$log_name = 'mysql_exception_'.date('Ymd', time( )).'.log';
+		$log_name = 'mysql_exception_'.date('Ymd', time( )).'.log'; // don't use ldate() here
 
 		// okay, write our log message
-		$str = date('Y/m/d H:i:s')." == ({$this->code}) {$this->message} : {$this->file} @ {$this->line}\n";
+		$str = date('Y/m/d H:i:s')." == ({$this->code}) {$this->message} : {$this->file} @ {$this->line}\n"; // don't use ldate() here
 
 		if ($this->backtrace) {
 			$str .= "---------- [ BACKTRACE ] ----------\n";

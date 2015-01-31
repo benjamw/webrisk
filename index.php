@@ -44,7 +44,7 @@ $table_format = array(
 //	array('Game Type', 'game_type') ,
 	array('Extra Info', '<acronym title="Fortify: [[[get_fortify]]] | Kamikaze: [[[get_kamikaze]]] | Warmonger: [[[get_warmonger]]] | FoW Armies: [[[get_fog_of_war_armies]]] | FoW Colors: [[[get_fog_of_war_colors]]] | Conquer Limit: [[[get_conquer_limit]]] | Custom Rules: [[[clean_custom_rules]]]">Hover</acronym>') ,
 	array('Players', '[[[players]]] / [[[capacity]]]') ,
-	array('Last Move', '###date(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"') ,
+	array('Last Move', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"') ,
 );
 $contents .= '
 	<div class="tableholder">
@@ -87,7 +87,7 @@ $lobby = '
 			}
 
 			$lobby .= '
-				<dt>'.$grav_img.'<span>'.$chat['create_date'].'</span> '.$chat['username'].'</dt>
+				<dt>'.$grav_img.'<span>'.ldate(Settings::read('short_date'), strtotime($chat['create_date'])).'</span> '.$chat['username'].'</dt>
 				<dd>'.htmlentities($chat['message'], ENT_QUOTES, 'ISO-8859-1', false).'</dd>';
 		}
 

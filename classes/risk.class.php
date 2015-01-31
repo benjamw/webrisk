@@ -2633,7 +2633,12 @@ class Risk
 	{
 		$Mysql = Mysql::get_instance( );
 
-		$Mysql->insert(self::GAME_LOG_TABLE, array('game_id' => $this->_game_id, 'data' => $log_data, 'create_date' => date('Y-m-d H:i:s'), 'microsecond' => substr(microtime( ), 2, 8)));
+		$Mysql->insert(self::GAME_LOG_TABLE, array(
+			'game_id' => $this->_game_id,
+			'data' => $log_data,
+			'create_date' => date('Y-m-d H:i:s'), // don't use ldate() here
+			'microsecond' => substr(microtime( ), 2, 8),
+		));
 	}
 
 

@@ -52,7 +52,7 @@ echo get_header($meta);
 
 ?>
 		<div id="notes">
-			<div id="date"><?php echo date($date_format); ?></div>
+			<div id="date"><?php echo ldate($date_format); ?></div>
 			<p><strong>Welcome to <?php echo GAME_NAME; ?>!</strong></p>
 			<p>Please enter a valid username and password to enter.</p>
 			<?php if ($approve_users) { ?>
@@ -89,7 +89,7 @@ echo get_header($meta);
 		<div id="footerspacer">&nbsp;</div>
 
 		<div id="footer">
-			<p><?php echo GAME_NAME; ?> <?php echo $GLOBALS['_VERSION']; ?>, last updated <?php echo date('F j, Y', strtotime($GLOBALS['_UPDATED'])); ?></p>
+			<p><?php echo GAME_NAME; ?> <?php echo $GLOBALS['_VERSION']; ?>, last updated <?php echo ldate('F j, Y', strtotime($GLOBALS['_UPDATED'])); ?></p>
 			<p><?php echo GAME_NAME; ?> is Free Software released under the GNU General Public License (GPL).</p>
 		</div>
 

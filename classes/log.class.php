@@ -234,7 +234,7 @@ class Log
 		// precede newlines in the message with tabs for indentation
 		$message = preg_replace('/\r?\n/', "\n\t\t", $message);
 
-		$msg = date('Y-m-d H:i:s').'- '.$message."\n";
+		$msg = date('Y-m-d H:i:s').'- '.$message."\n"; // don't use ldate() here
 
 		if ($backtrace) {
 			$msg .= "\t\t---------- [ BACKTRACE ] ----------\n";
@@ -242,7 +242,7 @@ class Log
 			$msg .= "\t\t-------- [ END BACKTRACE ] --------\n\n";
 		}
 
-		if ($fp = @fopen($_this->_file_path.$type.'_'.date('Ymd').'.log', 'a')) {
+		if ($fp = @fopen($_this->_file_path.$type.'_'.date('Ymd').'.log', 'a')) { // don't use ldate() here
 			fwrite($fp, $msg);
 			fclose($fp);
 		}

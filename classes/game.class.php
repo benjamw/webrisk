@@ -2385,13 +2385,8 @@ class Game
 
 			$this->_extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($result['extra_info'], true));
 
-			$cur_tz = date_default_timezone_get( );
-			date_default_timezone_set('UTC');
-
 			$this->create_date = strtotime($result['create_date']);
 			$this->modify_date = strtotime($result['modify_date']);
-
-			date_default_timezone_set($cur_tz);
 
 			// pull the player data
 			try {
@@ -3811,7 +3806,7 @@ class Game
 		}
 
 		// open the file for writing
-		$filename = GAMES_DIR.GAME_NAME.'_'.$game_id.'_'.date('Ymd', strtotime($game['create_date'])).'.dat';
+		$filename = GAMES_DIR.GAME_NAME.'_'.$game_id.'_'.date('Ymd', strtotime($game['create_date'])).'.dat'; // don't use ldate() here
 		$file = fopen($filename, 'wb');
 
 		if (false === $file) {
@@ -3819,7 +3814,7 @@ class Game
 		}
 
 		fwrite($file, "{$game['game_id']} - {$game['name']}\n");
-		fwrite($file, date('Y-m-d', strtotime($game['create_date']))."\n");
+		fwrite($file, date('Y-m-d', strtotime($game['create_date']))."\n"); // don't use ldate() here
 		fwrite($file, $GLOBALS['_ROOT_URI']."\n");
 		fwrite($file, "=================================\n");
 

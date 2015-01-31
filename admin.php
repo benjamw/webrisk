@@ -140,7 +140,7 @@ $table_format = array(
 	array(array('Games', '(Total | Current | Turn)'), '[[[played]]]&nbsp;|&nbsp;[[[games]]]&nbsp;|&nbsp;[[[turn]]]') ,
 	array('Admin', '###(([[[full_admin]]] | [[[half_admin]]]) ? \'<span class="notice">Yes</span>\' : \'No\')') ,
 	array('Approved', '###(([[[is_approved]]]) ? \'Yes\' : \'<span class="notice">No</span>\')') ,
-	array('Last Online', '###date(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"') ,
+	array('Last Online', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"') ,
 	array('<input type="checkbox" id="player_all" />', '<input type="checkbox" name="ids[]" value="[[[player_id]]]" class="player_box" />', 'false', 'class="edit"') ,
 );
 $table = get_table($table_format, $player_list, $table_meta);
@@ -179,8 +179,8 @@ $table_format = array(
 	array('Current', 'username') ,
 	array('State', '###(([[[paused]]]) ? \'<span class="notice">Paused</span>\' : \'[[[state]]]\')') ,
 	array('Players', '[[[players]]] / [[[capacity]]]') ,
-	array('Created', '###date(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', null, ' class="date"') ,
-	array('Last Move', '###date(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"') ,
+	array('Created', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', null, ' class="date"') ,
+	array('Last Move', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"') ,
 	array('<input type="checkbox" id="game_all" />', '<input type="checkbox" name="ids[]" value="[[[game_id]]]" class="game_box" />', 'false', 'class="edit"') ,
 );
 $table = get_table($table_format, $game_list, $table_meta);

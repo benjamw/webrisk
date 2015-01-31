@@ -88,10 +88,10 @@ class MyException
 	{
 		// first, lets make sure we can actually open and write to directory
 		// specified by the global variable... and lets also do daily logs for now
-		$log_name = 'exception_'.date('Ymd', time( )).'.log';
+		$log_name = 'exception_'.date('Ymd', time( )).'.log'; // don't use ldate() here
 
 		// okay, write our log message
-		$str = date('Y/m/d H:i:s')." == ({$this->code}) {$this->message} : {$this->file} @ {$this->line}\n";
+		$str = date('Y/m/d H:i:s')." == ({$this->code}) {$this->message} : {$this->file} @ {$this->line}\n"; // don't use ldate() here
 
 		if ($this->_backtrace) {
 			$str .= "---------- [ BACKTRACE ] ----------\n";

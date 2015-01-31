@@ -2,6 +2,11 @@
 
 $debug = false;
 
+// set the base system time to UTC
+// and only change the timezone for the user
+// when displaying dates using ldate( )
+date_default_timezone_set('UTC');
+
 // set some ini stuff
 ini_set('register_globals', 0); // you really should have this off anyways
 
@@ -56,8 +61,8 @@ require_once INCLUDE_DIR.'html.tables.php';
 // OR YOU END UP WITH INCOMPLETE OBJECTS PULLED FROM SESSION
 spl_autoload_register('load_class');
 
-// set the proper timezone
-date_default_timezone_set($GLOBALS['_DEFAULT_TIMEZONE']);
+// store the default timezone
+$GLOBALS['_TZ'] = $GLOBALS['_DEFAULT_TIMEZONE'];
 
 
 /**
@@ -81,6 +86,10 @@ while (false !== ($file = readdir($dh))) {
 $GLOBALS['_DEFAULT_COLOR'] = '';
 if (class_exists('Settings') && Settings::test( )) {
 	$GLOBALS['_DEFAULT_COLOR'] = preg_replace('/c_(.+)\\.css/i', '$1', Settings::read('default_color'));
+
+	if (false != Settings::read('timezone')) {
+		$GLOBALS['_TZ'] = Settings::read('timezone');
+	}
 }
 
 if ('' == $GLOBALS['_DEFAULT_COLOR']) {
@@ -181,8 +190,8 @@ if (( ! defined('LOGIN') || LOGIN) && isset($Mysql)) {
 	}
 
 	// set the default timezone for the player
-	if ('' !== $GLOBALS['Player']->timezone) {
-		date_default_timezone_set($GLOBALS['Player']->timezone);
+	if (false != $GLOBALS['Player']->timezone) {
+		$GLOBALS['_TZ'] = $GLOBALS['Player']->timezone;
 	}
 }
 

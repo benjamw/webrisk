@@ -292,3 +292,27 @@ function ifenr($var, $default = null) {
 	return $var;
 }
 
+
+/**
+ * Local formatting of dates using requested timezone
+ *
+ * @param string $format
+ * @param int $timestamp optional defaults to time( )
+ *
+ * @return bool|string
+ */
+function ldate($format, $timestamp = null) {
+	if (1 === func_num_args( )) {
+		$timestamp = time( );
+	}
+
+	if ( ! is_numeric($timestamp)) {
+		$timestamp = strtotime($timestamp);
+	}
+
+	date_default_timezone_set($GLOBALS['_TZ']);
+	$date = date($format, $timestamp);
+	date_default_timezone_set('UTC');
+
+	return $date;
+}

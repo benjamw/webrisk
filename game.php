@@ -85,7 +85,7 @@ if ( ! $Game->watch_mode || $GLOBALS['Player']->is_admin) {
 			$chat['message'] = str_replace('  ', ' &nbsp;', $chat['message']);
 
 			$chat_html .= '
-					<dt class="'.$color.'"><span>'.$chat['create_date'].'</span> '.$chat['username'].'</dt>
+					<dt class="'.$color.'"><span>'.ldate(Settings::read('short_date'), strtotime($chat['create_date'])).'</span> '.$chat['username'].'</dt>
 					<dd'.($chat['private'] ? ' class="private"' : '').'>'.$chat['message'].'</dd>';
 		}
 	}

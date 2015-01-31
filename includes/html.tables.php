@@ -504,7 +504,7 @@ if ( ! function_exists('ifdateor')) {
 		$date = (isset($if) && is_int($if)) ? $if : $or;
 
 		if (is_int($date)) {
-			$date = date($date_format, $date);
+			$date = ldate($date_format, $date);
 		}
 
 		return $date;

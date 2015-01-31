@@ -45,7 +45,7 @@ $table_format = array(
 	array('Kill-Loss', '###([[[kills]]] - [[[losses]]])', null, ' class="color"') ,
 	array('Kill-Win', '###([[[kills]]] - [[[wins]]])', null, ' class="color"') ,
 	array('Kill %', '###((0 != ([[[wins]]] + [[[losses]]])) ? perc([[[kills]]] / ([[[wins]]] + [[[losses]]]), 1) : 0)') ,
-	array('Last Online', '###date(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"') ,
+	array('Last Online', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"') ,
 );
 $contents = get_table($table_format, $list, $table_meta);
 

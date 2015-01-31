@@ -211,15 +211,10 @@ class Chat
 		if ($last) {
 			$last = $last[0];
 
-			$cur_tz = date_default_timezone_get( );
-			date_default_timezone_set('UTC');
-
 			$last_date = strtotime($last['create_date']);
 
 			// because there may be a time difference between the DB server and the WebServer
 			$date = strtotime($this->_mysql->fetch_value(" SELECT NOW( ) "));
-
-			date_default_timezone_set($cur_tz);
 
 			if (($message == $last['message']) && ($private == $last['private']) && ($date <= ($last_date + 60))) {
 				throw new MyException(__METHOD__.': Duplicate message');
