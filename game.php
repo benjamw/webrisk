@@ -216,6 +216,7 @@ echo get_header($meta);
 					$ra_table_format = array(
 						array('SPECIAL_CLASS', 'true', '###substr(\'[[[color]]]\', 0, 3).((\'Dead\' == \'[[[state]]]\') ? \' dead\' : \'\')'),
 
+						array('Order', 'order') ,
 						array('Player', 'username') ,
 						array('State', 'state') ,
 						array('Round', 'round') ,
