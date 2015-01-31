@@ -986,7 +986,7 @@ class Risk
 			$valid = $this->_test_card_set($card_ids);
 		}
 		catch (MyException $e) {
-			throw new MyException($e->getMessage( ), $e->get_code( ));
+			throw new MyException($e->getMessage( ), $e->getCode( ));
 		}
 
 		if ( ! $valid) {
