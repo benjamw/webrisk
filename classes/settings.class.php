@@ -42,6 +42,38 @@ class Settings
 	protected $_settings = array( );
 
 
+	/** protected property _defaults
+	 * 		The default settings in case
+	 * 		any are missing from the DB
+	 *		It's very restrictive by design
+	 *
+	 * @var array
+	 */
+	protected $_defaults = array(
+		'site_name' => 'This Website',
+		'default_color' => 'c_yellow_black.css',
+		'nav_links' => '',
+		'from_email' => '',
+		'to_email' => '',
+		'new_users' => 0,
+		'approve_users' => 1,
+		'confirm_email' => 1,
+		'max_users' => 0,
+		'default_pass' => 'change!me',
+		'expire_users' => 0,
+		'save_games' => 1,
+		'expire_finished_games' => 0,
+		'expire_games' => 0,
+		'nudge_flood_control' => 24,
+		'timezone' => 'UTC',
+		'long_date' => 'M j, Y g:i a',
+		'short_date' => 'Y-m-d H:i:s',
+		'debug_pass' => '',
+		'DB_error_log' => 0,
+		'DB_error_email' => 0,
+	);
+
+
 	/** protected property _notes
 	 *		Stores the site settings notes in an
 	 *		associative array
@@ -96,11 +128,13 @@ class Settings
 	 * @param void
 	 * @action instantiates object
 	 * @action pulls settings from settings table
-	 * @return void
+	 * @return Settings object
 	 */
 	protected function __construct( )
 	{
 		$this->_mysql = Mysql::get_instance( );
+
+		$this->_settings = $this->_defaults;
 
 		if ($this->test( )) {
 			$this->_pull( );
@@ -108,40 +142,15 @@ class Settings
 	}
 
 
-	/** public function __destruct
-	 *		Class destructor
-	 *
-	 * @param void
-	 * @action saves settings to DB
-	 * @action destroys object
-	 * @return void
-	 */
-/*
-	public function __destruct( )
-	{
-		// save anything changed to the database
-		// BUT... only if PHP didn't die because of an error
-		$error = error_get_last( );
-
-		if (0 == ((E_ERROR | E_WARNING | E_PARSE) & $error['type'])) {
-			try {
-				$this->save( );
-			}
-			catch (MyException $e) {
-				// do nothing, it will be logged
-			}
-		}
-	}
-*/
-
-
 	/** public function __get
 	 *		Class getter
 	 *		Returns the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
+	 * @param string $property name
+	 *
 	 * @return mixed property value
+	 * @throws MyException
 	 */
 	public function __get($property)
 	{
@@ -167,10 +176,13 @@ class Settings
 	 *		Sets the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
-	 * @param mixed property value
+	 * @param string $property name
+	 * @param mixed $value
+	 *
 	 * @action optional validation
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function __set($property, $value)
 	{
@@ -207,7 +219,6 @@ class Settings
 			die('Settings were not pulled properly');
 		}
 
-		$this->_settings = array( );
 		foreach ((array) $results as $result) {
 			$this->_settings[$result['setting']] = $result['value'];
 			$this->_notes[$result['setting']] = $result['notes'];
@@ -311,7 +322,7 @@ class Settings
 	 *		Gets the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
+	 * @param string $property name
 	 * @return mixed property value
 	 * @see __get
 	 */
@@ -347,8 +358,8 @@ class Settings
 	 *		Sets the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
-	 * @param mixed property value
+	 * @param string $property name
+	 * @param mixed $value
 	 * @return void
 	 * @see __set
 	 */
@@ -364,8 +375,8 @@ class Settings
 	/** static public function write_all
 	 *		Sets all the properties
 	 *
-	 * @param array property => value pairs
-	 * @return void
+	 * @param array $settings property => value pairs
+	 * @return array or false on failure
 	 * @see __set
 	 */
 	static public function write_all($settings)
