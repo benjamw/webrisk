@@ -210,7 +210,6 @@ class Chat
 		$last = $this->get_box_list(1);
 		if ($last) {
 			$last = $last[0];
-
 			$last_date = strtotime($last['create_date']);
 
 			// because there may be a time difference between the DB server and the WebServer
