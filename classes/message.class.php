@@ -111,7 +111,7 @@ class Message
 
 		// remove any expired messages
 		$query = "
-			SELECT DISTINCT message_id
+			SELECT DISTINCT `message_id`
 			FROM ".self::GLUE_TABLE."
 			WHERE expire_date < NOW( )
 				AND expire_date IS NOT NULL

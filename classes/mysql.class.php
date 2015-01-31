@@ -86,6 +86,11 @@ class Mysql {
 	public $sth;
 
 	/**
+	 * @var bool
+	 */
+	protected $prepared;
+
+	/**
 	 * Debug output for errors
 	 *
 	 * @var bool
@@ -169,9 +174,6 @@ class Mysql {
 		$this->log_path = $settings['log_path'];
 
 		try {
-//			$this->_log(__METHOD__);
-//			$this->_log('===============================');
-
 			$this->connect( );
 		}
 		catch (MySQLException $up) {
@@ -194,9 +196,6 @@ class Mysql {
 			if (is_null(self::$instance)) {
 				self::$instance = new Mysql($config);
 			}
-
-//			self::$instance->test_connection( );
-//			self::$instance->_log(__METHOD__.' --------------------------------------');
 		}
 		catch (MySQLException $e) {
 			throw $e;
@@ -253,7 +252,7 @@ class Mysql {
 			if (isset($settings[$key])) {
 				list($type, $idx) = explode('_', $key);
 				$var = $type.'_settings';
-				$this->$var[$idx] = $settings[$key];
+				$this->$var = $settings[$key];
 			}
 		}
 	}
@@ -301,17 +300,7 @@ class Mysql {
 	 * @throws MySQLException
 	 */
 	public function query($query = null) {
-		$args = func_get_args( );
-		unset($args[0]);
-
-		if ( ! empty($query)) {
-			$this->query = $query;
-			$this->params = array( );
-		}
-
-		if ( ! empty($args)) {
-			$this->params = $args;
-		}
+		$this->process_args(func_get_args( ), 1);
 
 		if (empty($this->query)) {
 			throw new MySQLException(__METHOD__.': No query found');
@@ -330,15 +319,18 @@ class Mysql {
 		try {
 			$time = microtime(true);
 			if ( ! empty($this->params)) {
-				if ( ! empty($query)) {
-					$this->sth = $this->conn->prepare($query);
+				if ( ! $this->prepared && ! empty($this->query)) {
+					$this->sth = $this->conn->prepare($this->query);
+					$this->prepared = true;
 				}
 
 				$this->sth->execute($this->params);
 			}
-			else {
-				$this->sth = $this->conn->query($query);
+			elseif ( ! $this->prepared && ! empty($this->query)) {
+				$this->sth = $this->conn->query($this->query);
+				$this->prepared = true;
 			}
+
 			$query_time = microtime(true) - $time;
 			$this->query_time += $query_time;
 
@@ -361,9 +353,16 @@ class Mysql {
 				$this->tries = 0;
 			}
 
-			if ((5 >= $this->tries) && ((2013 == $this->sth->errorCode( )) || (2006 == $this->sth->errorCode( )))) {
+			if ($this->sth) {
+				$error_info = $this->sth->errorInfo( );
+			}
+			else {
+				$error_info = $this->conn->errorInfo( );
+			}
+
+			if ((5 >= $this->tries) && ((2013 == $error_info[1]) || (2006 == $error_info[1]))) {
 				// try reconnecting a couple of times
-				$this->_log('RETRYING #'.$this->tries.': '.$this->sth->errorCode( ));
+				$this->_log('RETRYING #'.$this->tries.': '.$error_info[1]);
 				$this->test_connection( );
 				return $this->query(null, ++$this->tries);
 			}
@@ -376,7 +375,7 @@ class Mysql {
 				$extra = ' on line <strong>'.$line.'</strong> of <strong>'.$file.'</strong>';
 			}
 
-			$this->error = $this->sth->errorCode( ).': '.$this->sth->errorInfo( );
+			$this->error = $error_info[1].': '.$error_info[2];
 			$this->_error_report( );
 
 			if ($this->debug_error) {
@@ -532,6 +531,9 @@ class Mysql {
 	 */
 	protected function get_params($where) {
 // TODO: not quite sure how to build this
+// maybe parse through the array, and anywhere a value is found
+// insert it into the params array with the key name as it's index,
+// and then replace it with the key name with : appended
 	}
 
 
@@ -541,7 +543,7 @@ class Mysql {
 	 * 		$data['field_name2'] = value2
 	 *
 	 * If the field name has a trailing space: $data['field_name ']
-	 * then the query will insert the data with no sanitation
+	 * then the query will insert the data with no processing
 	 * or wrapping quotes (good for function calls, like NOW( )).
 	 *
 	 * @param string $table
@@ -587,7 +589,7 @@ class Mysql {
 					$query .= " `{$field}` = {$value} , ";
 				}
 				else {
-					$this->params[$field.'_val'] = $value;
+					$this->params[':'.$field.'_val'] = $value;
 					$query .= " `{$field}` = :{$field}_val , ";
 				}
 			}
@@ -596,7 +598,10 @@ class Mysql {
 		}
 
 		$query .= ' '.$where.' ';
+
 		$this->query = $query;
+		$this->prepared = false;
+
 		$return = $this->query( );
 
 		if (empty($where)) {
@@ -775,37 +780,253 @@ class Mysql {
 		return $this->query( );
 	}
 
+
+	/**
+	 * Execute a database query and return the next result row as object.
+	 * Each subsequent call to this method returns the next result row.
+	 *
+	 * @param string $query optional
+	 *
+	 * @return mixed
+	 * @throws MySQLException
+	 */
 	public function fetch_object($query = null) {
 		$this->process_args(func_get_args( ));
+
+		if ((true !== $query) || ($query !== $this->query)) {
+			$this->query( );
+		}
+
+		return $this->sth->fetchObject( );
 	}
 
+
+	/**
+	 * Execute a database query and return result as an indexed array.
+	 * Each subsequent call to this method returns the next result row.
+	 *
+	 * @param null $query
+	 *
+	 * @return mixed
+	 * @throws MySQLException
+	 */
 	public function fetch_row($query = null) {
 		$this->process_args(func_get_args( ));
+
+		if ((true !== $query) || ($query !== $this->query)) {
+			$this->query( );
+		}
+
+		return $this->sth->fetch(PDO::FETCH_NUM);
 	}
 
+
+	/**
+	 * Execute a database query and return result as an associative array.
+	 * Each subsequent call to this method returns the next result row.
+	 *
+	 * @param null $query
+	 *
+	 * @return mixed
+	 * @throws MySQLException
+	 */
 	public function fetch_assoc($query = null) {
 		$this->process_args(func_get_args( ));
+
+		if ((true !== $query) || ($query !== $this->query)) {
+			$this->query( );
+		}
+
+		return $this->sth->fetch(PDO::FETCH_ASSOC);
 	}
 
+
+	/**
+	 * Execute a database query and return result as both
+	 * an associative array and indexed array.
+	 * Each subsequent call to this method returns the next result row.
+	 *
+	 * @param null $query
+	 *
+	 * @return mixed
+	 * @throws MySQLException
+	 */
 	public function fetch_both($query = null) {
 		$this->process_args(func_get_args( ));
+
+		if ((true !== $query) || ($query !== $this->query)) {
+			$this->query( );
+		}
+
+		return $this->sth->fetch(PDO::FETCH_BOTH);
 	}
 
-// TODO: obviously, the second argument here needs to be changed
-	public function fetch_array($result_type = MYSQL_ASSOC, $query = null) {
-		$this->process_args(func_get_args( ), 2);
+
+	/**
+	 * Execute a database query and return result as
+	 * an indexed array of both indexed and associative arrays.
+	 * This method returns the entire result set in a single call.
+	 *
+	 * @param null $query
+	 * @param int $result_type
+	 *
+	 * @return mixed
+	 * @throws MySQLException
+	 */
+	public function fetch_array($query = null, $result_type = PDO::FETCH_ASSOC) {
+		$this->process_args(func_get_args( ), 2, true);
+
+		if ((true !== $query) || ($query !== $this->query)) {
+			$this->query( );
+		}
+
+		$this->sth->setFetchMode($result_type);
+
+		$results = array( );
+		foreach ($this->sth as $row) {
+			$results[] = $row;
+		}
+
+		return $results;
 	}
 
+
+	/**
+	 * Execute a database query and return result as
+	 * a single result value.
+	 * This method only returns the single value at index 0.
+	 * Each subsequent call to this method returns the next value.
+	 *
+	 * @param null $query
+	 *
+	 * @return mixed
+	 */
 	public function fetch_value($query = null) {
 		$this->process_args(func_get_args( ));
+
+		$row = $this->fetch_row((true === $query) ? true : null);
+
+		return $row[0];
 	}
 
+
+	/**
+	 * Execute a database query and return result as
+	 * an indexed array of single result values.
+	 * This method returns the entire result set in a single call.
+	 *
+	 * @param null $query
+	 *
+	 * @return array
+	 * @throws MySQLException
+	 */
 	public function fetch_value_array($query = null) {
 		$this->process_args(func_get_args( ));
+
+		if ((true !== $query) || ($query !== $this->query)) {
+			$this->query( );
+		}
+
+		return (array) $this->sth->fetchColumn(0);
 	}
 
+
+	/**
+	 * Paginates a query result set based on supplied information
+	 * NOTE: It is not necessary to include the SQL_CALC_FOUND_ROWS
+	 * nor the LIMIT clause in the query, in fact, including the
+	 * LIMIT clause in the query will probably break MySQL.
+	 *
+	 * @param int $page optional
+	 * @param int $num_per_page optional
+	 * @param string $query optional
+	 *
+	 * @return array
+	 * @throws MySQLException
+	 */
 	public function paginate($page = null, $num_per_page = null, $query = null) {
 		$this->process_args(func_get_args( ), 3);
+
+		if ( ! is_null($page)) {
+			$this->_page = $page;
+		}
+		else { // we don't have a page, either increment, or set equal to 1
+			$this->_page = ( ! empty($this->_page)) ? ($this->_page + 1) : 1;
+		}
+
+		if ( ! is_null($num_per_page)) {
+			$this->_num_per_page = $num_per_page;
+		}
+		else {
+			$this->_num_per_page = ( ! empty($this->_num_per_page)) ? $this->_num_per_page : 50;
+		}
+
+		if ( ! $this->_page || ! $this->_num_per_page) {
+			throw new MySQLException(__METHOD__.': No pagination data given');
+		}
+
+		if ( ! is_null($query)) {
+			$this->_page_query = $this->query;
+			$this->_page_params = $this->params;
+
+			// add the SQL_CALC_FOUND_ROWS keyword to the query
+			if (false === strpos($query, 'SQL_CALC_FOUND_ROWS')) {
+				$this->query = preg_replace('/SELECT\\s+(?!SQL_)/i', 'SELECT SQL_CALC_FOUND_ROWS ', $this->_page_query);
+			}
+
+			$start = ($this->_num_per_page * ($this->_page - 1));
+
+			// add the LIMIT clause to the query
+			$this->query .= "
+				LIMIT {$start}, {$this->_num_per_page}
+			";
+
+			$this->_page_result = $this->fetch_array( );
+
+			if ( ! $this->_page_result) {
+				// no data found
+				return array( );
+			}
+
+			$query = "
+				SELECT FOUND_ROWS( ) AS count
+			";
+			$this->_num_results = $this->fetch_value($query);
+
+			$this->_num_pages = (int) ceil($this->_num_results / $this->_num_per_page);
+		}
+		else { // we are using the previous data
+			if ($this->_num_results < ($this->_num_per_page * ($this->_page - 1))) {
+				return array( );
+			}
+
+			$this->query = $this->_page_query;
+			$this->params = $this->_page_params;
+
+			$start = $this->_num_per_page * ($this->_page - 1);
+
+			// add the LIMIT clause to the query
+			$this->query .= "
+				LIMIT {$start}, {$this->_num_per_page}
+			";
+
+			$this->_page_result = $this->fetch_array( );
+
+			if ( ! $this->_page_result) {
+				// no data found
+				return array( );
+			}
+		}
+
+		// clean up the data and output to user
+		$output = array( );
+		$output['num_rows'] = $this->_num_results;
+		$output['num_per_page'] = $this->_num_per_page;
+		$output['num_pages'] = $this->_num_pages;
+		$output['cur_page'] = $this->_page;
+		$output['data'] = $this->_page_result;
+
+		return $output;
 	}
 
 
@@ -813,29 +1034,44 @@ class Mysql {
 	 * Process the incoming arguments into the
 	 * various class properties
 	 *
-	 * @param array $args
+	 * @param array $args passed to the called function
 	 * @param int $count of named arguments
+	 * @param bool $query_first optional flag indicating the query is the first argument
 	 *
 	 * @return void
 	 */
-	protected function process_args($args, $count = 1) {
+	protected function process_args($args, $count = 1, $query_first = false) {
+		if (empty($args) || empty($args[0]) || (true === $args[0])) {
+			return;
+		}
+
+		if ($query_first) {
+			$query = array_shift($args);
+			--$count;
+		}
+
 		while ($count) {
-			if (1 === $count) {
-				$query = $args[0];
+			if ( ! $query_first && (1 === $count)) {
+				$query = array_shift($args);
+				--$count;
+				continue;
 			}
 
-			unset($args[0]);
-			$args = array_values($args);
+			array_shift($args);
+
 			--$count;
 		}
 
 		if ( ! empty($query)) {
+			if ($query !== $this->query) {
+				$this->prepared = false;
+			}
 			$this->query = $query;
 			$this->params = array( );
 		}
 
 		if ( ! empty($args)) {
-			$this->params = $args;
+			$this->params = $args[0];
 		}
 	}
 
@@ -1022,6 +1258,19 @@ if ( ! function_exists('microtime_float')) {
 die('microtime_float used')		;
 		list($usec, $sec) = explode(' ', microtime( ));
 		return ((float) $usec + (float) $sec);
+	}
+}
+
+if ( ! function_exists('sani')) {
+	function sani($data) {
+		if (is_array($data)) {
+			return array_map('sani', $data);
+		}
+		else {
+Log::write('Deprecated function "sani( )" used', 'error', true);
+			$Mysql = Mysql::get_instance( );
+			return trim($Mysql->conn->quote($data), "'");
+		}
 	}
 }
 

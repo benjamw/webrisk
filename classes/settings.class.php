@@ -210,8 +210,8 @@ class Settings
 	{
 		$query = "
 			SELECT *
-			FROM ".self::SETTINGS_TABLE."
-			ORDER BY sort
+			FROM `".self::SETTINGS_TABLE."`
+			ORDER BY `sort`
 		";
 		$results = $this->_mysql->fetch_array($query);
 
@@ -240,8 +240,8 @@ class Settings
 
 		$query = "
 			SELECT *
-			FROM ".self::SETTINGS_TABLE."
-			ORDER BY sort
+			FROM `".self::SETTINGS_TABLE."`
+			ORDER BY `sort`
 		";
 		$results = $this->_mysql->fetch_array($query);
 
@@ -428,7 +428,7 @@ class Settings
 		// look for anything in the settings table
 		$query = "
 			SELECT *
-			FROM ".self::SETTINGS_TABLE."
+			FROM `".self::SETTINGS_TABLE."`
 		";
 		$return = Mysql::get_instance( )->query($query);
 

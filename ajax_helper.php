@@ -53,7 +53,7 @@ if (isset($_POST['validity_test'])) {
 		case 'email' :
 			$username = '';
 			$email = '';
-			${$_POST['validity_test']} = sani($_POST['value']);
+			${$_POST['validity_test']} = $_POST['value'];
 
 			$player_id = (isset($_POST['player_id']) ? (int) $_POST['player_id'] : 0);
 

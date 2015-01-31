@@ -685,9 +685,12 @@ class Player
 					, alt_pass
 					, is_approved
 				FROM ".self::PLAYER_TABLE."
-				WHERE username = '".sani($_POST['username'])."'
+				WHERE username = :username
 			";
-			$result = $this->_mysql->fetch_row($query);
+			$params = array(
+				':username' => $_POST['username'],
+			);
+			$result = $this->_mysql->fetch_row($query, $params);
 
 			if ($result) {
 				list($id, $password, $alt_pass, $is_approved) = $result;
@@ -919,15 +922,16 @@ class Player
 		$Mysql = Mysql::get_instance( );
 
 		// make sure our query is clean
-		$username = sani($username);
-		$email = sani($email);
 		$player_id = (int) $player_id;
 
 		$query = "
 			SELECT COUNT(*)
 			FROM ".self::PLAYER_TABLE."
-			WHERE username = '{$username}'
+			WHERE username = :username
 		";
+		$params = array(
+			':username' => $username,
+		);
 		$result = $Mysql->fetch_value($query);
 
 		if ($result) {
@@ -943,9 +947,13 @@ class Player
 			$query = "
 				SELECT COUNT(*)
 				FROM ".self::PLAYER_TABLE."
-				WHERE email = '{$email}'
-					AND player_id <> '{$player_id}'
+				WHERE email = :email
+					AND player_id <> :player_id
 			";
+			$params = array(
+				':email' => $email,
+				':player_id' => $player_id,
+			);
 			$result = $Mysql->fetch_value($query);
 
 			if ($result) {

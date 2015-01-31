@@ -369,8 +369,6 @@ class Game
 		call(__METHOD__);
 		call($_POST);
 
-		// DON'T sanitize the data
-		// it gets sani'd in the MySQL->insert method
 		$_P = $_POST;
 
 		// make sure the game has a name
@@ -531,7 +529,7 @@ class Game
 		}
 
 		// THIS IS THE ONLY PLACE IN THE CLASS WHERE IT BREAKS THE _pull / _save MENTALITY
-		// BECAUSE I NEED THE INSERT ID FOR THE REST OF THE GAME FUNCTIONALITY
+		// BECAUSE THE INSERT ID IS NEEDED FOR THE REST OF THE GAME FUNCTIONALITY
 
 		$Mysql = Mysql::get_instance( );
 		$insert_id = $Mysql->insert(self::GAME_TABLE, $_DATA);
@@ -659,8 +657,6 @@ class Game
 			}
 		}
 
-		// DON'T sanitize the data
-		// it gets sani'd in the MySQL->insert method
 		$_P = $_POST;
 
 		$_P['player_id'] = (int) $_P['player_id'];
@@ -671,11 +667,15 @@ class Game
 		// (two people may have tried to join at the same time, and used the same color)
 		$query = "
 			SELECT COUNT(*)
-			FROM ".self::GAME_PLAYER_TABLE." AS GP
-			WHERE GP.color = '".sani($_P['color'])."'
-				AND GP.game_id = '{$this->id}'
+			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+			WHERE `GP`.`color` = :color
+				AND `GP`.`game_id` = :game_id
 		";
-		$used = $Mysql->fetch_value($query);
+		$params = array(
+			':color' => $_P['color'],
+			':game_id' => $this->id,
+		);
+		$used = $Mysql->fetch_value($query, $params);
 
 		if ($used) {
 			throw new MyException(__METHOD__.': Game player color ('.$_P['color'].') already used', 214);
