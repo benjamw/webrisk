@@ -2625,12 +2625,15 @@ class Risk
 	/** protected function _log
 	 *		logs the game message to the database
 	 *
-	 * @param string game message
-	 * @param string optional computer readable game message
+	 * @param string $log_data computer readable game message
+	 *
 	 * @return void
 	 */
-	protected function _log($log_data = NULL)
+	protected function _log($log_data)
 	{
+		usleep(100); // sleep for 1/10,000th of a second to prevent duplicate keys
+		// because computers are just too fast now
+
 		$Mysql = Mysql::get_instance( );
 
 		$Mysql->insert(self::GAME_LOG_TABLE, array(

@@ -112,7 +112,7 @@ class Message
 		// remove any expired messages
 		$query = "
 			SELECT DISTINCT `message_id`
-			FROM ".self::GLUE_TABLE."
+			FROM `".self::GLUE_TABLE."`
 			WHERE expire_date < NOW( )
 				AND expire_date IS NOT NULL
 		";
@@ -688,7 +688,7 @@ class Message
 			if (in_array(0, $user_ids)) {
 				$query = "
 					SELECT player_id
-					FROM ".Player::PLAYER_TABLE."
+					FROM `".Player::PLAYER_TABLE."`
 				";
 				$user_ids = $this->_mysql->fetch_value_array($query);
 				$user_ids[] = 0;
@@ -745,7 +745,7 @@ class Message
 
 		$query = "
 			SELECT *
-			FROM ".self::GLUE_TABLE."
+			FROM `".self::GLUE_TABLE."`
 			WHERE to_id = 0
 				AND deleted = 0
 		";

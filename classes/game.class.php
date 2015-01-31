@@ -2796,7 +2796,7 @@ fix_extra_info($player['extra_info']);
 
 			if ($update_player) {
 				$update_modified = true;
-				$Mysql->insert(self::GAME_PLAYER_TABLE, $update_player, " WHERE game_id = '{$this->id}' AND player_id = '{$player_id}' ");
+				$Mysql->insert(self::GAME_PLAYER_TABLE, $update_player, array('game_id' => $this->id, 'player_id' => $player_id));
 			}
 		}
 
@@ -2804,10 +2804,13 @@ fix_extra_info($player['extra_info']);
 			// update the land data
 			$query = "
 				SELECT *
-				FROM ".self::GAME_LAND_TABLE."
-				WHERE game_id = '{$this->id}'
+				FROM `".self::GAME_LAND_TABLE."`
+				WHERE game_id = :game_id
 			";
-			$db_lands = $Mysql->fetch_array($query);
+			$params = array(
+				':game_id' => $this->id,
+			);
+			$db_lands = $Mysql->fetch_array($query, $params);
 
 			if ( ! $db_lands) {
 				$board = $this->_risk->board;
@@ -3308,15 +3311,15 @@ fix_extra_info($player['extra_info']);
 				, COUNT(DISTINCT GP.player_id) AS players
 				, P.username AS hostname
 				, C.username AS username
-			FROM ".self::GAME_TABLE." AS G
-				LEFT JOIN ".self::GAME_PLAYER_TABLE." AS GP
+			FROM `".self::GAME_TABLE."` AS `G`
+				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `GP`
 					ON GP.game_id = G.game_id
-				LEFT JOIN ".self::GAME_PLAYER_TABLE." AS CP
+				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `CP`
 					ON (CP.game_id = G.game_id
 						AND CP.state NOT IN ('Waiting', 'Resigned', 'Dead'))
-				LEFT JOIN ".Player::PLAYER_TABLE." AS P
+				LEFT JOIN `".Player::PLAYER_TABLE."` AS `P`
 					ON P.player_id = G.host_id
-				LEFT JOIN ".Player::PLAYER_TABLE." AS C
+				LEFT JOIN `".Player::PLAYER_TABLE."` AS `C`
 					ON C.player_id = CP.player_id
 			GROUP BY game_id
 			ORDER BY state ASC
@@ -3328,8 +3331,8 @@ fix_extra_info($player['extra_info']);
 		$query = "
 			SELECT GP.game_id
 				, GP.state
-			FROM ".self::GAME_PLAYER_TABLE." AS GP
-				LEFT JOIN ".self::GAME_TABLE." AS G
+			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+				LEFT JOIN `".self::GAME_TABLE."` AS `G`
 					USING (game_id)
 			WHERE GP.player_id = '{$player_id}'
 		";
@@ -3398,8 +3401,8 @@ fix_extra_info($game['extra_info']);
 				, G.state AS game_state
 				, GP.*
 				, GP.state AS player_state
-			FROM ".self::GAME_TABLE." AS G
-				LEFT JOIN ".self::GAME_PLAYER_TABLE." AS GP
+			FROM `".self::GAME_TABLE."` AS `G`
+				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `GP`
 					ON GP.game_id = G.game_id
 			WHERE GP.player_id = '{$player_id}'
 		";
@@ -3473,7 +3476,7 @@ fix_extra_info($game['extra_info']);
 		// games in play
 		$query = "
 			SELECT COUNT(*)
-			FROM ".self::GAME_TABLE."
+			FROM `".self::GAME_TABLE."`
 			WHERE state <> 'Finished'
 		";
 		$count = $Mysql->fetch_value($query);
@@ -3481,14 +3484,14 @@ fix_extra_info($game['extra_info']);
 		// total games
 		$query = "
 			SELECT MAX(game_id)
-			FROM ".self::GAME_TABLE."
+			FROM `".self::GAME_TABLE."`
 		";
 		$next = $Mysql->fetch_value($query);
 
 		// my games
 		$query = "
 			SELECT COUNT(GP.player_id)
-			FROM ".self::GAME_PLAYER_TABLE." AS GP
+			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
 				LEFT JOIN ".self::GAME_TABLE." AS G
 					USING (game_id)
 			WHERE GP.player_id = '{$player_id}'
@@ -3499,8 +3502,8 @@ fix_extra_info($game['extra_info']);
 		// my turns
 		$query = "
 			SELECT COUNT(GP.player_id)
-			FROM ".self::GAME_PLAYER_TABLE." AS GP
-				LEFT JOIN ".self::GAME_TABLE." AS G
+			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+				LEFT JOIN `".self::GAME_TABLE."` AS `G`
 					USING (game_id)
 			WHERE  GP.player_id = '{$player_id}'
 				AND G.state <> 'Finished'
@@ -3576,7 +3579,7 @@ fix_extra_info($game['extra_info']);
 			self::GAME_TABLE ,
 		);
 
-		$Mysql->multi_delete($tables, " WHERE game_id IN (".implode(',', $ids).") ");
+		$Mysql->multi_delete($tables, array('game_id' => $ids));
 
 		$query = "
 			OPTIMIZE TABLE ".self::GAME_TABLE."

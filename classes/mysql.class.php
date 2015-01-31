@@ -151,6 +151,9 @@ class Mysql {
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 	/**
+	 * Class constructor
+	 * Not publicly callable, as this is a singleton class
+	 *
 	 * @param array $settings optional
 	 *
 	 * @return Mysql Object
@@ -179,6 +182,20 @@ class Mysql {
 		catch (MySQLException $up) {
 			throw $up;
 		}
+	}
+
+
+	/**
+	 * Class destructor
+	 * cleans up the mess it made
+	 *
+	 * @param void
+	 *
+	 * @return void
+	 */
+	public function __destruct( ) {
+		$this->reset( );
+		$this->conn = null;
 	}
 
 
@@ -530,10 +547,12 @@ class Mysql {
 	 * @return array params
 	 */
 	protected function get_params($where) {
+		$params = array( );
 // TODO: not quite sure how to build this
 // maybe parse through the array, and anywhere a value is found
 // insert it into the params array with the key name as it's index,
 // and then replace it with the key name with : appended
+		return $params;
 	}
 
 
@@ -555,9 +574,11 @@ class Mysql {
 	 * @throws MySQLException
 	 */
 	public function insert($table, $data_array, $where = '', $replace = false) {
+		$this->reset( );
+
 		if (is_array($where) && ! empty($where)) {
-			$where = " WHERE ". $this->build_where($where);
 			$this->params = $this->get_params($where);
+			$where = " WHERE ". $this->build_where($where);
 		}
 
 		$replace = (bool) $replace;
@@ -565,12 +586,13 @@ class Mysql {
 		if (empty($where)) {
 			$query  = (false == $replace) ? ' INSERT ' : ' REPLACE ';
 			$query .= ' INTO ';
+			$where = '';
 		}
 		else {
 			$query = ' UPDATE ';
 		}
 
-		$query .= '`'.$table.'`';
+		$query .= " `{$table}` ";
 
 		if ( ! is_array($data_array)) {
 			throw new MySQLException(__METHOD__.': Trying to insert non-array data');
@@ -579,28 +601,30 @@ class Mysql {
 			$query .= ' SET ';
 			foreach ($data_array as $field => $value) {
 				if (is_null($value)) {
-					$query .=  " `{$field}` = NULL , ";
+					$value = 'NULL';
 				}
 				elseif (is_bool($value)) {
-					$query .= " `{$field}` = ".($value ? 'TRUE' : 'FALSE')." , ";
+					$value = ($value ? 'TRUE' : 'FALSE');
 				}
 				elseif (' ' == substr($field, -1, 1)) { // a trailing space was chosen because it's an illegal field name in MySQL
-					$field = trim($field);
-					$query .= " `{$field}` = {$value} , ";
+					$field = trim($field); // and it's easy to trim
 				}
 				else {
-					$this->params[':'.$field.'_val'] = $value;
-					$query .= " `{$field}` = :{$field}_val , ";
+					$key = ":{$field}_val";
+					$this->params[$key] = $value;
+					$value = $key;
 				}
+
+				$query .= " `{$field}` = {$value} , ";
 			}
 
 			$query = substr($query, 0, -2).' '; // remove the last comma (but preserve the spaces)
 		}
 
-		$query .= ' '.$where.' ';
+		$query .= " {$where} ";
 
-		$this->query = $query;
 		$this->prepared = false;
+		$this->query = $query;
 
 		$return = $this->query( );
 
@@ -658,11 +682,14 @@ class Mysql {
 	 * @throws MySQLException
 	 */
 	public function delete($table, $where) {
+		$this->reset( );
+
 		if (is_array($where)) {
-			$where = " WHERE ". $this->build_where($where);
 			$this->params = $this->get_params($where);
+			$where = " WHERE ". $this->build_where($where);
 		}
 
+		$this->prepared = false;
 		$this->query = "
 			DELETE
 			FROM `{$table}`
@@ -711,7 +738,14 @@ class Mysql {
 			$table_array = (array) $table_array;
 		}
 
-		if ( ! is_array($where_array)) {
+		if (is_array($where_array)) {
+			list($key,) = each($where_array);
+			if (is_string($key)) {
+				$recursive = false;
+				$where_array = array($where_array);
+			}
+		}
+		else {
 			$recursive = false;
 			$where_array = array($where_array);
 		}
@@ -762,6 +796,8 @@ class Mysql {
 	 * @throws MySQLException
 	 */
 	public function fetch($table, $where = '') {
+		$this->reset( );
+
 		$this->query = "
 			SELECT *
 			FROM `{$table}`
@@ -793,7 +829,7 @@ class Mysql {
 	public function fetch_object($query = null) {
 		$this->process_args(func_get_args( ));
 
-		if ((true !== $query) || ($query !== $this->query)) {
+		if ($query === $this->query) {
 			$this->query( );
 		}
 
@@ -805,7 +841,7 @@ class Mysql {
 	 * Execute a database query and return result as an indexed array.
 	 * Each subsequent call to this method returns the next result row.
 	 *
-	 * @param null $query
+	 * @param string $query optional
 	 *
 	 * @return mixed
 	 * @throws MySQLException
@@ -813,7 +849,7 @@ class Mysql {
 	public function fetch_row($query = null) {
 		$this->process_args(func_get_args( ));
 
-		if ((true !== $query) || ($query !== $this->query)) {
+		if ($query === $this->query) {
 			$this->query( );
 		}
 
@@ -825,7 +861,7 @@ class Mysql {
 	 * Execute a database query and return result as an associative array.
 	 * Each subsequent call to this method returns the next result row.
 	 *
-	 * @param null $query
+	 * @param string $query optional
 	 *
 	 * @return mixed
 	 * @throws MySQLException
@@ -833,7 +869,7 @@ class Mysql {
 	public function fetch_assoc($query = null) {
 		$this->process_args(func_get_args( ));
 
-		if ((true !== $query) || ($query !== $this->query)) {
+		if ($query === $this->query) {
 			$this->query( );
 		}
 
@@ -846,7 +882,7 @@ class Mysql {
 	 * an associative array and indexed array.
 	 * Each subsequent call to this method returns the next result row.
 	 *
-	 * @param null $query
+	 * @param string $query optional
 	 *
 	 * @return mixed
 	 * @throws MySQLException
@@ -854,7 +890,7 @@ class Mysql {
 	public function fetch_both($query = null) {
 		$this->process_args(func_get_args( ));
 
-		if ((true !== $query) || ($query !== $this->query)) {
+		if ($query === $this->query) {
 			$this->query( );
 		}
 
@@ -867,17 +903,35 @@ class Mysql {
 	 * an indexed array of both indexed and associative arrays.
 	 * This method returns the entire result set in a single call.
 	 *
-	 * @param null $query
+	 * @param string $query optional
 	 * @param int $result_type
 	 *
 	 * @return mixed
 	 * @throws MySQLException
 	 */
 	public function fetch_array($query = null, $result_type = PDO::FETCH_ASSOC) {
-		$this->process_args(func_get_args( ), 2, true);
+		$args = func_get_args( );
 
-		if ((true !== $query) || ($query !== $this->query)) {
+		// allow the second and third arguments to be switched
+		if ( ! empty($args[1]) && is_array($args[1])) {
+			$this->process_args($args);
+
+			// but keep the default value for the second proper argument
+			$result_type = PDO::FETCH_ASSOC;
+			if ( ! empty($args[2])) {
+				$result_type = $args[2];
+			}
+		}
+		else {
+			$this->process_args(func_get_args( ), 2, true);
+		}
+
+		if ($query === $this->query) {
 			$this->query( );
+		}
+
+		if ( ! $this->sth) {
+			return array( );
 		}
 
 		$this->sth->setFetchMode($result_type);
@@ -897,16 +951,18 @@ class Mysql {
 	 * This method only returns the single value at index 0.
 	 * Each subsequent call to this method returns the next value.
 	 *
-	 * @param null $query
+	 * @param string $query optional
 	 *
 	 * @return mixed
 	 */
 	public function fetch_value($query = null) {
 		$this->process_args(func_get_args( ));
 
-		$row = $this->fetch_row((true === $query) ? true : null);
+		if ($query === $this->query) {
+			$this->query( );
+		}
 
-		return $row[0];
+		return $this->sth->fetchColumn(0);
 	}
 
 
@@ -915,7 +971,7 @@ class Mysql {
 	 * an indexed array of single result values.
 	 * This method returns the entire result set in a single call.
 	 *
-	 * @param null $query
+	 * @param string $query optional
 	 *
 	 * @return array
 	 * @throws MySQLException
@@ -923,11 +979,11 @@ class Mysql {
 	public function fetch_value_array($query = null) {
 		$this->process_args(func_get_args( ));
 
-		if ((true !== $query) || ($query !== $this->query)) {
+		if ($query === $this->query) {
 			$this->query( );
 		}
 
-		return (array) $this->sth->fetchColumn(0);
+		return $this->sth->fetchAll(PDO::FETCH_COLUMN, 0);
 	}
 
 
@@ -965,7 +1021,7 @@ class Mysql {
 			throw new MySQLException(__METHOD__.': No pagination data given');
 		}
 
-		if ( ! is_null($query)) {
+		if ($query === $this->query) {
 			$this->_page_query = $this->query;
 			$this->_page_params = $this->params;
 
@@ -1065,7 +1121,14 @@ class Mysql {
 		if ( ! empty($query)) {
 			if ($query !== $this->query) {
 				$this->prepared = false;
+
+				if ($this->sth) {
+					$this->sth->closeCursor( );
+				}
+
+				$this->sth = null;
 			}
+
 			$this->query = $query;
 			$this->params = array( );
 		}
@@ -1102,7 +1165,7 @@ class Mysql {
 	}
 
 	protected function _error_report( ) {
-
+		// what is this?
 	}
 
 	/**
@@ -1148,6 +1211,25 @@ class Mysql {
 		catch (MySQLException $e) {
 			return false;
 		}
+	}
+
+
+	/**
+	 * Resets all query data
+	 *
+	 * @param void
+	 *
+	 * @action void
+	 */
+	public function reset( ) {
+		if ($this->sth) {
+			$this->sth->closeCursor( );
+		}
+
+		$this->sth = null;
+		$this->params = array( );
+		$this->query = false;
+		$this->prepared = false;
 	}
 
 }

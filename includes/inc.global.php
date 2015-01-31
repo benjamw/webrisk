@@ -69,6 +69,12 @@ $GLOBALS['_TZ'] = $GLOBALS['_DEFAULT_TIMEZONE'];
  *		GLOBAL DATA
  * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+$Mysql = Mysql::get_instance( );
+$Mysql->set_settings(array(
+	'log_path' => LOG_DIR,
+	'email_subject' => GAME_NAME.' Query Error',
+));
+
 $GLOBALS['_&_DEBUG_QUERY'] = '';
 $GLOBALS['_?_DEBUG_QUERY'] = '';
 
@@ -149,21 +155,13 @@ if ( ! defined('DEBUG')) {
 
 $GLOBALS['_LOGGING'] = DEBUG; // do not change, rather, change debug value
 
-if (Mysql::test( )) {
-	$Mysql = Mysql::get_instance( );
+if (class_exists('Settings') && Settings::test( )) {
 	$Mysql->set_settings(array(
-		'log_path' => LOG_DIR,
-		'email_subject' => GAME_NAME.' Query Error',
+		'log_errors' => Settings::read('DB_error_log'),
+		'email_errors' => Settings::read('DB_error_email'),
+		'email_from' => Settings::read('from_email'),
+		'email_to' => Settings::read('to_email'),
 	));
-
-	if (class_exists('Settings') && Settings::test( )) {
-		$Mysql->set_settings(array(
-			'log_errors' => Settings::read('DB_error_log'),
-			'email_errors' => Settings::read('DB_error_email'),
-			'email_from' => Settings::read('from_email'),
-			'email_to' => Settings::read('to_email'),
-		));
-	}
 }
 
 if (defined('DEBUG') && DEBUG) {
