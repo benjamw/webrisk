@@ -674,6 +674,7 @@ class Risk
 		}
 
 		// pull our variables out to use them here
+		$type = false;
 		foreach ($this->_extra_info as $key => $value) {
 			if ('conquer_' == substr($key, 0, 8)) {
 				$key = substr($key, 8);
