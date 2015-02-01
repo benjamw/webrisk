@@ -218,7 +218,7 @@ function get_table($table_format, $table_data, $meta = null)
 			}
 		}
 
-		if (0 !== ($i % 2) && ! empty($opts['alt_class'])) {
+		if (0 === ($i % 2) && ! empty($opts['alt_class'])) {
 			$classes[] = $opts['alt_class'];
 		}
 
