@@ -7,7 +7,7 @@ require_once 'includes/inc.global.php';
 // times on other pages where it would be ran more often
 GamePlayer::delete_inactive(Settings::read('expire_users'));
 Game::delete_inactive(Settings::read('expire_games'));
-Game::delete_finished(Settings::read('expire_finished_games'));
+Game::archive_finished(Settings::read('expire_finished_games'));
 
 $Game = new Game( );
 

@@ -3476,13 +3476,84 @@ fix_extra_info($game['extra_info']);
 	}
 
 
+
+	/** static public function get_archived_list
+	 *		Returns a list array of all games in the database
+	 *		with games which have been archived
+	 *
+	 * @param void
+	 *
+	 * @return array game list (or bool false on failure)
+	 */
+	static public function get_archived_list( )
+	{
+		$Mysql = Mysql::get_instance( );
+
+		$query = "
+			SELECT G.*
+				-- this stops the query from pulling 0 from the player table if no moves have been made
+				-- or if there are no players in the game yet (don't know why that would be, but...)
+				, IF((0 = MAX(GP.move_date)) OR MAX(GP.move_date) IS NULL, G.create_date, MAX(GP.move_date)) AS last_move
+				, 0 AS in_game
+				, 0 AS highlight
+				, COUNT(DISTINCT GP.player_id) AS players
+				, P.username AS hostname
+				, C.username AS username
+			FROM `".self::GAME_TABLE."` AS `G`
+				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `GP`
+					ON GP.game_id = G.game_id
+				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `CP`
+					ON (CP.game_id = G.game_id
+						AND CP.state NOT IN ('Waiting', 'Resigned', 'Dead'))
+				LEFT JOIN `".Player::PLAYER_TABLE."` AS `P`
+					ON P.player_id = G.host_id
+				LEFT JOIN `".Player::PLAYER_TABLE."` AS `C`
+					ON C.player_id = CP.player_id
+			WHERE archived = 1
+			GROUP BY game_id
+			ORDER BY last_move DESC
+		";
+		$list = $Mysql->fetch_array($query);
+
+		// run though the list and add extra data
+		if ($list) {
+			foreach ($list as $key => $game) {
+// temp fix for old serialized data
+fix_extra_info($game['extra_info']);
+				$extra_info = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($game['extra_info'], true));
+
+				foreach ($extra_info as $field => $value) {
+					$game[$field] = $value;
+				}
+
+				$game['get_fortify'] = self::_get_fortify($extra_info);
+				$game['get_kamikaze'] = self::_get_kamikaze($extra_info);
+				$game['get_warmonger'] = self::_get_warmonger($extra_info);
+				$game['get_conquer_limit'] = self::_get_conquer_limit($extra_info);
+				$game['get_custom_rules'] = self::_get_custom_rules($extra_info);
+				$game['get_fog_of_war'] = self::_get_fog_of_war($extra_info);
+				$game['get_fog_of_war_armies'] = $game['get_fog_of_war']['armies'];
+				$game['get_fog_of_war_colors'] = $game['get_fog_of_war']['colors'];
+
+				$game['clean_name'] = htmlentities($game['name'], ENT_QUOTES, 'UTF-8', false);
+				$game['clean_custom_rules'] = htmlentities($game['get_custom_rules'], ENT_QUOTES, 'UTF-8', false);
+
+				$list[$key] = $game;
+			}
+		}
+
+		return $list;
+	}
+
+
 	/** static public function get_count
 	 *		Returns a count of all games in the database,
 	 *		the highest game id (the total number of games played),
 	 *		the number of games the given player is currently playing,
 	 *		the number of games where it is the current player's turn
 	 *
-	 * @param void
+	 * @param int $player_id optional
+	 *
 	 * @return array (int current game count, int total game count, int player game count, int player turn count)
 	 */
 	static public function get_count($player_id = 0)
@@ -3533,10 +3604,34 @@ fix_extra_info($game['extra_info']);
 	}
 
 
+	/** static public function get_archived_count
+	 *		Returns a count of all archived games in the database,
+	 *
+	 * @param void
+	 *
+	 * @return array (int current game count, int total game count, int player game count, int player turn count)
+	 */
+	static public function get_archived_count( )
+	{
+		$Mysql = Mysql::get_instance( );
+
+		// games in play
+		$query = "
+			SELECT COUNT(*)
+			FROM `".self::GAME_TABLE."`
+			WHERE archived = 1
+		";
+		$count = $Mysql->fetch_value($query);
+
+		return $count;
+	}
+
+
 	/** static public function check_turns
 	 *		Checks if it's the given player's turn in any games
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @return number of games player has a turn in
 	 */
 	static public function check_turns($player_id)
@@ -3612,7 +3707,7 @@ fix_extra_info($game['extra_info']);
 	/** static public function delete_inactive
 	 *		Deletes the inactive games from the database
 	 *
-	 * @param int age in days
+	 * @param int $age in days
 	 * @return void
 	 */
 	static public function delete_inactive($age)
@@ -3641,13 +3736,40 @@ fix_extra_info($game['extra_info']);
 	}
 
 
-	/** static public function delete_finished
+	/** static public function archive
+	 *		Archives the given game
+	 *
+	 * @param mixed array or csv of game ids
+	 * @action archives the game
+	 * @return void
+	 */
+	static public function archive($ids)
+	{
+		call(__METHOD__);
+		call($ids);
+
+		$Mysql = Mysql::get_instance( );
+
+		array_trim($ids, 'int');
+
+		if ( ! $ids) {
+			return;
+		}
+
+		foreach ($ids as $id) {
+			self::write_game_file($id);
+			$Mysql->insert(self::GAME_TABLE, array('archived' => true), array('game_id' => $id));
+		}
+	}
+
+
+	/** static public function archive_finished
 	 *		Deletes the finished games from the database
 	 *
 	 * @param int age in days
 	 * @return void
 	 */
-	static public function delete_finished($age)
+	static public function archive_finished($age)
 	{
 		call(__METHOD__);
 		call($age);
@@ -3668,7 +3790,7 @@ fix_extra_info($game['extra_info']);
 		";
 		$ids = $Mysql->fetch_value_array($query);
 
-		self::delete($ids);
+		self::archive($ids);
 	}
 
 
@@ -3885,6 +4007,7 @@ CREATE TABLE IF NOT EXISTS `wr_game` (
   `state` enum('Waiting','Placing','Playing','Finished') NOT NULL DEFAULT 'Waiting',
   `extra_info` text DEFAULT NULL,
   `paused` tinyint(1) NOT NULL DEFAULT '0',
+  `archived` tinyint(1) NOT NULL DEFAULT '0',
   `create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
 

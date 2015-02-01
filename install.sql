@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `wr2_game` (
 	`extra_info` text COLLATE utf8_general_ci,
 	`game_settings` text COLLATE utf8_general_ci NOT NULL,
 	`paused` tinyint(1) NOT NULL DEFAULT '0',
+	`archived` tinyint(1) NOT NULL DEFAULT '0',
 	`create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

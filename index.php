@@ -106,7 +106,7 @@ $hints = array(
 	'<span class="highlight">Colored entries</span> indicate that it is your turn.' ,
 	'Games that are displayed: <span class="highlight password">Waiting</span>, are password protected' ,
 	'<span class="warning">WARNING!</span><br />Games will be deleted after '.Settings::read('expire_games').' days of inactivity.' ,
-	'Finished games will be deleted after '.Settings::read('expire_finished_games').' days.' ,
+	'Finished games will be archived after '.Settings::read('expire_finished_games').' days.' ,
 );
 
 echo get_header($meta);
