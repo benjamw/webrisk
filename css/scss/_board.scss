@@ -143,6 +143,16 @@
 	#skip {
 		float: right;
 	}
+
+	.resign {
+		display: block;
+		margin: 75px auto 0;
+
+		&:hover {
+			background: #C00;
+			font-weight: bold;
+		}
+	}
 }
 
 
