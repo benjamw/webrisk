@@ -900,12 +900,15 @@ class Game
 	/** public function place_armies
 	 *		Places armies on a territory
 	 *
-	 * @param int player id
-	 * @param int number of armies
-	 * @param int land id
-	 * @param bool optional skip pause check
+	 * @param int $player_id
+	 * @param int $num_armies
+	 * @param int $land_id
+	 * @param bool $skip_pause optional
+	 *
 	 * @action saves the game
+	 *
 	 * @return bool success
+	 * @throws MyException
 	 */
 	public function place_armies($player_id, $num_armies, $land_id, $skip_pause = false)
 	{
@@ -1483,7 +1486,9 @@ class Game
 	 *		Generates the html for the game action box
 	 *
 	 * @param void
+	 *
 	 * @return string html
+	 * @throws MyException
 	 */
 	public function draw_action( )
 	{
@@ -1556,7 +1561,7 @@ class Game
 				}
 				else {
 					$html .= '
-					<input type="submit" name="submit" id="submit" value="Resign" />';
+					<input class="resign" type="submit" name="submit" id="submit" value="Resign the Game" />';
 				}
 
 				$html .= '
@@ -1614,7 +1619,7 @@ class Game
 
 				if ( ! $this->_extra_info['warmonger'] && ! $this->_risk->players[$player_id]['extra_info']['forced']) {
 					$html .= '
-					<input type="button" name="skip" id="skip" value="Skip" />';
+					<input class="placing" type="button" name="skip" id="skip" value="Skip to Placing" />';
 				}
 
 				$html .= '</div>';
@@ -1645,7 +1650,7 @@ class Game
 					<div><input type="submit" name="submit" id="submit" value="Attack" />';
 
 				if ( ! $this->_extra_info['kamikaze']) {
-					$html .= '<input type="button" name="skip" id="skip" value="Skip" />';
+					$html .= '<input class="fortify" type="button" name="skip" id="skip" value="Skip to Fortify" />';
 				}
 
 				$html .= '</div>
@@ -1682,7 +1687,7 @@ class Game
 					<div><!-- <label for="num_armies">Armies</label> --><input type="text" name="num_armies" id="num_armies" size="5" /><select id="num_armies_options">'.$army_options.'</select></div>
 					<div><!-- <label for="from_id">Move from</label> --><select name="from_id" id="from_id">'.$mine_select.'</select></div>
 					<div><!-- <label for="to_id">Move to</label> --><select name="to_id" id="to_id">'.$mine_select.'</select></div>
-					<div><input type="submit" name="submit" id="submit" value="Fortify" /><input type="button" name="skip" id="skip" value="Skip" /></div>
+					<div><input type="submit" name="submit" id="submit" value="Fortify" /><input class="finish" type="button" name="skip" id="skip" value="Finish Turn" /></div>
 				'.$form_end;
 				break;
 
