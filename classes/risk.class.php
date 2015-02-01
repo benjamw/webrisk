@@ -389,6 +389,14 @@ class Risk
 	protected $_extra_info;
 
 
+	/** protected property _log_messages
+	 *		Holds the deferred log messages
+	 *
+	 * @var array
+	 */
+	protected $_log_messages = array( );
+
+
 	/** protected property _DEBUG
 	 *		Holds the DEBUG state for the class
 	 *
@@ -1196,6 +1204,7 @@ class Risk
 		}
 
 		$this->_log('A '.$attack_id.':'.$attack_land_id.':'.$defend_id.':'.$defend_land_id.':'.implode('', $this->previous_dice['attack']).','.implode('', $this->previous_dice['defend']).':'.$attack_dead.','.$defend_dead.':'.(int) $defeated);
+		$this->_process_deferred_log( ); // because the killed log message should come after the attack message
 
 		// this makes more sense in the _test_killed function, but i needed the occupy info
 		$this->_test_win( );
@@ -1824,7 +1833,7 @@ class Risk
 	 * @param int attacker id
 	 * @param int defender id
 	 * @action tests and updates player data
-	 * @return void
+	 * @return bool defender is dead
 	 */
 	protected function _test_killed($attack_id, $defend_id)
 	{
@@ -1845,7 +1854,7 @@ class Risk
 
 			$this->players[$attack_id]['cards'] = array_merge($this->players[$attack_id]['cards'], $this->players[$defend_id]['cards']); // give the attacker the defender's cards
 
-			$this->_log('E '.$attack_id.':'.$defend_id.':'.implode(',', $this->players[$defend_id]['cards']));
+			$this->_log_deferred('E '.$attack_id.':'.$defend_id.':'.implode(',', $this->players[$defend_id]['cards']));
 
 			$this->players[$defend_id]['cards'] = array( );
 
@@ -1854,6 +1863,8 @@ class Risk
 				$this->players[$attack_id]['extra_info']['forced'] = true;
 			}
 		}
+
+		return $not_found;
 	}
 
 
@@ -2643,6 +2654,36 @@ class Risk
 			'create_date' => date('Y-m-d H:i:s'), // don't use ldate() here
 			'microsecond' => substr(microtime( ), 2, 8),
 		));
+	}
+
+
+	/** protected function _log_deferred
+	 *		defers a log to the database
+	 *
+	 * @param string $log_data computer readable game message
+	 *
+	 * @return void
+	 */
+	protected function _log_deferred($log_data)
+	{
+		$this->_log_message[] = $log_data;
+	}
+
+
+	/** protected function _process_deferred_log
+	 *		processes the list of deferred log messages
+	 *
+	 * @param void
+	 *
+	 * @return void
+	 */
+	protected function _process_deferred_log( )
+	{
+		foreach ($this->_log_messages as $log_message) {
+			$this->_log($log_message);
+		}
+
+		$this->_log_messages = array( );
 	}
 
 
