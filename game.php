@@ -395,7 +395,7 @@ echo get_header($meta);
 					<tbody>
 						<?php foreach ($conquests as $amount => $value) { ?>
 
-						<tr<?php echo (($amount % 2) ? ' class="alt"' : ''); ?>>
+						<tr<?php echo ((0 === ($amount % 2)) ? ' class="alt"' : ''); ?>>
 							<td><?php echo $amount; ?></td>
 							<td><?php echo $value; ?></td>
 						</tr>
