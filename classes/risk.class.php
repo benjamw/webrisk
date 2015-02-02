@@ -44,6 +44,9 @@ define('INFANTRY', 1);
 define('CAVALRY', 10);
 define('ARTILLERY', 100);
 
+define('LOG_TYPE', 0);
+define('LOG_DATA', 1);
+
 class Risk
 {
 
@@ -2765,7 +2768,8 @@ class Risk
 		if ($parse && $return) {
 			$logs = array( );
 			foreach ($return as $row) {
-				$data = explode(':', substr($row['data'], 2));
+				$row_data = explode(' ', $row['data']);
+				$data = explode(':', $row_data[LOG_DATA]);
 #				call($data);
 
 				$player = array( );
@@ -2785,10 +2789,11 @@ class Risk
 				}
 
 				$message = '';
-				switch(strtoupper(substr($row['data'], 0, 1))) {
+				switch(strtoupper($row_data[LOG_TYPE])) {
 					case 'A' : // Attack
 //* TEMP FIX ----
 // temp fix for what?   i forget... dammit
+// guess it's not so temp anymore, is it...
 if (isset($data[7])) {
 	$data[2] = $data[3];
 	$data[3] = $data[4];
@@ -2829,16 +2834,44 @@ if (isset($data[7])) {
 						$message = "ATTACK: {$player[0]} [{$data[0]}] with ".strlen($attack_roll)." ".plural(strlen($attack_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[1]][NAME])." [{$data[1]}], attacked {$player[2]} [{$data[2]}] with ".strlen($defend_roll)." ".plural(strlen($defend_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
 						break;
 
+					case 'C' : // Card
+						$message = "CARD: {$player[0]} [{$data[0]}] was given a card";
+						break;
+
+					case 'D' : // Done (game over)
+						$message = str_repeat('=', 10)." GAME OVER: {$player[0]} [{$data[0]}] wins !!! ".str_repeat('=', 10);
+						break;
+
+					case 'E' : // Eradicated (killed)
+						$message = str_repeat('+ ', 5)."KILLED: {$player[0]} [{$data[0]}] eradicated {$player[1]} [{$data[1]}] from the board";
+
+						if ('' != $data[2]) {
+							$message .= ' and recieved '.count(explode(',', $data[2])).' cards';
+						}
+						break;
+
+					case 'F' : // Fortify
+						$message = "FORTIFY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+						break;
+
 					case 'I' : // Initialization
 						$message = 'Board Initialized';
+						break;
+
+					case 'N' : // Next player
+						$message = str_repeat('=', 5)." NEXT: {$player[0]} [{$data[0]}] is the next player ".str_repeat('=', 40);
+						break;
+
+					case 'O' : // Occupy
+						$message = "OCCUPY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
 						break;
 
 					case 'P' : // Placing
 						$message = "PLACE: {$player[0]} [{$data[0]}] placed {$data[1]} ".plural($data[1], 'army', 'armies')." in ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}]";
 						break;
 
-					case 'N' : // Next player
-						$message = str_repeat('=', 5)." NEXT: {$player[0]} [{$data[0]}] is the next player ".str_repeat('=', 40);
+					case 'Q' : // Quit (resign)
+						$message = str_repeat('+ ', 5)."RESIGN: {$player[0]} [{$data[0]}] resigned the game";
 						break;
 
 					case 'R' : // Reinforcements
@@ -2857,44 +2890,17 @@ if (isset($data[7])) {
 						}
 						break;
 
-					case 'O' : // Occupy
-						$message = "OCCUPY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'C' : // Card
-						$message = "CARD: {$player[0]} [{$data[0]}] was given a card";
-						break;
-
-					case 'F' : // Fortify
-						$message = "FORTIFY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'Q' : // Quit (resign)
-						$message = str_repeat('+ ', 5)."RESIGN: {$player[0]} [{$data[0]}] resigned the game";
-						break;
-
 					case 'T' : // Trade
 						$message = "TRADE: {$player[0]} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
 
 						if (0 != $data['3']) {
+							// TODO: the bonus count here should be dynamic based on the bonus card setting for the game
 							$message .= " and got 2 bonus armies on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
 						}
 						break;
 
 					case 'V' : // Value
 						$message = "VALUE: The trade-in value was set to {$data[0]}";
-						break;
-
-					case 'E' : // Eradicated (killed)
-						$message = str_repeat('+ ', 5)."KILLED: {$player[0]} [{$data[0]}] eradicated {$player[1]} [{$data[1]}] from the board";
-
-						if ('' != $data[2]) {
-							$message .= ' and recieved '.count(explode(',', $data[2])).' cards';
-						}
-						break;
-
-					case 'D' : // Done (game over)
-						$message = str_repeat('=', 10)." GAME OVER: {$player[0]} [{$data[0]}] wins !!! ".str_repeat('=', 10);
 						break;
 				}
 

@@ -3787,8 +3787,6 @@ fix_extra_info($game['extra_info']);
 	{
 		$game_id = (int) $game_id;
 
-		return false; // TODO
-
 		if ( ! Settings::read('save_games')) {
 			return false;
 		}
@@ -3801,7 +3799,7 @@ fix_extra_info($game['extra_info']);
 
 		$query = "
 			SELECT *
-			FROM ".self::GAME_TABLE."
+			FROM `".self::GAME_TABLE."`
 			WHERE game_id = '{$game_id}'
 		";
 		$game = $Mysql->fetch_assoc($query);
@@ -3818,8 +3816,8 @@ fix_extra_info($game['extra_info']);
 			SELECT P.player_id
 				, P.username
 				, GP.order_num
-			FROM ".self::GAME_PLAYER_TABLE." AS GP
-				JOIN ".Player::PLAYER_TABLE." AS P
+			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+				JOIN `".Player::PLAYER_TABLE."` AS `P`
 					ON (P.player_id = GP.player_id)
 			WHERE GP.game_id = '{$game_id}'
 			ORDER BY GP.order_num ASC
@@ -3830,7 +3828,7 @@ fix_extra_info($game['extra_info']);
 			return false;
 		}
 
-		$logs = Risk::get_logs($game_id, 'machine');
+		$logs = Risk::get_logs($game_id, false);
 
 		if (empty($logs)) {
 			return false;
@@ -3838,7 +3836,7 @@ fix_extra_info($game['extra_info']);
 
 		// open the file for writing
 		$filename = GAMES_DIR.GAME_NAME.'_'.$game_id.'_'.date('Ymd', strtotime($game['create_date'])).'.dat'; // don't use ldate() here
-		$file = fopen($filename, 'wb');
+		$file = fopen($filename, 'w');
 
 		if (false === $file) {
 			return false;
@@ -3848,9 +3846,11 @@ fix_extra_info($game['extra_info']);
 		fwrite($file, date('Y-m-d', strtotime($game['create_date']))."\n"); // don't use ldate() here
 		fwrite($file, $GLOBALS['_ROOT_URI']."\n");
 		fwrite($file, "=================================\n");
+		fwrite($file, $game['extra_info']."\n");
+		fwrite($file, "=================================\n");
 
 		foreach ($players as $player) {
-			fwrite($file, "{$players['player_id']} - {$players['username']}\n");
+			fwrite($file, "{$player['player_id']} - {$player['username']}\n");
 		}
 
 		fwrite($file, "=================================\n");
@@ -3861,7 +3861,24 @@ fix_extra_info($game['extra_info']);
 			fwrite($file, $log['data']."\n");
 		}
 
-		fwrite($file, "=================================");
+		fwrite($file, "=================================\n");
+
+		fwrite($file, "KEY--- (plid = player_id, trid = territory_id, cid = continent_id, atk = attack, dfd = defend)\n");
+		fwrite($file, "A - Attack - [atk_plid]:[atk_trid]:[dfd_plid]:[dfd_trid]:[atk_rolls],[dfd_rolls]:[atk_lost],[dfd_lost]:[defeated]\n");
+		fwrite($file, "C - Card - [plid]:[card_id]\n");
+		fwrite($file, "D - Done (Game Over) - [winner_plid]\n");
+		fwrite($file, "E - Eradicated - [plid]:[killed_plid]:[cards_received (if any)]\n");
+		fwrite($file, "F - Fortify - [plid]:[armies_moved]:[from_trid]:[to_trid]\n");
+		fwrite($file, "I - Board Initialization - Ordered comma-separated list of plids ordered by trids (1-index).\n");
+		fwrite($file, "N - Next Player - [plid]\n");
+		fwrite($file, "O - Occupy - [plid]:[armies_moved]:[from_trid]:[to_trid]\n");
+		fwrite($file, "P - Placement - [plid]:[armies_placed]:[trid]\n");
+		fwrite($file, "Q - Quit - [plid]\n");
+		fwrite($file, "R - Reinforce - [plid]:[armies_given]:[num_territories_controlled]:[csv_cids_controlled (if any)]\n");
+		fwrite($file, "T - Trade - [plid]:[csv_card_list]:[armies_given]:[bonus_trid (if any)]\n");
+		fwrite($file, "V - Value for Trade - [next_trade_value]\n");
+
+		fwrite($file, "\n");
 
 		return fclose($file);
 	}
