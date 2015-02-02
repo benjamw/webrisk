@@ -49,14 +49,14 @@
 			border-color: #FFF;
 		}
 
-		/*&.waiting { list-style-image: url(../images/time.png); }*/
-		&.trading ,
-		&.placing { list-style-image: url(../images/add.png); }
-		&.attacking ,
-		&.occupying { list-style-image: url(../images/tick.png); }
-		&.fortifying { list-style-image: url(../images/exclamation.png); }
-		&.resigned { list-style-image: url(../images/flag_white.png); }
-		&.dead { list-style-image: url(../images/flower_daisy.png); }
+		/*&.waiting { list-style-image: url(../images/waiting.png); }*/
+		&.trading { list-style-image: url(../images/trading.png); }
+		&.placing { list-style-image: url(../images/placing.png); }
+		&.attacking { list-style-image: url(../images/attacking.png); }
+		&.occupying { list-style-image: url(../images/occupying.png); }
+		&.fortifying { list-style-image: url(../images/fortifying.png); }
+		&.resigned { list-style-image: url(../images/resigned.png); }
+		&.dead { list-style-image: url(../images/dead.png); }
 	}
 
 	span.cards {
