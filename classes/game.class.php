@@ -3815,6 +3815,7 @@ fix_extra_info($game['extra_info']);
 		$query = "
 			SELECT P.player_id
 				, P.username
+				, GP.color
 				, GP.order_num
 			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
 				JOIN `".Player::PLAYER_TABLE."` AS `P`
@@ -3842,7 +3843,7 @@ fix_extra_info($game['extra_info']);
 			return false;
 		}
 
-		fwrite($file, "{$game['game_id']} - {$game['name']}\n");
+		fwrite($file, "{$game['game_id']} - {$game['name']} - {$game['game_type']}\n");
 		fwrite($file, date('Y-m-d', strtotime($game['create_date']))."\n"); // don't use ldate() here
 		fwrite($file, $GLOBALS['_ROOT_URI']."\n");
 		fwrite($file, "=================================\n");
@@ -3850,7 +3851,7 @@ fix_extra_info($game['extra_info']);
 		fwrite($file, "=================================\n");
 
 		foreach ($players as $player) {
-			fwrite($file, "{$player['player_id']} - {$player['username']}\n");
+			fwrite($file, "{$player['player_id']} - {$player['color']} - {$player['username']}\n");
 		}
 
 		fwrite($file, "=================================\n");
