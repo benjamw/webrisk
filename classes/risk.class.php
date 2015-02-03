@@ -879,8 +879,11 @@ class Risk
 	 *		cards are still available for drawing
 	 *
 	 * @param void
+	 *
 	 * @action sets $_available_cards
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function find_available_cards( )
 	{
@@ -1105,11 +1108,14 @@ class Risk
 	/** public function attack
 	 *		ATTACK !!!
 	 *
-	 * @param int attack land id
-	 * @param int defend land id
-	 * @param int number of attacking armies
+	 * @param int $num_armies number of attacking armies
+	 * @param int $attack_land_id
+	 * @param int $defend_land_id
+	 *
 	 * @action tests and updates board and player data
+	 *
 	 * @return array (string outcome, int armies involved)
+	 * @throws MyException
 	 */
 	public function attack($num_armies, $attack_land_id, $defend_land_id)
 	{
@@ -2103,9 +2109,11 @@ class Risk
 	 *		dice roll method. there are two built in, but you
 	 *		can easily add your own
 	 *
-	 * @param int number of attacking armies
-	 * @param int number of defending armies
+	 * @param int $attack_armies number of attacking armies
+	 * @param int $defend_armies number of defending armies
+	 *
 	 * @action rolls dice and performs attack
+	 *
 	 * @return array (int number of dead attackers, int number of dead defenders)
 	 */
 	protected function _roll($attack_armies, $defend_armies)
@@ -2315,7 +2323,7 @@ class Risk
 		}
 
 		$calc_armies = $this->calculate_armies($player_id);
-		extract($calc_armies); // armies, land, cont_log
+		extract($calc_armies); // $armies, $land, $cont_log
 
 		$this->players[$player_id]['armies'] += $armies;
 
@@ -2740,8 +2748,8 @@ class Risk
 	/** static public function get_logs
 	 *		Grabs the logs for this game from the database
 	 *
-	 * @param int game id
-	 * @param bool parse the logs into human readable form
+	 * @param int $game_id
+	 * @param bool $parse the logs into human readable form
 	 * @return array log data
 	 */
 	static public function get_logs($game_id = 0, $parse = true)

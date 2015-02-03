@@ -2559,8 +2559,11 @@ fix_extra_info($player['extra_info']);
 	 *		Updates the Risk object with the current game data
 	 *
 	 * @param void
+	 *
 	 * @action updates the Risk object
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _update_risk( )
 	{
