@@ -2669,7 +2669,7 @@ class Risk
 	 */
 	protected function _log_deferred($log_data)
 	{
-		$this->_log_message[] = $log_data;
+		$this->_log_messages[] = $log_data;
 	}
 
 
