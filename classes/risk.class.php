@@ -271,7 +271,7 @@ class Risk
 	 *			territory_id => array('player_id', 'armies') ,
 	 *		)
 	 *
-	 * @var string
+	 * @var array
 	 */
 	public $board;
 
@@ -1416,11 +1416,14 @@ class Risk
 	 *		if placing is set to true, will not try to update the
 	 *		next player on 'Waiting'
 	 *
-	 * @param string state
-	 * @param int optional player id
-	 * @param bool optional placing flag
+	 * @param string $state
+	 * @param int $player_id optional
+	 * @param bool $placing optional placing flag
+	 *
 	 * @action tests and updates player data
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function set_player_state($state, $player_id = 0, $placing = false)
 	{
@@ -1632,7 +1635,8 @@ class Risk
 	 *		and return it as an array where the land_id is the key
 	 *		and the land_name is the value
 	 *
-	 * @param int optional player id
+	 * @param int $player_id optional
+	 *
 	 * @return array players land
 	 */
 	public function get_players_territory($player_id = 0)
@@ -2352,9 +2356,10 @@ class Risk
 	 *		Updates the number of armies
 	 *		available for the next turn in
 	 *
-	 * @param bool optional log the next value
-	 * @action updates next turn in value
+	 * @param bool $log optional log the next value
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _update_trade_value($log = true)
 	{

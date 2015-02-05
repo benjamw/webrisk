@@ -748,9 +748,12 @@ class Game
 	/** public function start
 	 *		Starts a game that is waiting
 	 *
-	 * @param int player id (for verification)
+	 * @param int $player_id (for verification)
+	 *
 	 * @action sets the game to start in the database
+	 *
 	 * @return bool success
+	 * @throws MyException
 	 */
 	public function start($player_id)
 	{

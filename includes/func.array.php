@@ -57,21 +57,23 @@ function arrayTrim( & $array, $type = null) { return array_trim($array, $type); 
  *		so it can be input into a database, or to just
  *		generally clean an array of fluff
  *
- * @param array data array to be cleaned
- * @param mixed csv or array of allowed keys
- * @param mixed optional csv or array of required keys
+ * @param array $array data array to be cleaned
+ * @param mixed $keys csv or array of allowed keys
+ * @param mixed $required optional csv or array of required keys
+ *
  * @return array
+ * @throws MyException
  */
-function array_clean($array, $keys, $reqd = array( ))
+function array_clean($array, $keys, $required = array( ))
 {
 	if ( ! is_array($array)) {
 		return array( );
 	}
 
 	array_trim($keys);
-	array_trim($reqd);
+	array_trim($required);
 
-	$keys = array_unique(array_merge($keys, $reqd));
+	$keys = array_unique(array_merge($keys, $required));
 
 	if (empty($keys)) {
 		return array( );
@@ -79,7 +81,7 @@ function array_clean($array, $keys, $reqd = array( ))
 
 	$return = array( );
 	foreach ($keys as $key) {
-		if (in_array($key, $reqd) && (empty($array[$key]))) {
+		if (in_array($key, $required) && (empty($array[$key]))) {
 			throw new MyException(__FUNCTION__.': Required element ('.$key.') missing');
 		}
 
@@ -90,7 +92,7 @@ function array_clean($array, $keys, $reqd = array( ))
 
 	return $return;
 }
-function arrayClean($array, $keys, $reqd = array( )) { return array_clean($array, $keys, $reqd); }
+function arrayClean($array, $keys, $required = array( )) { return array_clean($array, $keys, $required); }
 
 
 /** function array_transpose [arrayTranspose]
@@ -99,8 +101,10 @@ function arrayClean($array, $keys, $reqd = array( )) { return array_clean($array
  *
  *		Not to be confused with the PHP function array_flip
  *
- * @param array
+ * @param array $array
+ *
  * @return mixed array (or bool false on failure)
+ * @throws MyException
  */
 function array_transpose($array)
 {
