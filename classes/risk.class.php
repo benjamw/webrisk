@@ -400,6 +400,14 @@ class Risk
 	protected $_log_messages = array( );
 
 
+	/**
+	 * Flag to enable logging
+	 *
+	 * @var bool
+	 */
+	protected $_do_log = true;
+
+
 	/** protected property _DEBUG
 	 *		Holds the DEBUG state for the class
 	 *
@@ -505,6 +513,14 @@ class Risk
 	}
 
 
+	/**
+	 * @param boolean $do_log
+	 */
+	public function set_do_log($do_log) {
+		$this->_do_log = $do_log;
+	}
+
+
 	/** public function init_random_board
 	 *		Initializes a board by giving each
 	 *		player a random territory in turn until
@@ -557,6 +573,36 @@ class Risk
 		ksort($log_data);
 
 		$this->_log('I '.implode(',', $log_data));
+	}
+
+
+	/**
+	 * Initialize the board with data from the I log
+	 * @param string $board
+	 */
+	public function init_board($board) {
+		call(__METHOD__);
+		call($board);
+
+		$land_ids = array_keys(self::$TERRITORIES);
+
+		$board = explode(' ', $board);
+		$board = explode(',', ( ! empty($board[1])) ? $board[1] : $board[0]);
+
+		$this_board = array( );
+		foreach ($land_ids as $land_id) {
+			$this_board[$land_id] = array(
+				'player_id' => $board[$land_id - 1],
+				'armies' => 1,
+			);
+
+			--$this->players[$board[$land_id - 1]]['armies'];
+		}
+
+		ksort($this_board);
+
+		$this->board = $this_board;
+		call($this->board);
 	}
 
 
@@ -1120,13 +1166,15 @@ class Risk
 	 * @param int $num_armies number of attacking armies
 	 * @param int $attack_land_id
 	 * @param int $defend_land_id
+	 * @param int $attack_roll optional
+	 * @param int $defend_roll optional
 	 *
 	 * @action tests and updates board and player data
 	 *
 	 * @return array (string outcome, int armies involved)
 	 * @throws MyException
 	 */
-	public function attack($num_armies, $attack_land_id, $defend_land_id)
+	public function attack($num_armies, $attack_land_id, $defend_land_id, $attack_roll = null, $defend_roll = null)
 	{
 		call(__METHOD__);
 
@@ -1187,7 +1235,7 @@ class Risk
 		}
 
 		// roll the dice
-		list($attack_dead, $defend_dead) = $this->_roll($attack_armies, $defend_armies);
+		list($attack_dead, $defend_dead) = $this->_roll($attack_armies, $defend_armies, $attack_roll, $defend_roll);
 
 		// make the changes to the board
 		$this->board[$attack_land_id]['armies'] -= $attack_dead;
@@ -1468,6 +1516,11 @@ class Risk
 			throw new MyException(__METHOD__.': Trying to put a player (#'.$player_id.') into an unsupported state ('.$state.')');
 		}
 
+		// if the player is already in this state
+		if ($this->players[$player_id]['state'] === $state) {
+			return;
+		}
+
 		// if the given state does not follow our current state
 		if ( ! in_array($this->players[$player_id]['state'], $allowed_from_states[$state])) {
 			throw new MyException(__METHOD__.': Trying to put a player (#'.$player_id.') into a state ('.$state.') that does not correctly follow their current state ('.$this->players[$player_id]['state'].')', 191);
@@ -1484,7 +1537,7 @@ class Risk
 				unset($_SESSION['board']);
 
 				// check if we get a card for this round
-				$this->_award_card($player_id);
+				$this->_award_card( );
 
 				// reset our conquered count
 				$this->players[$player_id]['extra_info']['conquered'] = 0;
@@ -1511,7 +1564,7 @@ class Risk
 				// don't give a card if it's a forced trade
 				if ('Waiting' == $this->players[$player_id]['state']) {
 					// check if we forgot to get a card for a previous round
-					$this->_award_card($player_id);
+					$this->_award_card( );
 				}
 				break;
 
@@ -2124,13 +2177,14 @@ class Risk
 	 *
 	 * @param int $attack_armies number of attacking armies
 	 * @param int $defend_armies number of defending armies
+	 * @param int $attack_roll optional
+	 * @param int $defend_roll optional
 	 *
 	 * @action rolls dice and performs attack
 	 *
 	 * @return array (int number of dead attackers, int number of dead defenders)
 	 */
-	protected function _roll($attack_armies, $defend_armies)
-	{
+	protected function _roll($attack_armies, $defend_armies, $attack_roll = null, $defend_roll = null) {
 		call(__METHOD__);
 
 		// here you can switch the dice roll method to be one of:
@@ -2139,6 +2193,10 @@ class Risk
 		// or feel free to add your own...
 
 		$roll_method = 'builtin';
+
+		if (is_numeric($attack_roll) && is_numeric($defend_roll)) {
+			$roll_method = 'submitted';
+		}
 
 		switch ($roll_method) {
 			// if you build your own dice roll method
@@ -2150,8 +2208,6 @@ class Risk
 
 			// use random.orgs truly random number generator
 			case 'random' :
-				$rolls = array( );
-
 				$fp_random_org = fopen('http://www.random.org/integers/?num=5&min=1&max=6&col=5&base=8&format=plain&rnd=new', 'r');
 				$text_random_org = fread($fp_random_org, 20);
 				fclose($fp_random_org);
@@ -2176,6 +2232,15 @@ class Risk
 
 				break;
 
+			case 'submitted' :
+				$attack_roll = str_split($attack_roll);
+				$defend_roll = str_split($defend_roll);
+
+				// sort them both, highest to lowest
+				rsort($attack_roll);
+				rsort($defend_roll);
+				break;
+
 			// quick and easy built-in pseudo-random method
 			// ...many people have complained about 'anomalies'
 			// with this method, but it may just be the crazy
@@ -2190,26 +2255,28 @@ class Risk
 		}
 
 		// now pass out random dice rolls to the attacker
-		$attack_roll[] = reset($rolls);
-		$defend_roll[] = next($rolls);
-
-		if (2 <= $attack_armies) {
-			$attack_roll[] = next($rolls);
-		}
-
-		if (2 == $defend_armies) {
+		if ('submitted' !== $roll_method) {
+			$attack_roll[] = reset($rolls);
 			$defend_roll[] = next($rolls);
+
+			if (2 <= $attack_armies) {
+				$attack_roll[] = next($rolls);
+			}
+
+			if (2 == $defend_armies) {
+				$defend_roll[] = next($rolls);
+			}
+
+			if (3 == $attack_armies) {
+				$attack_roll[] = next($rolls);
+			}
+
+			// sort them both, highest to lowest
+			rsort($attack_roll);
+			rsort($defend_roll);
+
+			$this->_log_roll($attack_roll, $defend_roll);
 		}
-
-		if (3 == $attack_armies) {
-			$attack_roll[] = next($rolls);
-		}
-
-		// sort them both, highest to lowest
-		rsort($attack_roll);
-		rsort($defend_roll);
-
-		$this->_log_roll($attack_roll, $defend_roll);
 
 		$this->previous_dice = array('attack' => $attack_roll, 'defend' => $defend_roll);
 
@@ -2417,12 +2484,11 @@ class Risk
 	 *		if the player gets a card this round...
 	 *		give them one
 	 *
-	 * @param void
+	 * @param int $card_id optional
 	 * @action tests and updates player data
 	 * @return void
 	 */
-	protected function _award_card( )
-	{
+	protected function _award_card($card_id = null) {
 		call(__METHOD__);
 
 		$player_id = $this->current_player;
@@ -2433,11 +2499,16 @@ class Risk
 			return false;
 		}
 
-		// remove a random card from the deck
-		shuffle($this->_available_cards);
-		$card_index = array_rand($this->_available_cards);
+		if ( ! $card_id) {
+			// remove a random card from the deck
+			shuffle($this->_available_cards);
+			$card_index = array_rand($this->_available_cards);
 
-		$card_id = $this->_available_cards[$card_index];
+			$card_id = $this->_available_cards[$card_index];
+		}
+
+		$card_id = (int) $card_id;
+
 		unset($this->_available_cards[$card_index]);
 
 		// and give it to the player
@@ -2445,6 +2516,12 @@ class Risk
 		$this->players[$player_id]['extra_info']['get_card'] = false;
 
 		$this->_log('C '.$player_id.':'.$card_id);
+	}
+
+
+	public function give_card($player_id, $card_id) {
+		$this->current_player = (int) $player_id;
+		$this->_award_card($card_id);
 	}
 
 
@@ -2536,6 +2613,33 @@ class Risk
 		else {
 			$this->set_player_state('Placing');
 		}
+	}
+
+
+	/**
+	 * @param $player_id
+	 *
+	 * @return int next player id
+	 * @throws MyException
+	 */
+	public function set_next_player($player_id) {
+		if ((int) $player_id === (int) $this->current_player) {
+			return $player_id;
+		}
+
+		$orig_current_player = $this->current_player;
+
+		do {
+			$cur_state = $this->players[$player_id]['state'];
+			$this->set_player_next_state($cur_state, $this->current_player);
+		}
+		while ($orig_current_player === $this->current_player);
+
+		if ((int) $player_id !== (int) $this->current_player) {
+			throw new MyException(__METHOD__.': Next player was not the correct next player');
+		}
+
+		return $this->current_player;
 	}
 
 
@@ -2693,6 +2797,10 @@ class Risk
 	 */
 	protected function _log($log_data)
 	{
+		if ( ! $this->_do_log) {
+			return;
+		}
+
 		usleep(100); // sleep for 1/10,000th of a second to prevent duplicate keys
 		// because computers are just too fast now
 

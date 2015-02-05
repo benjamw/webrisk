@@ -366,6 +366,15 @@ class Game
 	}
 
 
+	/**
+	 * @param bool $do_log flag
+	 * @return void
+	 */
+	public function set_do_log($do_log) {
+		$this->_risk->set_do_log($do_log);
+	}
+
+
 	/** public function create
 	 *		Creates a new Risk game
 	 *
