@@ -531,8 +531,6 @@ class Risk
 
 		shuffle($land_ids);
 		call($land_ids);
-		shuffle($player_ids);
-		call($player_ids);
 
 		$i = 0;
 		foreach ($land_ids as $land_id) {
@@ -542,6 +540,8 @@ class Risk
 				'armies' => 1 ,
 			);
 			++$i;
+
+			--$this->players[$player_id]['armies'];
 
 			call($board[$land_id]);
 		}
@@ -565,7 +565,7 @@ class Risk
 	 *		when the game starts
 	 *
 	 * @param void
-	 * @action randomly places all players start armies
+	 *
 	 * @return void
 	 */
 	public function place_start_armies( ) {
@@ -601,6 +601,8 @@ class Risk
 					$placed[$player_id][$land_id] = 1;
 				}
 
+				--$my_armies;
+
 				if (0 != $this->_extra_info['initial_army_limit']) {
 					// account for the armies already on the board by subtracting 1 from the limit
 					if ($placed[$player_id][$land_id] > ($this->_extra_info['initial_army_limit'] - 1)) {
@@ -608,8 +610,6 @@ class Risk
 						continue;
 					}
 				}
-
-				--$my_armies;
 			}
 		}
 
@@ -861,14 +861,20 @@ class Risk
 	 *		Returns the number of armies each player
 	 *		has to place at the start of the game
 	 *
-	 * @param void
+	 * @param int $count optional player count
 	 * @return int number of start armies
 	 */
-	public function get_start_armies( )
+	public function get_start_armies($count = null)
 	{
 		call(__METHOD__);
 
+		$count = (int) $count;
+
 		$start_armies = array(2 => 40, 35, 30, 25, 20);
+
+		if ( ! empty($count)) {
+			return $start_armies[$count];
+		}
 
 		return $start_armies[count($this->players)];
 	}
@@ -1054,12 +1060,15 @@ class Risk
 	 *		Places $num_armies armies onto $land_id
 	 *		for player $player_id
 	 *
-	 * @param int player id
-	 * @param int number of armies
-	 * @param int land id
-	 * @param bool optional test initial placement limit
+	 * @param int $player_id
+	 * @param int $num_armies
+	 * @param int $land_id
+	 * @param bool $is_initial_placing optional test initial placement limit
+	 *
 	 * @action tests and updates board and player data
+	 *
 	 * @return int number of armies placed
+	 * @throws MyException
 	 */
 	public function place_armies($player_id, $num_armies, $land_id, $is_initial_placing = false)
 	{
@@ -2269,8 +2278,12 @@ class Risk
 	 *		Returns the number of armies the given player
 	 *		has to place at the start of their next turn
 	 *
-	 * @param int player id
-	 * @return int number of available armies
+	 * @param int $player_id
+	 *
+	 * @return array [avail armies, land, continents]
+	 * @throws MyException
+	 *
+	 * @TODO: break this up into three functions, or remove the last two data items from the array
 	 */
 	public function calculate_armies($player_id)
 	{
@@ -2309,8 +2322,10 @@ class Risk
 	 *		Adds the number of armies the given player
 	 *		has to place at the start of their next turn
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _add_armies($player_id)
 	{
@@ -2322,6 +2337,8 @@ class Risk
 			throw new MyException(__METHOD__.': Missing required arguments');
 		}
 
+		$armies = 0;
+		$land = $cont_log = array( );
 		$calc_armies = $this->calculate_armies($player_id);
 		extract($calc_armies); // $armies, $land, $cont_log
 
@@ -2423,6 +2440,23 @@ class Risk
 		$this->players[$player_id]['extra_info']['get_card'] = false;
 
 		$this->_log('C '.$player_id.':'.$card_id);
+	}
+
+
+	public function order_players( ) {
+		$players = $this->players;
+
+		$order = array( );
+		foreach ($players as $player) {
+			$order[$player['order_num']] = $player['player_id'];
+		}
+
+		ksort($order);
+
+		$this->players = array( );
+		foreach ($order as $player_id) {
+			$this->players[$player_id] = $players[$player_id];
+		}
 	}
 
 

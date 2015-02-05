@@ -773,13 +773,6 @@ class Game
 			throw new MyException(__METHOD__.': Player attempting to start the game (#'.$this->id.') without enough players.');
 		}
 
-		try {
-			$this->_risk->init_random_board( );
-		}
-		catch (MyException $e) {
-			throw $e;
-		}
-
 		// get the data we need to start the game
 		$num_armies = $this->_risk->get_start_armies( );
 
@@ -793,6 +786,19 @@ class Game
 			$this->_risk->players[$player_id]['state'] = 'Placing';
 			$this->_risk->players[$player_id]['armies'] = $num_armies;
 			$this->_risk->players[$player_id]['order_num'] = $i;
+		}
+
+		$this->_risk->order_players( );
+
+		try {
+			$this->_risk->init_random_board( );
+		}
+		catch (MyException $e) {
+			throw $e;
+		}
+
+		$land_count = array( );
+		foreach ($player_ids as $player_id) {
 			$land_count[$player_id] = count($this->_risk->get_players_territory($player_id));
 		}
 		call($land_count);
