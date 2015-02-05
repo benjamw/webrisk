@@ -3022,14 +3022,14 @@ if (isset($data[7])) {
 		// grab our counts so we can run some stats
 		$query = "
 			SELECT COUNT(*)
-			FROM ".self::ROLL_LOG_TABLE."
+			FROM `".self::ROLL_LOG_TABLE."`
 		";
 		$count['total'] = $Mysql->fetch_value($query);
 
 		foreach ($fights as $fight) {
 			$query = "
 				SELECT COUNT(*)
-				FROM ".self::ROLL_LOG_TABLE."
+				FROM `".self::ROLL_LOG_TABLE."`
 				WHERE {$WHERE[$fight]}
 			";
 			$count[$fight] = $Mysql->fetch_value($query);
@@ -3047,7 +3047,7 @@ if (isset($data[7])) {
 					case 'attack' :
 						$query = "
 							SELECT COUNT(*)
-							FROM ".self::ROLL_LOG_TABLE."
+							FROM `".self::ROLL_LOG_TABLE."`
 							WHERE {$WHERE[$fight]}
 								AND attack_1 > defend_1
 								AND (
@@ -3061,7 +3061,7 @@ if (isset($data[7])) {
 					case 'defend' :
 						$query = "
 							SELECT COUNT(*)
-							FROM ".self::ROLL_LOG_TABLE."
+							FROM `".self::ROLL_LOG_TABLE."`
 							WHERE {$WHERE[$fight]}
 								AND attack_1 <= defend_1
 								AND (
@@ -3075,7 +3075,7 @@ if (isset($data[7])) {
 					case 'both' :
 						$query = "
 							SELECT COUNT(*)
-							FROM ".self::ROLL_LOG_TABLE."
+							FROM `".self::ROLL_LOG_TABLE."`
 							WHERE {$WHERE[$fight]}
 								AND ((
 										attack_1 > defend_1
