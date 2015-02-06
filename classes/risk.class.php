@@ -2286,8 +2286,6 @@ class Risk
 	 *
 	 * @return array [avail armies, land, continents]
 	 * @throws MyException
-	 *
-	 * @TODO: break this up into three functions, or remove the last two data items from the array
 	 */
 	public function calculate_armies($player_id)
 	{
@@ -2311,14 +2309,11 @@ class Risk
 
 		$continents = $this->get_players_continents($player_id);
 
-		// calculate if the player controls any continents
-		$cont_log = array( );
 		foreach ($continents as $cont_id => $cont) {
 			$armies += $cont[BONUS];
-			$cont_log[] = $cont_id;
 		}
 
-		return compact('armies', 'land', 'cont_log');
+		return $armies;
 	}
 
 
@@ -2341,10 +2336,9 @@ class Risk
 			throw new MyException(__METHOD__.': Missing required arguments');
 		}
 
-		$armies = 0;
-		$land = $cont_log = array( );
-		$calc_armies = $this->calculate_armies($player_id);
-		extract($calc_armies); // $armies, $land, $cont_log
+		$armies = $this->calculate_armies($player_id);
+		$land = $this->get_players_land($player_id);
+		$cont_ids = array_values($this->get_players_continents($player_id));
 
 		$this->players[$player_id]['armies'] += $armies;
 
