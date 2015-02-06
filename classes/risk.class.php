@@ -393,12 +393,11 @@ class Risk
 	 *		Class constructor
 	 *		Sets all outside data
 	 *
-	 * @param void
-	 * @action instantiates object
-	 * @return void
+	 * @param int $game_id optional
+	 *
+	 * @return Risk object reference
 	 */
-	public function __construct($game_id = 0)
-	{
+	public function __construct($game_id = 0) {
 		call(__METHOD__);
 
 		try {
@@ -425,11 +424,12 @@ class Risk
 	 *		Returns the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
+	 * @param string $property name
+	 *
 	 * @return mixed property value
+	 * @throws MyException
 	 */
-	public function __get($property)
-	{
+	public function __get($property) {
 		if ( ! property_exists($this, $property)) {
 			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 2);
 		}
@@ -447,13 +447,15 @@ class Risk
 	 *		Sets the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string property name
-	 * @param mixed property value
+	 * @param string $property
+	 * @param mixed $value
+	 *
 	 * @action optional validation
+	 *
 	 * @return bool success
+	 * @throws MyException
 	 */
-	public function __set($property, $value)
-	{
+	public function __set($property, $value) {
 		if ( ! property_exists($this, $property)) {
 			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 3);
 		}
@@ -487,11 +489,13 @@ class Risk
 	 *		all territories are occupied
 	 *
 	 * @param void
+	 *
 	 * @action randomly inits the game board
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
-	public function init_random_board( )
-	{
+	public function init_random_board( ) {
 		call(__METHOD__);
 
 		if ( ! is_null($this->board)) {
@@ -602,10 +606,10 @@ class Risk
 	 *		Can be one of: Original, Secret mission, Capital
 	 *
 	 * @param string game type
+	 *
 	 * @return void
 	 */
-	public function set_game_type($value)
-	{
+	public function set_game_type($value) {
 		call(__METHOD__);
 
 		$allowed = array(
@@ -625,11 +629,11 @@ class Risk
 	/** public function set_extra_info
 	 *		Sets the extra info for the game
 	 *
-	 * @param array extra game info
+	 * @param array $extra_info
+	 *
 	 * @return void
 	 */
-	public function set_extra_info($extra_info)
-	{
+	public function set_extra_info($extra_info) {
 		call(__METHOD__);
 
 		$extra_info = array_clean($extra_info, array_keys(self::$EXTRA_INFO_DEFAULTS));
@@ -650,10 +654,10 @@ class Risk
 	 *		Calculates the conquer limit for the current player
 	 *
 	 * @param void
+	 *
 	 * @return void
 	 */
-	public function calculate_conquer_limit( )
-	{
+	public function calculate_conquer_limit( ) {
 		call(__METHOD__);
 
 		if ( ! $this->current_player) {
@@ -781,10 +785,10 @@ class Risk
 	 *		Returns the extra info for the game
 	 *
 	 * @param void
+	 *
 	 * @return array
 	 */
-	public function get_extra_info( )
-	{
+	public function get_extra_info( ) {
 		call(__METHOD__);
 
 		return $this->_extra_info;
@@ -795,10 +799,10 @@ class Risk
 	 *		Returns the game type
 	 *
 	 * @param void
+	 *
 	 * @return string game type
 	 */
-	public function get_type( )
-	{
+	public function get_type( ) {
 		call(__METHOD__);
 
 		return $this->_game_type;
@@ -809,11 +813,12 @@ class Risk
 	 *		Sets the trade value array
 	 *		to be used when setting the trade values
 	 *
-	 * @param array trade values
+	 * @param array $trades values
+	 * @param int $bonus value optional
+	 *
 	 * @return void
 	 */
-	public function set_trade_values($trades, $bonus = 2)
-	{
+	public function set_trade_values($trades, $bonus = 2) {
 		call(__METHOD__);
 
 		$this->_trade_values = $trades;
@@ -825,10 +830,10 @@ class Risk
 	 *		Returns the next available card trade value
 	 *
 	 * @param void
+	 *
 	 * @return int next trade value
 	 */
-	public function get_trade_value( )
-	{
+	public function get_trade_value( ) {
 		return $this->_next_trade;
 	}
 
@@ -838,10 +843,10 @@ class Risk
 	 *		has to place at the start of the game
 	 *
 	 * @param int $count optional player count
+	 *
 	 * @return int number of start armies
 	 */
-	public function get_start_armies($count = null)
-	{
+	public function get_start_armies($count = null) {
 		call(__METHOD__);
 
 		$count = (int) $count;
@@ -867,8 +872,7 @@ class Risk
 	 * @return void
 	 * @throws MyException
 	 */
-	public function find_available_cards( )
-	{
+	public function find_available_cards( ) {
 		call(__METHOD__);
 
 		$avail_cards = array_keys(self::$CARDS);
@@ -904,10 +908,10 @@ class Risk
 	 *		and 'starts' the game
 	 *
 	 * @param void
+	 *
 	 * @return int first player id
 	 */
-	public function begin( )
-	{
+	public function begin( ) {
 		call(__METHOD__);
 
 		// grab the first player's id and give them some armies to place
@@ -930,13 +934,15 @@ class Risk
 	/** public function trade_cards
 	 *		Trades the given cards for more armies
 	 *
-	 * @param array card ids
-	 * @param int bonus card id
+	 * @param array $card_ids
+	 * @param int $bonus_card id
+	 *
 	 * @action tests and updates player data
+	 *
 	 * @return bool traded
+	 * @throws MyException
 	 */
-	public function trade_cards($card_ids, $bonus_card = null)
-	{
+	public function trade_cards($card_ids, $bonus_card = null) {
 		call(__METHOD__);
 
 		$player_id = $this->current_player;
@@ -1046,8 +1052,7 @@ class Risk
 	 * @return int number of armies placed
 	 * @throws MyException
 	 */
-	public function place_armies($player_id, $num_armies, $land_id, $is_initial_placing = false)
-	{
+	public function place_armies($player_id, $num_armies, $land_id, $is_initial_placing = false) {
 		call(__METHOD__);
 
 		// make sure this player exists
@@ -1102,8 +1107,7 @@ class Risk
 	 * @return array (string outcome, int armies involved)
 	 * @throws MyException
 	 */
-	public function attack($num_armies, $attack_land_id, $defend_land_id)
-	{
+	public function attack($num_armies, $attack_land_id, $defend_land_id) {
 		call(__METHOD__);
 
 		$attack_id = $this->current_player;
@@ -1219,12 +1223,14 @@ class Risk
 	 *		armies MUST be moved, and moves the given number
 	 *		of armies into the defeated land
 	 *
-	 * @param int number of armies
+	 * @param int $num_armies
+	 *
 	 * @action tests and updates board and player data
+	 *
 	 * @return int occupied land id
+	 * @throws MyException
 	 */
-	public function occupy($num_armies)
-	{
+	public function occupy($num_armies) {
 		call(__METHOD__);
 
 		$player_id = $this->current_player;
@@ -1290,14 +1296,16 @@ class Risk
 	 *		moves $num_armies armies from $from_land_id
 	 *		into $to_land_id, if possible
 	 *
-	 * @param int number of armies
-	 * @param int from land id
-	 * @param int to land id
+	 * @param int $num_armies
+	 * @param int $from_land_id
+	 * @param int $to_land_id
+	 *
 	 * @action tests and updates board and player data
+	 *
 	 * @return int number of armies moved
+	 * @throws MyException
 	 */
-	public function fortify($num_armies, $from_land_id, $to_land_id)
-	{
+	public function fortify($num_armies, $from_land_id, $to_land_id) {
 		call(__METHOD__);
 
 		$player_id = $this->current_player;
@@ -1401,8 +1409,7 @@ class Risk
 	 * @return void
 	 * @throws MyException
 	 */
-	public function set_player_state($state, $player_id = 0, $placing = false)
-	{
+	public function set_player_state($state, $player_id = 0, $placing = false) {
 		call(__METHOD__);
 		call($state);
 
@@ -1568,13 +1575,15 @@ class Risk
 	 *		places the given player into the next state,
 	 *		if possible
 	 *
-	 * @param string players current state
-	 * @param int player id
+	 * @param string $cur_state players current state
+	 * @param int $player_id
+	 *
 	 * @action tests and updates player data
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
-	public function set_player_next_state($cur_state, $player_id)
-	{
+	public function set_player_next_state($cur_state, $player_id) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1615,8 +1624,7 @@ class Risk
 	 *
 	 * @return array players land
 	 */
-	public function get_players_territory($player_id = 0)
-	{
+	public function get_players_territory($player_id = 0) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1642,11 +1650,11 @@ class Risk
 	/** public function get_adjacent_territories
 	 *		Grabs the ids for all emeny territories adjacent to the player
 	 *
-	 * @param int player id
+	 * @param int $player_id optional
+	 *
 	 * @return string player state
 	 */
-	public function get_adjacent_territories($player_id = null)
-	{
+	public function get_adjacent_territories($player_id = null) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1681,11 +1689,11 @@ class Risk
 	 *		and return it as an array where the land_id is the key
 	 *		and the land_name is the value
 	 *
-	 * @param int optional player id
+	 * @param int $player_id optional
+	 *
 	 * @return array players land
 	 */
-	public function get_others_territory($player_id = 0)
-	{
+	public function get_others_territory($player_id = 0) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1713,11 +1721,11 @@ class Risk
 	 *		and return it as a 2-D array where the card_id is the key
 	 *		and the card data array is the value
 	 *
-	 * @param int optional player id
+	 * @param int $player_id optional
+	 *
 	 * @return array players cards
 	 */
-	public function get_players_cards($player_id = 0)
-	{
+	public function get_players_cards($player_id = 0) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1739,11 +1747,11 @@ class Risk
 	/** public function get_players_extra_info
 	 *		Returns the extra info for the given player
 	 *
-	 * @param int optional player id
+	 * @param int $player_id optional
+	 *
 	 * @return array players extra info
 	 */
-	public function get_players_extra_info($player_id = 0)
-	{
+	public function get_players_extra_info($player_id = 0) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1761,11 +1769,11 @@ class Risk
 	 *		and return it as an array where the land_id is the key
 	 *		and the armies is the value
 	 *
-	 * @param int optional player id
+	 * @param int $player_id optional
+	 *
 	 * @return array players land
 	 */
-	public function get_players_land($player_id = 0)
-	{
+	public function get_players_land($player_id = 0) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1793,11 +1801,11 @@ class Risk
 	 *		and return it as an array where the cont_id is the key
 	 *		and the cont array is the value
 	 *
-	 * @param int optional player id
+	 * @param int $player_id optional
+	 *
 	 * @return array players continents
 	 */
-	public function get_players_continents($player_id = 0)
-	{
+	public function get_players_continents($player_id = 0) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1828,13 +1836,14 @@ class Risk
 	 *		Check to see if we completely eradicated one player
 	 *		from the game, and if so, transfer all their cards
 	 *
-	 * @param int attacker id
-	 * @param int defender id
+	 * @param int $attack_id
+	 * @param int $defend_id
+	 *
 	 * @action tests and updates player data
+	 *
 	 * @return bool defender is dead
 	 */
-	protected function _test_killed($attack_id, $defend_id)
-	{
+	protected function _test_killed($attack_id, $defend_id) {
 		call(__METHOD__);
 
 		$not_found = true;
@@ -1871,11 +1880,12 @@ class Risk
 	 *		and perform our occupy if we have
 	 *
 	 * @param void
+	 *
 	 * @action tests and updates player data
-	 * @return void
+	 *
+	 * @return bool someone won the game
 	 */
-	protected function _test_win( )
-	{
+	protected function _test_win( ) {
 		call(__METHOD__);
 
 		$alive = array( );
@@ -1907,12 +1917,13 @@ class Risk
 	 *		one army on it), if not, skip everything and go
 	 *		directly to next player
 	 *
-	 * @param int optional player id
+	 * @param int $player_id optional
+	 *
 	 * @action tests and updates player data
-	 * @return void
+	 *
+	 * @return bool player can attack
 	 */
-	protected function _test_attack($player_id = 0)
-	{
+	protected function _test_attack($player_id = 0) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1969,12 +1980,14 @@ class Risk
 	/** protected function _session_board_test_fortify
 	 *		Check to see if we can fortify at all
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @action tests and updates player data
-	 * @return void
+	 *
+	 * @return bool player can fortify
+	 * @throws MyException
 	 */
-	protected function _session_board_test_fortify($player_id)
-	{
+	protected function _session_board_test_fortify($player_id) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -2023,13 +2036,14 @@ class Risk
 	 *		Check to see if the two given territories are
 	 *		connected via a path of the player's territories
 	 *
-	 * @param int from land id
-	 * @param int to land id
-	 * @param int optional player id
+	 * @param int $from_land_id
+	 * @param int $to_land_id
+	 * @param int $player_id optional
+	 *
 	 * @return bool valid path
+	 * @throws MyException
 	 */
-	protected function _is_connected($from_land_id, $to_land_id, $player_id = 0)
-	{
+	protected function _is_connected($from_land_id, $to_land_id, $player_id = 0) {
 		call(__METHOD__);
 
 		$from_land_id = (int) $from_land_id;
@@ -2105,8 +2119,7 @@ class Risk
 	 *
 	 * @return array (int number of dead attackers, int number of dead defenders)
 	 */
-	protected function _roll($attack_armies, $defend_armies)
-	{
+	protected function _roll($attack_armies, $defend_armies) {
 		call(__METHOD__);
 
 		// here you can switch the dice roll method to be one of:
@@ -2212,11 +2225,12 @@ class Risk
 	 *		making sure all territories are accounted for
 	 *		and no armies are less than 1
 	 *
-	 * @param array board data
+	 * @param array $board
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
-	protected function _test_board($board)
-	{
+	protected function _test_board($board) {
 		call(__METHOD__);
 
 		$lands = array( );
@@ -2263,8 +2277,7 @@ class Risk
 	 * @return array [avail armies, land, continents]
 	 * @throws MyException
 	 */
-	public function calculate_armies($player_id)
-	{
+	public function calculate_armies($player_id) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -2302,8 +2315,7 @@ class Risk
 	 * @return void
 	 * @throws MyException
 	 */
-	protected function _add_armies($player_id)
-	{
+	protected function _add_armies($player_id) {
 		call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -2331,8 +2343,7 @@ class Risk
 	 * @return void
 	 * @throws MyException
 	 */
-	protected function _update_trade_value($log = true)
-	{
+	protected function _update_trade_value($log = true) {
 		call(__METHOD__);
 		call($log);
 
@@ -2388,11 +2399,12 @@ class Risk
 	 *		give them one
 	 *
 	 * @param void
+	 *
 	 * @action tests and updates player data
+	 *
 	 * @return void
 	 */
-	protected function _award_card( )
-	{
+	protected function _award_card( ) {
 		call(__METHOD__);
 
 		$player_id = $this->current_player;
@@ -2418,6 +2430,13 @@ class Risk
 	}
 
 
+	/**
+	 * Orders the player array in turn order
+	 *
+	 * @param void
+	 *
+	 * @return void
+	 */
 	public function order_players( ) {
 		$players = $this->players;
 
@@ -2440,11 +2459,13 @@ class Risk
 	 *		gets them ready to go
 	 *
 	 * @param void
+	 *
 	 * @action tests and updates player data
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
-	protected function _next_player( )
-	{
+	protected function _next_player( ) {
 		call(__METHOD__);
 
 		// kill the pesky infinite loop
@@ -2512,11 +2533,11 @@ class Risk
 	/** protected function _player_can_trade
 	 *		finds out if the given player can make a trade
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @return bool player can trade
 	 */
-	protected function _player_can_trade($player_id)
-	{
+	protected function _player_can_trade($player_id) {
 		call(__METHOD__);
 
 		// if the player doesn't have enough cards, they can't trade
@@ -2544,11 +2565,12 @@ class Risk
 	/** protected function _test_card_set
 	 *		Tests the given cards for a valid set
 	 *
-	 * @param array of card ids
+	 * @param array $cards card ids
+	 *
 	 * @return bool has valid set
+	 * @throws MyException
 	 */
-	protected function _test_card_set($cards)
-	{
+	protected function _test_card_set($cards) {
 		call(__METHOD__);
 		call($cards);
 
@@ -2664,10 +2686,11 @@ class Risk
 	 *		in case they were changed by somebody else
 	 *
 	 * @param void
+	 *
 	 * @return bool success
+	 * @throws MyException
 	 */
-	static public function check_adjacencies( )
-	{
+	static public function check_adjacencies( ) {
 		foreach (self::$TERRITORIES as $id => $territory) {
 			foreach ($territory[ADJACENT] as $adj) {
 				if ( ! in_array($id, self::$TERRITORIES[$adj][ADJACENT])) {
@@ -2680,8 +2703,13 @@ class Risk
 } // end of Risk class
 
 
-
-// setup some constant conversion functions
+/**
+ * Return a human readable version of the card type
+ *
+ * @param int $input card type id
+ *
+ * @return string card name or false on failure
+ */
 function card_type($input) {
 	switch ($input) {
 		case WILD :
@@ -2707,6 +2735,13 @@ function card_type($input) {
 }
 
 
+/**
+ * Get an abbreviated version of the territory name
+ *
+ * @param string $name normal territory name
+ *
+ * @return string short territory name
+ */
 function shorten_territory_name($name) {
 	$short_names = array(
 			// North America
