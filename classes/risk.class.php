@@ -2803,6 +2803,19 @@ class Risk
 		$Mysql = Mysql::get_instance( );
 
 		$query = "
+			SELECT `extra_info`
+			FROM `".Game::GAME_TABLE."`
+			WHERE `game_id` = '{$game_id}'
+		";
+		$extra_info = $Mysql->fetch_value($query);
+		$extra_info = json_decode($extra_info, true);
+
+		$trade_bonus = 2;
+		if ( ! empty($extra_info['trade_card_bonus'])) {
+			$trade_bonus = (int) $extra_info['trade_card_bonus'];
+		}
+
+		$query = "
 			SELECT *
 			FROM ".self::GAME_LOG_TABLE."
 			WHERE game_id = '{$game_id}'
@@ -2940,9 +2953,8 @@ if (isset($data[7])) {
 					case 'T' : // Trade
 						$message = "TRADE: {$player[0]} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
 
-						if (0 != $data['3']) {
-							// TODO: the bonus count here should be dynamic based on the bonus card setting for the game
-							$message .= " and got 2 bonus armies on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+						if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
+							$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
 						}
 						break;
 
