@@ -34,7 +34,7 @@ try {
 	}
 
 	if ( ! isset($history)) {
-		$logs = Risk::get_logs($_SESSION['game_id'], 'human');
+		$logs = Game::get_logs($_SESSION['game_id'], 'human');
 		$players = $Game->get_players( );
 
 		$colors = array( );

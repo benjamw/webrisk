@@ -49,7 +49,7 @@ $table_format = array(
 );
 $contents = get_table($table_format, $list, $table_meta);
 
-extract(Risk::get_roll_stats( )); // extracts $actual, $theor, and $values arrays
+extract(Game::get_roll_stats( )); // extracts $actual, $theor, and $values arrays
 
 // we can't use the table creator for this one, just build it by hand
 $contents .= '

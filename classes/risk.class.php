@@ -23,6 +23,9 @@
 */
 
 // TODO: organize better
+// TODO: the logging system should really be wholly contained within the game class
+// with the Risk class returning everything that the Game class might need to write the log
+// or making it available so that the game class can get at it easily.
 
 require_once INCLUDE_DIR.'html.general.php';
 require_once INCLUDE_DIR.'func.array.php';
@@ -44,31 +47,12 @@ define('INFANTRY', 1);
 define('CAVALRY', 10);
 define('ARTILLERY', 100);
 
-define('LOG_TYPE', 0);
-define('LOG_DATA', 1);
-
 class Risk
 {
 
 	/**
 	 *		PROPERTIES
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-	/** const property GAME_LOG_TABLE
-	 *		Holds the game log table name
-	 *
-	 * @var string
-	 */
-	const GAME_LOG_TABLE = T_GAME_LOG;
-
-
-	/** const property ROLL_LOG_TABLE
-	 *		Holds the roll log table name
-	 *
-	 * @var string
-	 */
-	const ROLL_LOG_TABLE = T_ROLL_LOG;
-
 
 	/** static protected property CONTINENTS
 	 *		Holds the game continents data
@@ -392,14 +376,6 @@ class Risk
 	protected $_extra_info;
 
 
-	/** protected property _log_messages
-	 *		Holds the deferred log messages
-	 *
-	 * @var array
-	 */
-	protected $_log_messages = array( );
-
-
 	/** protected property _DEBUG
 	 *		Holds the DEBUG state for the class
 	 *
@@ -556,7 +532,7 @@ class Risk
 
 		ksort($log_data);
 
-		$this->_log('I '.implode(',', $log_data));
+		Game::log($this->$_game_id, 'I '.implode(',', $log_data));
 	}
 
 
@@ -942,7 +918,7 @@ class Risk
 			}
 		}
 
-		$this->_log('N '.$this->current_player);
+		Game::log($this->$_game_id, 'N '.$this->current_player);
 		$this->_add_armies($this->current_player);
 
 		$this->set_player_state('Placing');
@@ -1034,7 +1010,7 @@ class Risk
 			$bonus_card = 0;
 		}
 
-		$this->_log('T '.$player_id.':'.implode(',', $card_ids).':'.$this->_next_trade.':'.$bonus_card);
+		Game::log($this->$_game_id, 'T '.$player_id.':'.implode(',', $card_ids).':'.$this->_next_trade.':'.$bonus_card);
 
 		// update the next trade in value
 		$this->_update_trade_value( );
@@ -1108,7 +1084,7 @@ class Risk
 		// remove those armies from the stockpile
 		$this->players[$player_id]['armies'] -= $num_armies;
 
-		$this->_log('P '.$player_id.':'.$num_armies.':'.$land_id);
+		Game::log($this->$_game_id, 'P '.$player_id.':'.$num_armies.':'.$land_id);
 
 		return $num_armies;
 	}
@@ -1221,8 +1197,8 @@ class Risk
 			$this->players[$attack_id]['extra_info']['occupy'] = $attack_armies.':'.$attack_land_id.'->'.$defend_land_id;
 		}
 
-		$this->_log('A '.$attack_id.':'.$attack_land_id.':'.$defend_id.':'.$defend_land_id.':'.implode('', $this->previous_dice['attack']).','.implode('', $this->previous_dice['defend']).':'.$attack_dead.','.$defend_dead.':'.(int) $defeated);
-		$this->_process_deferred_log( ); // because the killed log message should come after the attack message
+		Game::log($this->$_game_id, 'A '.$attack_id.':'.$attack_land_id.':'.$defend_id.':'.$defend_land_id.':'.implode('', $this->previous_dice['attack']).','.implode('', $this->previous_dice['defend']).':'.$attack_dead.','.$defend_dead.':'.(int) $defeated);
+		Game::process_deferred_log($this->_game_id); // because the killed log message should come after the attack message
 
 		// this makes more sense in the _test_killed function, but i needed the occupy info
 		$this->_test_win( );
@@ -1300,7 +1276,7 @@ class Risk
 		$this->board[$from_land_id]['armies'] -= $num_armies;
 		$this->board[$to_land_id]['armies'] += $num_armies;
 
-		$this->_log('O '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
+		Game::log($this->$_game_id, 'O '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
 
 		// erase the occupy data and return to an Attacking state
 		$this->players[$player_id]['extra_info']['occupy'] = null;
@@ -1395,7 +1371,7 @@ class Risk
 		$this->board[$from_land_id]['armies'] -= $num_armies;
 		$this->board[$to_land_id]['armies'] += $num_armies;
 
-		$this->_log('F '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
+		Game::log($this->$_game_id, 'F '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
 
 		if ( ! $this->_extra_info['multiple_fortify']) {
 			$this->set_player_state('Waiting');
@@ -1563,7 +1539,7 @@ class Risk
 				break;
 
 			case 'Resigned' :
-				$this->_log('Q '.$player_id);
+				Game::log($this->$_game_id, 'Q '.$player_id);
 				break;
 
 			case 'Dead' :
@@ -1876,7 +1852,7 @@ class Risk
 
 			$this->players[$attack_id]['cards'] = array_merge($this->players[$attack_id]['cards'], $this->players[$defend_id]['cards']); // give the attacker the defender's cards
 
-			$this->_log_deferred('E '.$attack_id.':'.$defend_id.':'.implode(',', $this->players[$defend_id]['cards']));
+			Game::log_deferred($this->_game_id, 'E '.$attack_id.':'.$defend_id.':'.implode(',', $this->players[$defend_id]['cards']));
 
 			$this->players[$defend_id]['cards'] = array( );
 
@@ -1911,7 +1887,7 @@ class Risk
 			}
 		}
 
-		if (1 != count($alive)) {
+		if (1 !== count($alive)) {
 			return false;
 		}
 
@@ -1919,7 +1895,7 @@ class Risk
 
 		// perform the winner's occupy
 		$this->occupy(9999);
-		$this->_log('D '.$winner);
+		Game::log($this->$_game_id, 'D '.$winner);
 
 		return true;
 	}
@@ -2209,7 +2185,7 @@ class Risk
 		rsort($attack_roll);
 		rsort($defend_roll);
 
-		$this->_log_roll($attack_roll, $defend_roll);
+		Game::log_roll($attack_roll, $defend_roll);
 
 		$this->previous_dice = array('attack' => $attack_roll, 'defend' => $defend_roll);
 
@@ -2342,7 +2318,7 @@ class Risk
 
 		$this->players[$player_id]['armies'] += $armies;
 
-		$this->_log('R '.$player_id.':'.$armies.':'.count($land).(count($cont_log) ? ':'.implode(',', $cont_log) : ''));
+		Game::log($this->$_game_id, 'R '.$player_id.':'.$armies.':'.count($land).(count($cont_ids) ? ':'.implode(',', $cont_ids) : ''));
 	}
 
 
@@ -2402,7 +2378,7 @@ class Risk
 		$this->_next_trade = (int) $value;
 
 		if ($log) {
-			$this->_log('V '.$this->_next_trade);
+			Game::log($this->$_game_id, 'V '.$this->_next_trade);
 		}
 	}
 
@@ -2438,7 +2414,7 @@ class Risk
 		$this->players[$player_id]['cards'][] = $card_id;
 		$this->players[$player_id]['extra_info']['get_card'] = false;
 
-		$this->_log('C '.$player_id.':'.$card_id);
+		Game::log($this->$_game_id, 'C '.$player_id.':'.$card_id);
 	}
 
 
@@ -2518,7 +2494,7 @@ class Risk
 
 		$prev_player = $cur_player;
 
-		$this->_log('N '.$this->current_player);
+		Game::log($this->$_game_id, 'N '.$this->current_player);
 		$this->_add_armies($this->current_player);
 
 		// place the next player into an appropriate state based
@@ -2678,82 +2654,6 @@ class Risk
 	}
 
 
-	/** protected function _log
-	 *		logs the game message to the database
-	 *
-	 * @param string $log_data computer readable game message
-	 *
-	 * @return void
-	 */
-	protected function _log($log_data)
-	{
-		usleep(100); // sleep for 1/10,000th of a second to prevent duplicate keys
-		// because computers are just too fast now
-
-		$Mysql = Mysql::get_instance( );
-
-		$Mysql->insert(self::GAME_LOG_TABLE, array(
-			'game_id' => $this->_game_id,
-			'data' => $log_data,
-			'create_date' => date('Y-m-d H:i:s'), // don't use ldate() here
-			'microsecond' => substr(microtime( ), 2, 8),
-		));
-	}
-
-
-	/** protected function _log_deferred
-	 *		defers a log to the database
-	 *
-	 * @param string $log_data computer readable game message
-	 *
-	 * @return void
-	 */
-	protected function _log_deferred($log_data)
-	{
-		$this->_log_messages[] = $log_data;
-	}
-
-
-	/** protected function _process_deferred_log
-	 *		processes the list of deferred log messages
-	 *
-	 * @param void
-	 *
-	 * @return void
-	 */
-	protected function _process_deferred_log( )
-	{
-		foreach ($this->_log_messages as $log_message) {
-			$this->_log($log_message);
-		}
-
-		$this->_log_messages = array( );
-	}
-
-
-	/** protected function _log_roll
-	 *		logs the roll to the database
-	 *
-	 * @param array attack roll
-	 * @param array defend_roll
-	 * @return void
-	 */
-	protected function _log_roll($attack_roll, $defend_roll)
-	{
-		$Mysql = Mysql::get_instance( );
-
-		$insert = array( );
-		foreach ($attack_roll as $i => $attack) {
-			$insert['attack_'.($i + 1)] = $attack;
-		}
-		foreach ($defend_roll as $i => $defend) {
-			$insert['defend_'.($i + 1)] = $defend;
-		}
-
-		$Mysql->insert(self::ROLL_LOG_TABLE, $insert);
-	}
-
-
 
 	/**
 	 *		STATIC METHODS
@@ -2775,334 +2675,6 @@ class Risk
 				}
 			}
 		}
-	}
-
-
-	/** static public function get_logs
-	 *		Grabs the logs for this game from the database
-	 *
-	 * @param int $game_id
-	 * @param bool $parse the logs into human readable form
-	 * @return array log data
-	 */
-	static public function get_logs($game_id = 0, $parse = true)
-	{
-		$game_id = (int) $game_id;
-		$parse = (bool) $parse;
-
-		if (0 == $game_id) {
-			return false;
-		}
-
-		$Mysql = Mysql::get_instance( );
-
-		$query = "
-			SELECT `extra_info`
-			FROM `".Game::GAME_TABLE."`
-			WHERE `game_id` = '{$game_id}'
-		";
-		$extra_info = $Mysql->fetch_value($query);
-		$extra_info = json_decode($extra_info, true);
-
-		$trade_bonus = 2;
-		if ( ! empty($extra_info['trade_card_bonus'])) {
-			$trade_bonus = (int) $extra_info['trade_card_bonus'];
-		}
-
-		$query = "
-			SELECT *
-			FROM ".self::GAME_LOG_TABLE."
-			WHERE game_id = '{$game_id}'
-			ORDER BY create_date DESC
-				, microsecond DESC
-		";
-		$return = $Mysql->fetch_array($query);
-
-		// parse the logs
-		if ($parse && $return) {
-			$logs = array( );
-			foreach ($return as $row) {
-				$row_data = explode(' ', $row['data']);
-				$data = explode(':', $row_data[LOG_DATA]);
-#				call($data);
-
-				$player = array( );
-				for ($i = 0; $i < 3; ++$i) {
-					if ( ! isset($data[$i])) {
-						break;
-					}
-
-					if ( ! isset($GLOBALS['_PLAYERS'][$data[$i]])) {
-						continue;
-					}
-
-					$player[$i] = htmlentities($GLOBALS['_PLAYERS'][$data[$i]], ENT_QUOTES, 'UTF-8', false);
-					if ('' == $player[$i]) {
-						$player[$i] = '[deleted]';
-					}
-				}
-
-				$message = '';
-				switch(strtoupper($row_data[LOG_TYPE])) {
-					case 'A' : // Attack
-//* TEMP FIX ----
-// temp fix for what?   i forget... dammit
-// guess it's not so temp anymore, is it...
-if (isset($data[7])) {
-	$data[2] = $data[3];
-	$data[3] = $data[4];
-	$data[4] = $data[5];
-	$data[5] = $data[6];
-	$data[6] = $data[7];
-	unset($data[7]);
-}
-//*/
-						// we add a few log messages here, but make them in reverse
-						// add the outcome
-						list($attack_lost, $defend_lost) = explode(',', $data[5]);
-						$message = " - - ATTACK: {$player[0]} [{$data[0]}] lost {$attack_lost}, {$player[2]} [{$data[2]}] lost {$defend_lost}";
-
-						if ( ! empty($data[6])) {
-							$message .= ' and was defeated';
-						}
-
-						$logs[] = array(
-							'game_id' => $game_id,
-							'message' => $message,
-							'data' => null,
-							'create_date' => $row['create_date'],
-						);
-
-						// add the roll data
-						list($attack_roll, $defend_roll) = explode(',', $data[4]);
-						$message = ' - - ROLL: attack = '.implode(', ', str_split($attack_roll)).'; defend = '.implode(', ', str_split($defend_roll)).';';
-
-						$logs[] = array(
-							'game_id' => $game_id,
-							'message' => $message,
-							'data' => null,
-							'create_date' => $row['create_date'],
-						);
-
-						// make the attack announcement (gets saved below)
-						$message = "ATTACK: {$player[0]} [{$data[0]}] with ".strlen($attack_roll)." ".plural(strlen($attack_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[1]][NAME])." [{$data[1]}], attacked {$player[2]} [{$data[2]}] with ".strlen($defend_roll)." ".plural(strlen($defend_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'C' : // Card
-						$message = "CARD: {$player[0]} [{$data[0]}] was given a card";
-						break;
-
-					case 'D' : // Done (game over)
-						$message = str_repeat('=', 10)." GAME OVER: {$player[0]} [{$data[0]}] wins !!! ".str_repeat('=', 10);
-						break;
-
-					case 'E' : // Eradicated (killed)
-						$message = str_repeat('+ ', 5)."KILLED: {$player[0]} [{$data[0]}] eradicated {$player[1]} [{$data[1]}] from the board";
-
-						if ('' != $data[2]) {
-							$message .= ' and recieved '.count(explode(',', $data[2])).' cards';
-						}
-						break;
-
-					case 'F' : // Fortify
-						$message = "FORTIFY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'I' : // Initialization
-						$message = 'Board Initialized';
-						break;
-
-					case 'N' : // Next player
-						$message = str_repeat('=', 5)." NEXT: {$player[0]} [{$data[0]}] is the next player ".str_repeat('=', 40);
-						break;
-
-					case 'O' : // Occupy
-						$message = "OCCUPY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'P' : // Placing
-						$message = "PLACE: {$player[0]} [{$data[0]}] placed {$data[1]} ".plural($data[1], 'army', 'armies')." in ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}]";
-						break;
-
-					case 'Q' : // Quit (resign)
-						$message = str_repeat('+ ', 5)."RESIGN: {$player[0]} [{$data[0]}] resigned the game";
-						break;
-
-					case 'R' : // Reinforcements
-						$message = "REINFORCE: {$player[0]} [{$data[0]}] was given {$data[1]} ".plural($data[1], 'army', 'armies')." for {$data[2]} territories";
-						if (isset($data[3])) {
-							$data[3] = explode(',', $data[3]);
-
-							foreach ($data[3] as $cont_id) {
-								$message .= ', '.self::$CONTINENTS[$cont_id][NAME];
-							}
-
-							// if there were continents, use the word and just after the last comma,
-							// unless there was only one continent, then replace the comma
-							$one = (bool) (1 >= count($data[3]));
-							$message = substr_replace($message, ' and', strrpos($message, ',') + (int) ! $one, (int) $one);
-						}
-						break;
-
-					case 'T' : // Trade
-						$message = "TRADE: {$player[0]} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
-
-						if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
-							$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						}
-						break;
-
-					case 'V' : // Value
-						$message = "VALUE: The trade-in value was set to {$data[0]}";
-						break;
-				}
-
-#				call($message);
-				$row['message'] = $message;
-
-				$logs[] = $row;
-			}
-
-			$return = $logs;
-		}
-
-		return $return;
-	}
-
-
-	/** static public function get_roll_stats
-	 *		Grabs the roll stats from the database
-	 *
-	 * @param void
-	 * @return array roll data
-	 */
-	static public function get_roll_stats( )
-	{
-		// for all variables with a 1v1, 3v2, etc.
-		// the syntax is num_atack v num_defend
-
-		$Mysql = Mysql::get_instance( );
-
-		$WHERE['1v1'] = " (attack_2 IS NULL AND defend_2 IS NULL) ";
-		$WHERE['2v1'] = " (attack_2 IS NOT NULL AND attack_3 IS NULL AND defend_2 IS NULL) ";
-		$WHERE['3v1'] = " (attack_3 IS NOT NULL AND defend_2 IS NULL) ";
-		$WHERE['1v2'] = " (attack_2 IS NULL AND defend_2 IS NOT NULL) ";
-		$WHERE['2v2'] = " (attack_2 IS NOT NULL AND attack_3 IS NULL AND defend_2 IS NOT NULL) ";
-		$WHERE['3v2'] = " (attack_3 IS NOT NULL AND defend_2 IS NOT NULL) ";
-
-		// the theoretical probabilities
-		// var syntax (dice_rolled)_(who_wins)
-		// 1v1
-		$theor['1v1']['attack'] = '0.4167'; // 41.67 %
-		$theor['1v1']['defend'] = '0.5833'; // 58.33 %
-
-		// 2v1
-		$theor['2v1']['attack'] = '0.5787'; // 57.87 %
-		$theor['2v1']['defend'] = '0.4213'; // 42.13 %
-
-		// 3v1
-		$theor['3v1']['attack'] = '0.6597'; // 65.97 %
-		$theor['3v1']['defend'] = '0.3403'; // 34.03 %
-
-		// 1v2
-		$theor['1v2']['attack'] = '0.2546'; // 25.46 %
-		$theor['1v2']['defend'] = '0.7454'; // 74.54 %
-
-		// 2v2
-		$theor['2v2']['attack'] = '0.2276'; // 22.76 %
-		$theor['2v2']['defend'] = '0.4483'; // 44.83 %
-		$theor['2v2']['both']   = '0.3241'; // 32.41 %
-
-		// 3v2
-		$theor['3v2']['attack'] = '0.3717'; // 37.17 %
-		$theor['3v2']['defend'] = '0.2926'; // 29.26 %
-		$theor['3v2']['both']   = '0.3358'; // 33.58 %
-
-		$fights = array(
-			'1v1', '2v1', '3v1',
-			'1v2', '2v2', '3v2',
-		);
-
-		$wins = array('attack', 'defend', 'both');
-
-		// grab our counts so we can run some stats
-		$query = "
-			SELECT COUNT(*)
-			FROM `".self::ROLL_LOG_TABLE."`
-		";
-		$count['total'] = $Mysql->fetch_value($query);
-
-		foreach ($fights as $fight) {
-			$query = "
-				SELECT COUNT(*)
-				FROM `".self::ROLL_LOG_TABLE."`
-				WHERE {$WHERE[$fight]}
-			";
-			$count[$fight] = $Mysql->fetch_value($query);
-		}
-
-		// now grab the actual percentages for wins and losses
-		foreach ($fights as $fight) {
-			foreach ($wins as $win) {
-				// we only do 'both' on 2v2 and 3v2 fights
-				if (('both' == $win) && ! in_array($fight, array('2v2', '3v2'))) {
-					continue;
-				}
-
-				switch ($win) {
-					case 'attack' :
-						$query = "
-							SELECT COUNT(*)
-							FROM `".self::ROLL_LOG_TABLE."`
-							WHERE {$WHERE[$fight]}
-								AND attack_1 > defend_1
-								AND (
-									attack_2 > defend_2
-									OR attack_2 IS NULL
-									OR defend_2 IS NULL
-								)
-						";
-						break;
-
-					case 'defend' :
-						$query = "
-							SELECT COUNT(*)
-							FROM `".self::ROLL_LOG_TABLE."`
-							WHERE {$WHERE[$fight]}
-								AND attack_1 <= defend_1
-								AND (
-									attack_2 <= defend_2
-									OR attack_2 IS NULL
-									OR defend_2 IS NULL
-								)
-						";
-						break;
-
-					case 'both' :
-						$query = "
-							SELECT COUNT(*)
-							FROM `".self::ROLL_LOG_TABLE."`
-							WHERE {$WHERE[$fight]}
-								AND ((
-										attack_1 > defend_1
-										AND attack_2 <= defend_2
-									)
-									OR (
-										attack_1 <= defend_1
-										AND attack_2 > defend_2
-									)
-								)
-						";
-						break;
-				}
-				$value = $Mysql->fetch_value($query);
-
-				$values[$fight][$win] = $value;
-				$actual[$fight][$win] = (0 != $count[$fight]) ? $value / $count[$fight] : 0;
-			}
-		}
-
-		return compact('count', 'values', 'theor', 'actual');
 	}
 
 } // end of Risk class
@@ -3198,42 +2770,4 @@ function shorten_territory_name($name) {
 
 	return $name;
 }
-
-
-/*		schemas
-// ===================================
-
---
--- Table structure for table `wr_game_log`
---
-
-DROP TABLE IF EXISTS `wr_game_log`;
-CREATE TABLE IF NOT EXISTS `wr_game_log` (
-  `game_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `data` varchar(255) DEFAULT NULL,
-  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `microsecond` int(10) unsigned NOT NULL DEFAULT '0',
-
-  KEY `game_id` (`game_id`,`create_date`,`microsecond`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `wr_roll_log`
---
-
-DROP TABLE IF EXISTS `wr_roll_log`;
-CREATE TABLE IF NOT EXISTS `wr_roll_log` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `attack_1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `attack_2` tinyint(1) unsigned DEFAULT NULL,
-  `attack_3` tinyint(1) unsigned DEFAULT NULL,
-  `defend_1` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `defend_2` tinyint(1) unsigned DEFAULT NULL,
-
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci ;
-
-*/
 
