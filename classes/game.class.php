@@ -3023,8 +3023,11 @@ fix_extra_info($player['extra_info']);
 	 *
 	 * @return void
 	 */
-	public static function log($game_id, $log_data)
-	{
+	public static function log($game_id, $log_data) {
+		if (0 === (int) $game_id) {
+			return;
+		}
+
 		usleep(100); // sleep for 1/10,000th of a second to prevent duplicate keys
 		// because computers are just too fast now
 
