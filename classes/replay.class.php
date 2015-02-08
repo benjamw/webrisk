@@ -375,6 +375,37 @@ class Replay extends Game {
 	}
 
 
+	/** public function place_armies
+	 *		Places armies on a territory
+	 *
+	 * @param int $player_id
+	 * @param int $num_armies
+	 * @param int $land_id
+	 * @param bool $skip_pause optional
+	 *
+	 * @action saves the game
+	 *
+	 * @return bool success
+	 * @throws MyException
+	 */
+	public function place_armies($player_id, $num_armies, $land_id, $skip_pause = false)
+	{
+		call(__METHOD__);
+
+		$player_id = (int) $player_id;
+		$num_armies = (int) $num_armies;
+		$land_id = (int) $land_id;
+
+		if (empty($player_id) || empty($num_armies) || empty($land_id)) {
+			throw new MyException(__METHOD__.': Missing required argument');
+		}
+
+		// just do this raw, because there may have been some DB corruption
+		$this->_risk->players[$player_id]['armies'] -= $num_armies;
+		$this->_risk->board[$land_id]['armies'] += $num_armies;
+	}
+
+
 	/** public function get_players_visible_data
 	 *		Grabs the visible player data
 	 *

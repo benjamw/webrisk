@@ -868,6 +868,18 @@ class Risk
 	}
 
 
+	/** public function set_trade_value
+	 *		Sets the next available card trade value
+	 *
+	 * @param int $value
+	 *
+	 * @return void
+	 */
+	public function set_trade_value($value) {
+		$this->_next_trade = (int) $value;
+	}
+
+
 	/** public function get_start_armies
 	 *		Returns the number of armies each player
 	 *		has to place at the start of the game
