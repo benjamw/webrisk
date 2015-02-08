@@ -17,12 +17,18 @@ elseif ( ! isset($_SESSION['game_file'])) {
 	exit;
 }
 
+if (isset($_GET['step'])) {
+	$_SESSION['step'] = (int) $_GET['step'];
+}
+
+if (empty($_SESSION['step'])) {
+	$_SESSION['step'] = 0;
+}
+
 // load the game
 // always refresh the game data, there may be more than one person online
 try {
-	$Replay = new Replay($_SESSION['game_file']);
-	call($Replay);
-	$Replay->play_to(100);
+	$Replay = new Replay($_SESSION['game_file'], $_SESSION['step']);
 }
 catch (MyException $e) {
 	if ( ! defined('DEBUG') || ! DEBUG) {
@@ -45,6 +51,9 @@ $meta['head_data'] = '
 
 	<script type="text/javascript">//<![CDATA[
 		var state = "watching";
+		var game_file = '.json_encode($_SESSION['game_file']).';
+		var step = '.json_encode($_SESSION['step']).';
+		var steps = '.json_encode($Replay->get_steps( )).';
 	/*]]>*/</script>
 	<script type="text/javascript" src="scripts/game.js"></script>
 ';
@@ -315,7 +324,7 @@ echo get_header($meta);
 				<?php } // end conquer type table ?>
 
 				<?php
-					$array = Replay::calculate_trade_values($Game->get_trade_array( ));
+					$array = Replay::calculate_trade_values($Replay->get_trade_array( ));
 
 					$table = '';
 					$prev_value = 0;

@@ -253,6 +253,18 @@ class Replay extends Game {
 	}
 
 
+	/**
+	 * Get the list of steps for this replay
+	 *
+	 * @param void
+	 *
+	 * @return array
+	 */
+	public function get_steps( ) {
+		return $this->_file[FILE_GAME_LOG];
+	}
+
+
 	/** public function get_players_visible_continents
 	 *		Filters the continent data based on what
 	 *		the current player can see
