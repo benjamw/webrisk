@@ -2208,6 +2208,8 @@ class Game
 		elseif ($data['connected_fortify'] && $data['multiple_fortify']) {
 			return 'Multiple Connected';
 		}
+
+		return 'Single';
 	}
 
 
