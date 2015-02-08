@@ -363,7 +363,7 @@ class Game
 	public function __get($property)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 2);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 2);
 		}
 
 		if ('_' === $property[0]) {
@@ -390,7 +390,7 @@ class Game
 	public function __set($property, $value)
 	{
 		if ( ! property_exists($this, $property)) {
-			throw new MyException(__METHOD__.': Trying to access non-existant property ('.$property.')', 3);
+			throw new MyException(__METHOD__.': Trying to access non-existent property ('.$property.')', 3);
 		}
 
 		if ('_' === $property[0]) {
@@ -883,11 +883,14 @@ class Game
 	/** public function trade_cards
 	 *		Trades cards for more armies
 	 *
-	 * @param int player id
+	 * @param int $player id
 	 * @param array card ids to trade
 	 * @param int bonus land id
+	 *
 	 * @action saves the game
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function trade_cards($player_id, $card_ids, $bonus_card = null)
 	{
@@ -917,8 +920,10 @@ class Game
 	/** public function get_cards
 	 *		Returns the cards owned by the given player
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @return string card values
+	 * @throws MyException
 	 */
 	public function get_cards($player_id)
 	{
@@ -1144,10 +1149,13 @@ class Game
 	 *		Occupies a recently defeated territory with the
 	 *		given number of armies
 	 *
-	 * @param int player id
-	 * @param int number of armies to move
+	 * @param int $player_id
+	 * @param int $num_armies to move
+	 *
 	 * @action saves the game
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function occupy($player_id, $num_armies)
 	{
@@ -1181,12 +1189,15 @@ class Game
 	 *		Occupies a recently defeated territory with the
 	 *		given number of armies
 	 *
-	 * @param int player id
-	 * @param int number of armies to move
-	 * @param int from land id
-	 * @param int to land id
+	 * @param int $player_id
+	 * @param int $num_armies to move
+	 * @param int $from_land_id
+	 * @param int $to_land_id
+	 *
 	 * @action saves the game
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function fortify($player_id, $num_armies, $from_land_id, $to_land_id)
 	{
@@ -1221,9 +1232,12 @@ class Game
 	/** public function resign
 	 *		Resigns from the game
 	 *
-	 * @param int player id
-	 * @param bool optional skip paused check
+	 * @param int $player_id
+	 * @param bool $skip_pause optional allow resignations in paused games
+	 *
 	 * @return void
+	 *
+	 * @throws MyException
 	 */
 	public function resign($player_id, $skip_pause = false)
 	{
@@ -1328,9 +1342,11 @@ class Game
 	/** public function skip
 	 *		Skip the given player to the next state
 	 *
-	 * @param string players current state
-	 * @param int player id
+	 * @param string $cur_state players current state
+	 * @param int $player_id
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function skip($cur_state, $player_id)
 	{
@@ -1393,7 +1409,8 @@ class Game
 	 *		Filters the board data based on what
 	 *		the current player can see
 	 *
-	 * @param int optional observer id
+	 * @param int $observer_id optional
+	 *
 	 * @return array board data
 	 */
 	public function get_visible_board($observer_id = null)
@@ -1412,7 +1429,7 @@ class Game
 			$adjacent = $this->_risk->get_adjacent_territories($observer_id);
 		}
 
-		foreach ($board as $land_id => & $data) {
+		foreach ($board as $land_id => & $data) { // mind the reference
 			// don't show where other people have placed their armies until we start
 			if (('Placing' == $this->state) && ($data['player_id'] != $observer_id)) {
 				$data['armies'] = 1;
@@ -1454,7 +1471,8 @@ class Game
 	 *		Filters the continent data based on what
 	 *		the current player can see
 	 *
-	 * @param int optional observer id
+	 * @param int $observer_id optional
+	 *
 	 * @return array continent data
 	 */
 	public function get_players_visible_continents($player_id, $observer_id = null)
@@ -1492,6 +1510,7 @@ class Game
 	 *		Generates the html for the game player list
 	 *
 	 * @param void
+	 *
 	 * @return string html
 	 */
 	public function draw_players( )
@@ -1764,6 +1783,7 @@ class Game
 	 *		Grabs the player array
 	 *
 	 * @param void
+	 *
 	 * @return array player data
 	 */
 	public function get_players( )
@@ -1788,7 +1808,8 @@ class Game
 	/** public function get_players_visible_data
 	 *		Grabs the visible player data
 	 *
-	 * @param int optional observer id
+	 * @param int $observer_id optional
+	 *
 	 * @return array visible player data
 	 */
 	public function get_players_visible_data($observer_id = null)
@@ -1978,7 +1999,8 @@ class Game
 	/** public function get_player_state
 	 *		Grabs the state of the given player from the risk class
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @return string player state
 	 */
 	public function get_player_state($player_id)
@@ -1995,7 +2017,8 @@ class Game
 	 *		Grabs the number of available armies for
 	 *		the given player from the risk class
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @return int available armies
 	 */
 	public function get_player_armies($player_id)
@@ -2007,7 +2030,8 @@ class Game
 	/** public function get_land_armies
 	 *		Grabs the number of armies on the given territory
 	 *
-	 * @param int land id
+	 * @param int $land_id
+	 *
 	 * @return int armies
 	 */
 	public function get_land_armies($land_id)
@@ -2020,8 +2044,10 @@ class Game
 	 *		Grabs the cards for the given player
 	 *		based on what the observer can see
 	 *
-	 * @param int player id
-	 * @param int optional observer id
+	 * @param int $player_id
+	 *
+	 * @param int $observer_id optional
+	 *
 	 * @return array cards
 	 */
 	public function get_players_cards($player_id, $observer_id = null)
@@ -2045,6 +2071,7 @@ class Game
 	 *		Grabs the values of the previous dice roll from the risk class
 	 *
 	 * @param void
+	 *
 	 * @return array dice values
 	 */
 	public function get_dice( )
@@ -2057,6 +2084,7 @@ class Game
 	 *		Grabs the next trade value from the risk class
 	 *
 	 * @param void
+	 *
 	 * @return int trade value
 	 */
 	public function get_trade_value( )
@@ -2069,6 +2097,7 @@ class Game
 	 *		Grabs the game type from the risk class
 	 *
 	 * @param void
+	 *
 	 * @return string game type
 	 */
 	public function get_type( )
@@ -2081,6 +2110,7 @@ class Game
 	 *		Grabs the game's extra info array
 	 *
 	 * @param void
+	 *
 	 * @return array extra info
 	 */
 	public function get_extra_info( )
@@ -2093,6 +2123,7 @@ class Game
 	 *		Grabs the placement method
 	 *
 	 * @param void
+	 *
 	 * @return string placement method
 	 */
 	public function get_placement( )
@@ -2104,7 +2135,8 @@ class Game
 	/** static protected function _get_placement
 	 *		Grabs the placement method
 	 *
-	 * @param array extra info
+	 * @param array $data extra info
+	 *
 	 * @return string placement method
 	 */
 	static protected function _get_placement($data)
@@ -2117,6 +2149,7 @@ class Game
 	 *		Grabs the initial placement limit
 	 *
 	 * @param void
+	 *
 	 * @return int initial placement limit
 	 */
 	public function get_placement_limit( )
@@ -2128,7 +2161,8 @@ class Game
 	/** static protected function _get_placement_limit
 	 *		Grabs the initial placement limit
 	 *
-	 * @param array extra info
+	 * @param array $data extra info
+	 *
 	 * @return int initial placement limit
 	 */
 	static protected function _get_placement_limit($data)
@@ -2141,6 +2175,7 @@ class Game
 	 *		Grabs the fortification method from the risk class and formats
 	 *
 	 * @param void
+	 *
 	 * @return string fortification method
 	 */
 	public function get_fortify( )
@@ -2152,7 +2187,8 @@ class Game
 	/** static protected function _get_fortify
 	 *		Grabs the fortification method from the risk class and formats
 	 *
-	 * @param array extra info
+	 * @param array $data extra info
+	 *
 	 * @return string fortification method
 	 */
 	static protected function _get_fortify($data)
@@ -2179,6 +2215,7 @@ class Game
 	 *		Grabs the kamikaze method
 	 *
 	 * @param void
+	 *
 	 * @return string kamikaze method
 	 */
 	public function get_kamikaze( )
@@ -2190,7 +2227,8 @@ class Game
 	/** static protected function _get_kamikaze
 	 *		Grabs the kamikaze method
 	 *
-	 * @param array extra info
+	 * @param array $data extra info
+	 *
 	 * @return string kamikaze method
 	 */
 	static protected function _get_kamikaze($data)
@@ -2203,6 +2241,7 @@ class Game
 	 *		Grabs the warmonger method
 	 *
 	 * @param void
+	 *
 	 * @return string warmonger method
 	 */
 	public function get_warmonger( )
@@ -2214,7 +2253,8 @@ class Game
 	/** static protected function _get_warmonger
 	 *		Grabs the warmonger method
 	 *
-	 * @param array extra info
+	 * @param array $data extra info
+	 *
 	 * @return string warmonger method
 	 */
 	static protected function _get_warmonger($data)
@@ -2227,6 +2267,7 @@ class Game
 	 *		Grabs the fog of war method
 	 *
 	 * @param void
+	 *
 	 * @return string fog of war method
 	 */
 	public function get_fog_of_war( )
@@ -2238,7 +2279,8 @@ class Game
 	/** static protected function _get_fog_of_war
 	 *		Grabs the fog of war method
 	 *
-	 * @param array extra info
+	 * @param array $data extra info
+	 *
 	 * @return string fog of war method
 	 */
 	static protected function _get_fog_of_war($data)
@@ -2255,6 +2297,7 @@ class Game
 	 *		for the current player for this round
 	 *
 	 * @param void
+	 *
 	 * @return string conquer limit method
 	 */
 	public function get_round_conquer_limit( )
@@ -2268,6 +2311,7 @@ class Game
 	 *		Grabs the conquer limit method
 	 *
 	 * @param void
+	 *
 	 * @return string conquer limit method
 	 */
 	public function get_remaining_conquer_limit( )
@@ -2282,6 +2326,7 @@ class Game
 	 *		Grabs the conquer limit method
 	 *
 	 * @param void
+	 *
 	 * @return string conquer limit method
 	 */
 	public function get_conquer_limit( )
@@ -2293,7 +2338,8 @@ class Game
 	/** static protected function _get_conquer_limit
 	 *		Grabs the conquer limit method
 	 *
-	 * @param array extra info
+	 * @param array $data extra info
+	 *
 	 * @return string conquer limit method
 	 */
 	static protected function _get_conquer_limit($data)
@@ -2330,6 +2376,7 @@ class Game
 	 *		Grabs the custom rules
 	 *
 	 * @param void
+	 *
 	 * @return string custom rules
 	 */
 	public function get_custom_rules( )
@@ -2342,6 +2389,7 @@ class Game
 	 *		Grabs the custom rules
 	 *
 	 * @param void
+	 *
 	 * @return string custom rules
 	 */
 	static protected function _get_custom_rules($data)
@@ -2354,6 +2402,7 @@ class Game
 	 *		Grabs the trade card bonus
 	 *
 	 * @param void
+	 *
 	 * @return int trade card bonus
 	 */
 	public function get_trade_card_bonus( )
@@ -2366,6 +2415,7 @@ class Game
 	 *		Grabs the trade card bonus
 	 *
 	 * @param void
+	 *
 	 * @return int trade card bonus
 	 */
 	static protected function _get_trade_card_bonus($data)
@@ -2378,6 +2428,7 @@ class Game
 	 *		Grabs the custom trade array
 	 *
 	 * @param void
+	 *
 	 * @return array custom trade array
 	 */
 	public function get_trade_array( )
@@ -2390,6 +2441,7 @@ class Game
 	 *		Grabs the custom trade array
 	 *
 	 * @param void
+	 *
 	 * @return array custom trade array
 	 */
 	static protected function _get_trade_array($data)
@@ -2402,6 +2454,7 @@ class Game
 	 *		Grabs the current trade count
 	 *
 	 * @param void
+	 *
 	 * @return int trade count
 	 */
 	public function get_trade_count( )
@@ -2414,6 +2467,7 @@ class Game
 	 *		Grabs the current trade count
 	 *
 	 * @param void
+	 *
 	 * @return int trade count
 	 */
 	static protected function _get_trade_count($data)
@@ -2526,8 +2580,10 @@ fix_extra_info($result['extra_info']);
 	/** protected function _set_player_data
 	 *		Adds a player to the game and risk data
 	 *
-	 * @param array player data
+	 * @param array $data player data
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _set_player_data($data)
 	{
@@ -2593,8 +2649,11 @@ fix_extra_info($player['extra_info']);
 	 *		Calculates the trade value array from the extra info
 	 *
 	 * @see self::calculate_trade_values
+	 *
 	 * @param void
+	 *
 	 * @action updates the Risk object
+	 *
 	 * @return void
 	 */
 	protected function _calculate_trade_values( )
@@ -3351,15 +3410,17 @@ fix_extra_info($player['extra_info']);
 	/** protected function _log
 	 *		Report messages to a file
 	 *
-	 * @param string message
+	 * @param string $message
+	 *
 	 * @action log messages to file
+	 *
 	 * @return void
 	 */
-	protected function _log($msg)
+	protected function _log($message)
 	{
 		// log the error
 		if (false && class_exists('Log')) {
-			Log::write($msg, __CLASS__);
+			Log::write($message, __CLASS__);
 		}
 	}
 
@@ -3390,10 +3451,13 @@ fix_extra_info($player['extra_info']);
 	 *		Tests the number of armies available to place for the given player
 	 *		and sets the player to the next state based on game state
 	 *
-	 * @param int player id
+	 * @param int $player_id
+	 *
 	 * @action optionally sets the next state
 	 * @action optionally saves the game
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _test_armies($player_id)
 	{
@@ -3434,7 +3498,9 @@ fix_extra_info($player['extra_info']);
 	 *		and sets the game state to the next state based on count
 	 *
 	 * @param void
+	 *
 	 * @action optionally sets the next state
+	 *
 	 * @return void
 	 */
 	protected function _test_placing( )
@@ -3469,7 +3535,9 @@ fix_extra_info($player['extra_info']);
 	 *		and sets the winner if only one
 	 *
 	 * @param void
+	 *
 	 * @action optionally sets the winner
+	 *
 	 * @return void
 	 */
 	protected function _test_winner( )
@@ -3638,7 +3706,8 @@ fix_extra_info($player['extra_info']);
 	 *		and would return the following array:
 	 *			array(4, 6, 8, 10, 12, 15, '+5')
 	 *
-	 * @param array of input arrays
+	 * @param array $input array of input arrays
+	 *
 	 * @return array of trade values
 	 */
 	static public function calculate_trade_values($input)
