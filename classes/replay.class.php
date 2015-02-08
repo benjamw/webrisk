@@ -107,7 +107,6 @@ class Replay extends Game {
 		ksort(self::$_PLAYER_EXTRA_INFO_DEFAULTS);
 
 		$this->_filename = $file;
-		$this->step = (int) $step;
 
 		$this->_risk = new Risk( );
 		$this->_do_log = false;
@@ -125,6 +124,10 @@ class Replay extends Game {
 
 		$this->id = (int) $id;
 		call($this->id);
+
+		if (0 !== $step) {
+			$this->play_to($step);
+		}
 	}
 
 
