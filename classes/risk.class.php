@@ -1634,6 +1634,8 @@ class Risk
 	 */
 	public function set_player_next_state($cur_state, $player_id) {
 		call(__METHOD__);
+		call($cur_state);
+		call($player_id);
 
 		$player_id = (int) $player_id;
 
@@ -2648,7 +2650,7 @@ class Risk
 		$orig_current_player = $this->current_player;
 
 		do {
-			$cur_state = $this->players[$player_id]['state'];
+			$cur_state = $this->players[$this->current_player]['state'];
 			$this->set_player_next_state($cur_state, $this->current_player);
 		}
 		while ($orig_current_player === $this->current_player);
