@@ -380,7 +380,6 @@ class Mysql {
 			if ((5 >= $this->tries) && ((2013 == $error_info[1]) || (2006 == $error_info[1]))) {
 				// try reconnecting a couple of times
 				$this->_log('RETRYING #'.$this->tries.': '.$error_info[1]);
-				$this->test_connection( );
 				return $this->query(null, ++$this->tries);
 			}
 
@@ -678,7 +677,6 @@ class Mysql {
 	 * @param string|array $where
 	 *
 	 * @return bool
-	 * @throws Exception
 	 * @throws MySQLException
 	 */
 	public function delete($table, $where) {
@@ -729,7 +727,6 @@ class Mysql {
 	 * @param bool $recursive optional
 	 *
 	 * @return array of results
-	 * @throws Exception
 	 * @throws MySQLException
 	 */
 	public function multi_delete($table_array, $where_array, $recursive = false) {
@@ -833,6 +830,10 @@ class Mysql {
 			$this->query( );
 		}
 
+		if ( ! $this->sth) {
+			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
+		}
+
 		return $this->sth->fetchObject( );
 	}
 
@@ -851,6 +852,10 @@ class Mysql {
 
 		if ($query === $this->query) {
 			$this->query( );
+		}
+
+		if ( ! $this->sth) {
+			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
 		}
 
 		return $this->sth->fetch(PDO::FETCH_NUM);
@@ -873,6 +878,10 @@ class Mysql {
 			$this->query( );
 		}
 
+		if ( ! $this->sth) {
+			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
+		}
+
 		return $this->sth->fetch(PDO::FETCH_ASSOC);
 	}
 
@@ -892,6 +901,10 @@ class Mysql {
 
 		if ($query === $this->query) {
 			$this->query( );
+		}
+
+		if ( ! $this->sth) {
+			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
 		}
 
 		return $this->sth->fetch(PDO::FETCH_BOTH);
@@ -931,7 +944,7 @@ class Mysql {
 		}
 
 		if ( ! $this->sth) {
-			return array( );
+			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
 		}
 
 		$this->sth->setFetchMode($result_type);
@@ -954,12 +967,17 @@ class Mysql {
 	 * @param string $query optional
 	 *
 	 * @return mixed
+	 * @throws MySQLException
 	 */
 	public function fetch_value($query = null) {
 		$this->process_args(func_get_args( ));
 
 		if ($query === $this->query) {
 			$this->query( );
+		}
+
+		if ( ! $this->sth) {
+			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
 		}
 
 		return $this->sth->fetchColumn(0);
@@ -981,6 +999,10 @@ class Mysql {
 
 		if ($query === $this->query) {
 			$this->query( );
+		}
+
+		if ( ! $this->sth) {
+			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
 		}
 
 		return $this->sth->fetchAll(PDO::FETCH_COLUMN, 0);
