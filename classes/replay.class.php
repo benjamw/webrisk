@@ -125,7 +125,6 @@ class Replay extends Game {
 
 		$this->id = (int) $id;
 		call($this->id);
-		}
 	}
 
 
