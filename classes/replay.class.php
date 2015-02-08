@@ -430,7 +430,6 @@ class Replay extends Game {
 				'player_id' => $player['player_id'],
 				'username' => $player['name'],
 				'color' => $player['color'],
-				'move_date' => $player['move_date'],
 				'order' => $this->_risk->players[$id]['order_num'],
 				'state' => $this->_risk->players[$id]['state'],
 				'round' => $this->_risk->players[$id]['extra_info']['round'],

@@ -259,14 +259,6 @@ class Game
 	protected $_risk;
 
 
-	/** protected property _log_messages
-	 *		Holds the deferred log messages
-	 *
-	 * @var array
-	 */
-	protected $_log_messages = array( );
-
-
 	/**
 	 * Flag to enable logging
 	 *
@@ -986,13 +978,7 @@ class Game
 		}
 
 		try {
-			$placed_armies = $this->_risk->place_armies($player_id, $num_armies, $land_id, 'Placing' == $this->state);
-		}
-		catch (MyException $e) {
-			throw $e;
-		}
-
-		try {
+			$this->_risk->place_armies($player_id, $num_armies, $land_id, 'Placing' == $this->state);
 			$this->_test_armies($player_id);
 		}
 		catch (MyException $e) {
