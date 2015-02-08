@@ -12,7 +12,8 @@
  *		Good for use in database inserts
  *		$data['field'] = is_checked($_POST['field']);
  *
- * @param string field value
+ * @param string $value
+ *
  * @return bool checked
  */
 function is_checked( & $value) {
@@ -42,12 +43,13 @@ function isChecked($value) { return is_checked($value); }
  *		attribute to either check the box, or select
  *		the option
  *
- *		Good for prepopulating an html form
+ *		Good for pre-populating an html form
  *		<input type="checkbox" name="foo" value="bar" <?php print_selected('bar', $_POST['foo'], false); ?> />
  *
- * @param mixed value one
- * @param mixed value two
- * @param bool select box
+ * @param mixed $one
+ * @param mixed $two
+ * @param bool $selected optional
+ *
  * @return string html attribute
  */
 function get_selected($one, $two, $selected = true) {
@@ -72,12 +74,13 @@ function printSelected($one, $two, $selected = true) { echo get_selected($one, $
  *		attribute to either check the box, or select
  *		the option
  *
- *		Good for prepopulating an html form
+ *		Good for pre-populating an html form
  *		<input type="checkbox" name="foo" value="2" <?php print_selected_bitwise(2, $_POST['foo'], false); ?> />
  *
- * @param int value one
- * @param int value two
- * @param bool select box
+ * @param int $one
+ * @param int $two
+ * @param bool $selected optional
+ *
  * @return string html attribute
  */
 function get_selected_bitwise($one, $two, $selected = true) {
@@ -99,8 +102,9 @@ function printSelectedBitwise($one, $two, $selected = true) { echo get_selected_
 /** function perc
  *		Returns a number formatted as a percentage
  *
- * @param float value (should be less than 1)
- * @param int number of decimal digits to show
+ * @param float $num value (should be less than 1)
+ * @param int $digits number of decimal digits to show
+ *
  * @return string formatted percentage
  */
 function perc($num, $digits = 2) {
@@ -111,7 +115,8 @@ function perc($num, $digits = 2) {
 /** function humanize
  *		Returns a variable string as human readable
  *
- * @param string variable string
+ * @param string $string
+ *
  * @return string formatted as human readable
  */
 function humanize($string) {
@@ -128,9 +133,10 @@ function humanize($string) {
 /** function plural
  *		Returns a plural version of a string if needed
  *
- * @param int number of items
- * @param string singular version of item name
- * @param string plural version of item name
+ * @param int $items count
+ * @param string $singular version of item name
+ * @param string $plural version of item name
+ *
  * @return string formatted as needed
  */
 function plural($items, $singular, $plural = null) {
@@ -152,7 +158,8 @@ function plural($items, $singular, $plural = null) {
  *		Returns a singular version of a string if needed
  *		basically removes a trailing "s" if found
  *
- * @param string input string
+ * @param string $string
+ *
  * @return string formatted as needed
  */
 function singular($string) {
@@ -167,7 +174,8 @@ function singular($string) {
 /** function human
  *		Returns a human version of a string if needed
  *
- * @param string input string
+ * @param string $string underscored
+ *
  * @return string with _ replaced with space
  */
 function human($string) {
