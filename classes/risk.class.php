@@ -2456,6 +2456,7 @@ class Risk
 	 * @action tests and updates player data
 	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	protected function _award_card($card_id = null) {
 		call(__METHOD__);
@@ -2475,6 +2476,13 @@ class Risk
 
 			$card_id = $this->_available_cards[$card_index];
 		}
+		else {
+			$card_index = array_search($card_id, $this->_available_cards);
+
+			if (false === $card_index) {
+				throw new MyException(__METHOD__.': Given card ('.$card_id.') is not available to give');
+			}
+		}
 
 		$card_id = (int) $card_id;
 
@@ -2488,9 +2496,29 @@ class Risk
 	}
 
 
+	/**
+	 * Give the given player the given card
+	 *
+	 * @note This method for replays only, do not use this method in normal gameplay
+	 *
+	 * @param $player_id
+	 * @param $card_id
+	 *
+	 * @return void
+	 * @throws MyException
+	 */
 	public function give_card($player_id, $card_id) {
+		$orig_current_player = $this->current_player;
+
 		$this->current_player = (int) $player_id;
-		$this->_award_card($card_id);
+		try {
+			$this->_award_card($card_id);
+		}
+		catch (MyException $e) {
+			throw $e;
+		}
+
+		$this->current_player = $orig_current_player;
 	}
 
 

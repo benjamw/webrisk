@@ -813,8 +813,18 @@ fix_extra_info($player['extra_info']);
 	 * @throws MyException
 	 */
 	public function play_to($step) {
-		for ($i = 0; $i < $step; ++$i) {
-			$this->do_action($this->_file[FILE_GAME_LOG][$i]);
+		call(__METHOD__);
+		call($step);
+
+		try {
+			for ($i = 0; $i < $step; ++$i) {
+				call('--- STEP = ' . $i . ' ---');
+				$this->step = (int) $i;
+				$this->do_action($this->_file[FILE_GAME_LOG][$i]);
+			}
+		}
+		catch (MyException $e) {
+			throw $e;
 		}
 	}
 
@@ -828,93 +838,143 @@ fix_extra_info($player['extra_info']);
 	 * @throws MyException
 	 */
 	protected function do_action($action) {
+		call(__METHOD__);
+		call($action);
+
 		list($type, $action) = explode(' ', $action);
 		$action = explode(':', $action);
 
 		// TODO: need to test the current state for the current player
 		// and skip if they are in the wrong state until they get to the right state
 
-		switch (strtoupper($type)) {
-			case 'A' : // Attack
-				$rolls = explode(',', $action[4]);
+		try {
+			switch (strtoupper($type)) {
+				case 'A' : // Attack
+					$rolls = explode(',', $action[4]);
 
-				$player_id = $action[0];
-				$attack_land_id = $action[1];
-				$defend_land_id = $action[3];
-				$attack_roll = $rolls[0];
-				$defend_roll = $rolls[1];
-				$num_armies = str_len($attack_roll);
+					$player_id = $action[0];
+					$attack_land_id = $action[1];
+					$defend_land_id = $action[3];
+					$attack_roll = $rolls[0];
+					$defend_roll = $rolls[1];
+					$num_armies = strlen($attack_roll);
 
-				$this->_risk->set_player_state('Attacking', $player_id);
-				$this->attack($player_id, $num_armies, $attack_land_id, $defend_land_id, $attack_roll, $defend_roll);
-				break;
+					$this->_risk->set_player_state('Attacking', $player_id);
+					$this->attack($player_id, $num_armies, $attack_land_id, $defend_land_id, $attack_roll, $defend_roll);
+					break;
 
-			case 'C' : // Card
-				$this->_risk->give_card($action[0], $action[1]);
-				break;
+				case 'C' : // Card
+					$this->_risk->give_card($action[0], $action[1]);
+					break;
 
-			case 'D' : // Done (game over)
-				// do nothing
-				break;
+				case 'D' : // Done (game over)
+					// do nothing
+					break;
 
-			case 'E' : // Eradicated (killed)
-				// do nothing
-				break;
+				case 'E' : // Eradicated (killed)
+					// do nothing
+					break;
 
-			case 'F' : // Fortify
-				$player_id = $action[0];
-				$num_armies = $action[1];
-				$from_land_id = $action[2];
-				$to_land_id = $action[3];
+				case 'F' : // Fortify
+					$player_id = $action[0];
+					$num_armies = $action[1];
+					$from_land_id = $action[2];
+					$to_land_id = $action[3];
 
-				$this->_risk->set_player_state('Fortifying', $player_id);
-				$this->fortify($player_id, $num_armies, $from_land_id, $to_land_id);
-				break;
+					$this->_risk->set_player_state('Fortifying', $player_id);
+					$this->fortify($player_id, $num_armies, $from_land_id, $to_land_id);
+					break;
 
-			case 'I' : // Initialization
-				$board = $action[0];
+				case 'I' : // Initialization
+					$board = $action[0];
 
-				$this->_risk->init_board($board);
-				break;
+					$this->_risk->init_board($board);
+					break;
 
-			case 'N' : // Next player
-				$player_id = $action[0];
+				case 'N' : // Next player
+					// if the game was in 'Placing' state, and we get here
+					// remove all armies from everybody, start fresh
+					// there were bugs in the game previously that messed up
+					// the army count for each player, so we just have to let
+					// those invalid army counts through
+					if ('Placing' === $this->state) {
+						foreach ($this->_risk->players as & $player) { // mind the reference
+							$player['armies'] = 0;
 
-				$this->_risk->set_next_player($player_id);
-				break;
+							// and set all players into a waiting state
+							$player['state'] = 'Waiting';
 
-			case 'O' : // Occupy
-				$player_id = $action[0];
-				$num_armies = $action[1];
+							// also... the current player is not set, so do that as well
+							if (1 == $player['order_num']) {
+								$this->_risk->current_player = $player['player_id'];
+							}
+						}
+						unset($player); // kill the reference
 
-				$this->_risk->set_player_state('Occupying', $player_id);
-				$this->occupy($player_id, $num_armies);
-				break;
+						$this->state = 'Playing';
+					}
 
-			case 'P' : // Placing
-				$player_id = $action[0];
-				$num_armies = $action[1];
-				$land_id = $action[2];
+					$player_id = $action[0];
 
-				$this->_risk->set_player_state('Placing', $player_id);
-				$this->place_armies($player_id, $num_armies, $land_id);
-				break;
+					$this->_risk->set_next_player($player_id);
+					break;
 
-			case 'Q' : // Quit (resign)
-				$player_id = $action[0];
+				case 'O' : // Occupy
+					$player_id = $action[0];
+					$num_armies = $action[1];
 
-				$this->resign($player_id);
-				break;
+					$this->_risk->set_player_state('Occupying', $player_id);
+					$this->occupy($player_id, $num_armies);
+					break;
 
-			case 'R' : // Reinforcements
-				break;
+				case 'P' : // Placing
+					$player_id = $action[0];
+					$num_armies = $action[1];
+					$land_id = $action[2];
 
-			case 'T' : // Trade
-				break;
+					$this->_risk->set_player_state('Placing', $player_id);
+					$this->place_armies($player_id, $num_armies, $land_id, true, true);
+					break;
 
-			case 'V' : // Value
-				break;
+				case 'Q' : // Quit (resign)
+					$player_id = $action[0];
 
+					$this->resign($player_id);
+					break;
+
+				case 'R' : // Reinforcements
+					$player_id = $action[0];
+					$armies = $action[1];
+
+					$this->_risk->players[$player_id]['armies'] += $armies;
+					call($this->_risk->players);
+					break;
+
+				case 'T' : // Trade
+					$player_id = $action[0];
+					$cards = array_trim($action[1], 'int');
+					$bonus = $action[3];
+
+					$this->trade_cards($player_id, $cards, $bonus);
+					break;
+
+				case 'V' : // Value
+					$value = $action[0];
+
+					// should be handled in the trade_cards method
+					// but just in case...
+					if ($value !== $this->_risk->get_trade_value()) {
+						$this->_risk->set_trade_value($value);
+					}
+					break;
+
+				default :
+					throw new MyException(__METHOD__.': Invalid action type ('.$type.') encountered');
+					break;
+			}
+		}
+		catch (MyException $e) {
+			throw $e;
 		}
 	}
 
