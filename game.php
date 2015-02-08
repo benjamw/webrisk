@@ -376,6 +376,11 @@ echo get_header($meta);
 							$limit = ( ! empty($maximum) && ($limit > $maximum)) ? $maximum : $limit;
 
 							$conquests[$amount] = $limit;
+
+							// there are only 42 territories, we don't need to calculate any more than that
+							if (42 <= $limit) {
+								break;
+							}
 						}
 
 						// don't show 0 count for certain types
