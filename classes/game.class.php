@@ -2581,11 +2581,12 @@ fix_extra_info($result['extra_info']);
 	 *		Adds a player to the game and risk data
 	 *
 	 * @param array $data player data
+	 * @param int $count optional total player count
 	 *
 	 * @return void
 	 * @throws MyException
 	 */
-	protected function _set_player_data($data)
+	protected function _set_player_data($data, $count = null)
 	{
 		call(__METHOD__);
 

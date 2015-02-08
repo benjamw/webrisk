@@ -614,12 +614,13 @@ fix_extra_info($this->_file[FILE_EXTRA_INFO]);
 		$last_move = 0;
 
 		$n = 1;
+		$count = count($players);
 		foreach ($players as $player) {
 			$player = explode(' - ', $player);
 			$player = array_combine(array('player_id', 'color', 'name'), $player);
 			$player['order_num'] = $n;
 
-			$this->_set_player_data($player);
+			$this->_set_player_data($player, $count);
 
 			++$n;
 		}
@@ -632,11 +633,12 @@ fix_extra_info($this->_file[FILE_EXTRA_INFO]);
 	 *		Adds a player to the game and risk data
 	 *
 	 * @param array $data player data
+	 * @param int $count optional total player count
 	 *
 	 * @return void
 	 * @throws MyException
 	 */
-	protected function _set_player_data($data)
+	protected function _set_player_data($data, $count = null)
 	{
 		call(__METHOD__);
 
@@ -670,7 +672,7 @@ fix_extra_info($player['extra_info']);
 
 		$player = array_clean($player, $player_keys);
 
-		$risk_player['armies'] = $this->_risk->get_start_armies( );
+		$risk_player['armies'] = $this->_risk->get_start_armies($count);
 		$risk_player['state'] = 'Placing';
 
 		$risk_player_keys = array(
