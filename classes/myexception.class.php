@@ -41,11 +41,13 @@ class MyException
 	 *		Class constructor
 	 *		Sets all outside data
 	 *
-	 * @param string error message
-	 * @param int optional error code
+	 * @param string $message
+	 * @param int $code optional error code
+	 *
 	 * @action instantiates object
 	 * @action writes the exception to the log
-	 * @return void
+	 *
+	 * @return MyException Object reference
 	 */
 	public function __construct($message = '', $code = 0)
 	{
@@ -65,7 +67,8 @@ class MyException
 	 *		cleans the message for use
 	 *
 	 * @param void
-	 * @return cleaned message
+	 *
+	 * @return string cleaned message
 	 */
 	public function outputMessage( )
 	{
@@ -81,7 +84,9 @@ class MyException
 	 *		writes the exception to the log file
 	 *
 	 * @param void
+	 *
 	 * @action writes the exception to the log
+	 *
 	 * @return void
 	 */
 	protected function _write_error( )

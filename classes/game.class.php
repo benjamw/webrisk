@@ -3056,6 +3056,7 @@ fix_extra_info($player['extra_info']);
 	 *
 	 * @param int $game_id
 	 * @param bool $parse the logs into human readable form
+	 *
 	 * @return array log data
 	 */
 	static public function get_logs($game_id = 0, $parse = true)
@@ -3303,7 +3304,7 @@ if (isset($data[7])) {
 	static public function get_roll_stats( )
 	{
 		// for all variables with a 1v1, 3v2, etc.
-		// the syntax is num_atack v num_defend
+		// the syntax is num_attack v num_defend
 
 		$Mysql = Mysql::get_instance( );
 
