@@ -3095,140 +3095,7 @@ fix_extra_info($player['extra_info']);
 		if ($parse && $return) {
 			$logs = array( );
 			foreach ($return as $row) {
-				$row_data = explode(' ', $row['data']);
-				$data = explode(':', $row_data[LOG_DATA]);
-#				call($data);
-
-				$player = array( );
-				for ($i = 0; $i < 3; ++$i) {
-					if ( ! isset($data[$i])) {
-						break;
-					}
-
-					if ( ! isset($GLOBALS['_PLAYERS'][$data[$i]])) {
-						continue;
-					}
-
-					$player[$i] = htmlentities($GLOBALS['_PLAYERS'][$data[$i]], ENT_QUOTES, 'UTF-8', false);
-					if ('' == $player[$i]) {
-						$player[$i] = '[deleted]';
-					}
-				}
-
-				$message = '';
-				switch(strtoupper($row_data[LOG_TYPE])) {
-					case 'A' : // Attack
-//* TEMP FIX ----
-// temp fix for what?   i forget... dammit
-// guess it's not so temp anymore, is it...
-						if (isset($data[7])) {
-							$data[2] = $data[3];
-							$data[3] = $data[4];
-							$data[4] = $data[5];
-							$data[5] = $data[6];
-							$data[6] = $data[7];
-							unset($data[7]);
-						}
-//*/
-						// we add a few log messages here, but make them in reverse
-						// add the outcome
-						list($attack_lost, $defend_lost) = explode(',', $data[5]);
-						$message = " - - ATTACK: {$player[0]} [{$data[0]}] lost {$attack_lost}, {$player[2]} [{$data[2]}] lost {$defend_lost}";
-
-						if ( ! empty($data[6])) {
-							$message .= ' and was defeated';
-						}
-
-						$logs[] = array(
-							'game_id' => $game_id,
-							'message' => $message,
-							'data' => null,
-							'create_date' => $row['create_date'],
-						);
-
-						// add the roll data
-						list($attack_roll, $defend_roll) = explode(',', $data[4]);
-						$message = ' - - ROLL: attack = '.implode(', ', str_split($attack_roll)).'; defend = '.implode(', ', str_split($defend_roll)).';';
-
-						$logs[] = array(
-							'game_id' => $game_id,
-							'message' => $message,
-							'data' => null,
-							'create_date' => $row['create_date'],
-						);
-
-						// make the attack announcement (gets saved below)
-						$message = "ATTACK: {$player[0]} [{$data[0]}] with ".strlen($attack_roll)." ".plural(strlen($attack_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[1]][NAME])." [{$data[1]}], attacked {$player[2]} [{$data[2]}] with ".strlen($defend_roll)." ".plural(strlen($defend_roll), 'army', 'armies')." on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'C' : // Card
-						$message = "CARD: {$player[0]} [{$data[0]}] was given a card";
-						break;
-
-					case 'D' : // Done (game over)
-						$message = str_repeat('=', 10)." GAME OVER: {$player[0]} [{$data[0]}] wins !!! ".str_repeat('=', 10);
-						break;
-
-					case 'E' : // Eradicated (killed)
-						$message = str_repeat('+ ', 5)."KILLED: {$player[0]} [{$data[0]}] eradicated {$player[1]} [{$data[1]}] from the board";
-
-						if ('' != $data[2]) {
-							$message .= ' and recieved '.count(explode(',', $data[2])).' cards';
-						}
-						break;
-
-					case 'F' : // Fortify
-						$message = "FORTIFY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'I' : // Initialization
-						$message = 'Board Initialized';
-						break;
-
-					case 'N' : // Next player
-						$message = str_repeat('=', 5)." NEXT: {$player[0]} [{$data[0]}] is the next player ".str_repeat('=', 40);
-						break;
-
-					case 'O' : // Occupy
-						$message = "OCCUPY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						break;
-
-					case 'P' : // Placing
-						$message = "PLACE: {$player[0]} [{$data[0]}] placed {$data[1]} ".plural($data[1], 'army', 'armies')." in ".shorten_territory_name(self::$TERRITORIES[$data[2]][NAME])." [{$data[2]}]";
-						break;
-
-					case 'Q' : // Quit (resign)
-						$message = str_repeat('+ ', 5)."RESIGN: {$player[0]} [{$data[0]}] resigned the game";
-						break;
-
-					case 'R' : // Reinforcements
-						$message = "REINFORCE: {$player[0]} [{$data[0]}] was given {$data[1]} ".plural($data[1], 'army', 'armies')." for {$data[2]} territories";
-						if (isset($data[3])) {
-							$data[3] = explode(',', $data[3]);
-
-							foreach ($data[3] as $cont_id) {
-								$message .= ', '.self::$CONTINENTS[$cont_id][NAME];
-							}
-
-							// if there were continents, use the word and just after the last comma,
-							// unless there was only one continent, then replace the comma
-							$one = (bool) (1 >= count($data[3]));
-							$message = substr_replace($message, ' and', strrpos($message, ',') + (int) ! $one, (int) $one);
-						}
-						break;
-
-					case 'T' : // Trade
-						$message = "TRADE: {$player[0]} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
-
-						if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
-							$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(self::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-						}
-						break;
-
-					case 'V' : // Value
-						$message = "VALUE: The trade-in value was set to {$data[0]}";
-						break;
-				}
+				$message = self::parse_move_info($row, $trade_bonus, $game_id, $logs);
 
 #				call($message);
 				$row['message'] = $message;
@@ -3240,6 +3107,166 @@ fix_extra_info($player['extra_info']);
 		}
 
 		return $return;
+	}
+
+
+	public static function parse_move_info($move, $trade_bonus = 2, $game_id = null, & $logs = false) {
+		$move_data = (is_array($move) ? explode(' ', $move['data']) : explode(' ', $move));
+		$data = explode(':', $move_data[LOG_DATA]);
+#				call($data);
+
+		$player = array( );
+		for ($i = 0; $i < 3; ++$i) {
+			if ( ! isset($data[$i])) {
+				break;
+			}
+
+			if ( ! isset($GLOBALS['_PLAYERS'][$data[$i]])) {
+				continue;
+			}
+
+			$player[$i] = htmlentities($GLOBALS['_PLAYERS'][$data[$i]], ENT_QUOTES, 'UTF-8', false);
+			if ('' == $player[$i]) {
+				$player[$i] = '[deleted]';
+			}
+		}
+
+		$message = '';
+		switch(strtoupper($move_data[LOG_TYPE])) {
+			case 'A' : // Attack
+//* TEMP FIX ----
+// temp fix for what?   i forget... dammit
+// guess it's not so temp anymore, is it...
+if (isset($data[7])) {
+	$data[2] = $data[3];
+	$data[3] = $data[4];
+	$data[4] = $data[5];
+	$data[5] = $data[6];
+	$data[6] = $data[7];
+	unset($data[7]);
+}
+//*/
+				list($attack_lost, $defend_lost) = explode(',', $data[5]);
+				list($attack_roll, $defend_roll) = explode(',', $data[4]);
+
+				if (is_array($logs)) {
+					// we add a few log messages here, but make them in reverse
+					// add the outcome
+					$message = " - - ATTACK: {$player[0]} [{$data[0]}] lost {$attack_lost}, {$player[2]} [{$data[2]}] lost {$defend_lost}";
+
+					if ( ! empty($data[6])) {
+						$message .= ' and was defeated';
+					}
+
+					$logs[] = array(
+						'game_id' => $game_id,
+						'message' => $message,
+						'data' => null,
+						'create_date' => ( ! empty($move['create_date']) ? $move['create_date'] : false),
+					);
+
+					// add the roll data
+					$message = ' - - ROLL: attack = ' . implode(', ', str_split($attack_roll)) . '; defend = ' . implode(', ', str_split($defend_roll)) . ';';
+
+					$logs[] = array(
+						'game_id' => $game_id,
+						'message' => $message,
+						'data' => null,
+						'create_date' => ( ! empty($move['create_date']) ? $move['create_date'] : false),
+					);
+
+					// make the attack announcement (gets saved below)
+					$message = "ATTACK: {$player[0]} [{$data[0]}] with " . strlen($attack_roll) . " " . plural(strlen($attack_roll), 'army', 'armies') . " on " . shorten_territory_name(Risk::$TERRITORIES[$data[1]][NAME]) . " [{$data[1]}], attacked {$player[2]} [{$data[2]}] with " . strlen($defend_roll) . " " . plural(strlen($defend_roll), 'army', 'armies') . " on " . shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME]) . " [{$data[3]}]";
+				}
+				else {
+					$message = "ATTACK: {$player[0]} [{$data[0]}] with " . strlen($attack_roll) . " " . plural(strlen($attack_roll), 'army', 'armies') . " on " . shorten_territory_name(Risk::$TERRITORIES[$data[1]][NAME]) . " [{$data[1]}], attacked {$player[2]} [{$data[2]}] with " . strlen($defend_roll) . " " . plural(strlen($defend_roll), 'army', 'armies') . " on " . shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME]) . " [{$data[3]}]";
+					$message .= "\n\nROLL:\nattack = " . implode(', ', str_split($attack_roll)) . ";\ndefend = " . implode(', ', str_split($defend_roll)) . ';';
+					$message .= "\n\n{$player[0]} [{$data[0]}] lost {$attack_lost},\n{$player[2]} [{$data[2]}] lost {$defend_lost}";
+
+					if ( ! empty($data[6])) {
+						$message .= ' and was defeated';
+					}
+				}
+				break;
+
+			case 'C' : // Card
+				$message = "CARD: {$player[0]} [{$data[0]}] was given a card";
+				if (is_null($game_id)) {
+					$card = Risk::$CARDS[$data[1]];
+
+					$card_type = card_type($card[CARD_TYPE]);
+					$card_territory = ((0 !== $card[TERRITORY_ID]) ? ' - '.Risk::$TERRITORIES[$card[TERRITORY_ID]][NAME] : '');
+
+					$message .= "\n({$card_type}{$card_territory})";
+				}
+				break;
+
+			case 'D' : // Done (game over)
+				$message = str_repeat('=', 10)." GAME OVER: {$player[0]} [{$data[0]}] wins !!! ".str_repeat('=', 10);
+				break;
+
+			case 'E' : // Eradicated (killed)
+				$message = str_repeat('+ ', 5)."KILLED: {$player[0]} [{$data[0]}] eradicated {$player[1]} [{$data[1]}] from the board";
+
+				if ('' != $data[2]) {
+					$message .= ' and received '.count(explode(',', $data[2])).' cards';
+				}
+				break;
+
+			case 'F' : // Fortify
+				$message = "FORTIFY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(Risk::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+				break;
+
+			case 'I' : // Initialization
+				$message = 'Board Initialized';
+				break;
+
+			case 'N' : // Next player
+				$message = str_repeat('=', 5)." NEXT: {$player[0]} [{$data[0]}] is the next player ".str_repeat('=', 40);
+				break;
+
+			case 'O' : // Occupy
+				$message = "OCCUPY: {$player[0]} [{$data[0]}] moved {$data[1]} ".plural($data[1], 'army', 'armies')." from ".shorten_territory_name(Risk::$TERRITORIES[$data[2]][NAME])." [{$data[2]}] to ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+				break;
+
+			case 'P' : // Placing
+				$message = "PLACE: {$player[0]} [{$data[0]}] placed {$data[1]} ".plural($data[1], 'army', 'armies')." in ".shorten_territory_name(Risk::$TERRITORIES[$data[2]][NAME])." [{$data[2]}]";
+				break;
+
+			case 'Q' : // Quit (resign)
+				$message = str_repeat('+ ', 5)."RESIGN: {$player[0]} [{$data[0]}] resigned the game";
+				break;
+
+			case 'R' : // Reinforcements
+				$message = "REINFORCE: {$player[0]} [{$data[0]}] was given {$data[1]} ".plural($data[1], 'army', 'armies')." for {$data[2]} territories";
+				if (isset($data[3])) {
+					$data[3] = explode(',', $data[3]);
+
+					foreach ($data[3] as $cont_id) {
+						$message .= ', '.Risk::$CONTINENTS[$cont_id][NAME];
+					}
+
+					// if there were continents, use the word and just after the last comma,
+					// unless there was only one continent, then replace the comma
+					$one = (bool) (1 >= count($data[3]));
+					$message = substr_replace($message, ' and', strrpos($message, ',') + (int) ! $one, (int) $one);
+				}
+				break;
+
+			case 'T' : // Trade
+				$message = "TRADE: {$player[0]} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
+
+				if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
+					$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+				}
+				break;
+
+			case 'V' : // Value
+				$message = "VALUE: The trade-in value was set to {$data[0]}";
+				break;
+		}
+
+		return $message;
 	}
 
 

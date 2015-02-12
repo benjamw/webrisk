@@ -77,67 +77,7 @@ if (isset($_POST['validity_test'])) {
 
 // run the custom trade table builder
 if (isset($_POST['custom_trades'])) {
-	$table = '';
-	$amount = 0;
-	$array = Game::calculate_trade_values($_POST['custom_trades']);
-
-	$prev_value = 0;
-	foreach ($array as $trade => $value) {
-		$idx = $trade + 1;
-
-		if ('-' == $value[0]) {
-			// if minus, go till 0, then show 0 three times
-			$next_value = $prev_value;
-			while (0 < $next_value) {
-				$next_value += (int) $value;
-				if (0 >= $next_value) {
-					--$idx;
-					break;
-				}
-				$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
-				++$idx;
-			}
-
-			++$idx;
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
-
-			++$idx;
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
-
-			++$idx;
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
-		}
-		elseif('+' == $value[0]) {
-			// if plus, go for three then append plus value
-			$next_value = $prev_value;
-			for ($i = 1; $i <= 3; ++$i) {
-				$next_value += (int) $value;
-				$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
-				++$idx;
-			}
-
-			$value = '('.$value.')';
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
-		}
-		else {
-			// nothing special, just append the value
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
-			$prev_value = $value;
-		}
-	}
-
-	// if the last value was not a changer
-	// show the last value three times
-	if ( ! in_array($array[count($array) - 1][0], array('+','-'))) {
-		$idx = count($array) + 1;
-		$value = $array[count($array) - 1];
-		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
-
-		++$idx;
-		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
-	}
-
-	echo $table;
+	echo trade_value_table(Game::calculate_trade_values($_POST['custom_trades']));
 	exit;
 }
 

@@ -56,6 +56,7 @@ require_once INCLUDE_DIR.'inc.settings.php';
 require_once INCLUDE_DIR.'func.global.php';
 require_once INCLUDE_DIR.'html.general.php';
 require_once INCLUDE_DIR.'html.tables.php';
+require_once INCLUDE_DIR.'html.risk.php';
 
 // MAKE SURE TO LOAD CLASS FILES BEFORE STARTING THE SESSION
 // OR YOU END UP WITH INCOMPLETE OBJECTS PULLED FROM SESSION

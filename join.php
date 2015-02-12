@@ -252,65 +252,7 @@ if ($trades) {
 	$trade_array_table .= '</table>';
 }
 
-$trade_array = Game::calculate_trade_values($trades);
-
-$trade_value_table = '';
-$prev_value = 0;
-$amount = 0;
-foreach ($trade_array as $trade => $value) {
-	$idx = $trade + 1;
-
-	if ('-' == $value[0]) {
-		// if minus, go till 0, then show 0 three times
-		$next_value = $prev_value;
-		while (0 < $next_value) {
-			$next_value += (int) $value;
-			if (0 >= $next_value) {
-				--$idx;
-				break;
-			}
-			$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
-			++$idx;
-		}
-
-		++$idx;
-		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
-
-		++$idx;
-		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
-
-		++$idx;
-		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
-	}
-	elseif('+' == $value[0]) {
-		// if plus, go for three then append plus value
-		$next_value = $prev_value;
-		for ($i = 1; $i <= 3; ++$i) {
-			$next_value += (int) $value;
-			$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
-			++$idx;
-		}
-
-		$value = '('.$value.')';
-		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
-	}
-	else {
-		// nothing special, just append the value
-		$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
-		$prev_value = $value;
-	}
-}
-
-// if the last value was not a changer
-// show the last value three times
-if ( ! in_array($trade_array[count($trade_array) - 1][0], array('+','-'))) {
-	$idx = count($trade_array) + 1;
-	$value = $trade_array[count($trade_array) - 1];
-	$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
-
-	++$idx;
-	$trade_value_table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
-}
+$trade_value_table = trade_value_table(Game::calculate_trade_values($trades));
 
 $contents = '
 
