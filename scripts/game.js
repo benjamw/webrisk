@@ -325,20 +325,20 @@ $(document).ready( function( ) {
 
 							// show the dice
 							reenable = true;
-							$('#board #dice').empty( );
+							var $dice = $('#dice').empty( );
 							if (undefined != reply.dice) {
-								$('#board #dice').append(
+								$dice.append(
 									'<div class="attack"></div><div class="defend"></div>'
 								);
 
 								$.each(reply.dice.attack, function(i, n) {
-									$('#board #dice .attack').append(
+									$dice.find('.attack').append(
 										'<div class="'+attack_class+' dc'+n+'">'+n+'</div>'
 									);
 								});
 
 								$.each(reply.dice.defend, function(i, n) {
-									$('#board #dice .defend').append(
+									$dice.find('.defend').append(
 										'<div class="'+defend_class+' dc'+n+'">'+n+'</div>'
 									);
 								});

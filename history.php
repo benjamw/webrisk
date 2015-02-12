@@ -34,7 +34,7 @@ try {
 	}
 
 	if ( ! isset($history)) {
-		$logs = Game::get_logs($_SESSION['game_id'], 'human');
+		$logs = Game::get_logs($_SESSION['game_id']);
 		$players = $Game->get_players( );
 
 		$colors = array( );
@@ -44,7 +44,7 @@ try {
 
 		foreach ($logs as & $log) {
 			// wrap the first all uppercase word in a class of the same name
-			$log['message'] = preg_replace_callback('/^([ -]*)([A-Z]+)/', 'make_class', $log['message']);
+			$log['message'] = preg_replace_callback('/^([ -+=]*)([A-Z]+)/', 'make_class', $log['message']);
 
 			// add outcome class to attack outcome
 			if (' - - ' == substr($log['message'], 0, 5)) {
