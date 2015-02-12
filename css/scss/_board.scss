@@ -1,4 +1,6 @@
 
+@import "compass/css3/user-interface";
+
 #nudge {
 	float: right;
 }
@@ -11,6 +13,36 @@
 
 	hr {
 		line-height: 26px;
+	}
+
+	.review {
+		.steps {
+			text-align: center;
+			font-size: large;
+		}
+
+		span {
+			padding: 2px 5px 1px;
+			border: 1px solid #555;
+			border-radius: 3px;
+			cursor: pointer;
+			@include user-select(none);
+
+			&:hover {
+				border-color: #AAA;
+			}
+
+			&.disabled {
+				color: #AAA;
+				border-color: #333;
+				cursor: default;
+			}
+		}
+	}
+
+	#move_info {
+		padding: 10px;
+		word-wrap: break-word;
 	}
 }
 

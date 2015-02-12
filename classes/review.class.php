@@ -2,20 +2,20 @@
 /*
 +---------------------------------------------------------------------------
 |
-|   replay.class.php (php 5.x)
+|   review.class.php (php 5.x)
 |
 |   by Benjam Welker
 |   http://iohelix.net
 |
 +---------------------------------------------------------------------------
 |
-|	This module is built to replay the game Risk, it doesn't really
+|	This module is built to review the game Risk, it doesn't really
 |	care about how to play, or the deep goings on of the game, only about
 |	dat file structure and how to allow players to interact with the game.
 |
 +---------------------------------------------------------------------------
 |
-|   > WebRisk Game Replay module
+|   > WebRisk Game Review module
 |   > Date started: 2015-02-02
 |
 |   > Module Version Number: 0.8.0
@@ -37,7 +37,7 @@ define('TABLE_GAME', 0);
 define('TABLE_PLAYERS', 1);
 define('TABLE_LAND', 2);
 
-class Replay extends Game {
+class Review extends Game {
 
 	/**
 	 *		PROPERTIES
@@ -98,7 +98,7 @@ class Replay extends Game {
 	 *
 	 * @action instantiates object
 	 *
-	 * @return Replay Object reference
+	 * @return Review Object reference
 	 * @throws MyException
 	 */
 	public function __construct($file, $step = 0) {
@@ -109,6 +109,7 @@ class Replay extends Game {
 		$this->_filename = $file;
 
 		$this->_risk = new Risk( );
+		$this->_risk->halt_redirect = true;
 		$this->_do_log = false;
 
 		if (defined('DEBUG')) {
@@ -125,9 +126,19 @@ class Replay extends Game {
 		$this->id = (int) $id;
 		call($this->id);
 
-		if (0 !== $step) {
-			$this->play_to($step);
-		}
+		$this->play_to((int) $step);
+	}
+
+
+	/**
+	 * Class destructor, overrides the destructor in Game class
+	 *
+	 * @param void
+	 *
+	 * @return void
+	 */
+	public function __destruct( ) {
+		// do nothing
 	}
 
 
@@ -227,19 +238,13 @@ class Replay extends Game {
 	 *		Filters the board data based on what
 	 *		the current player can see
 	 *
-	 * @param int $observer_id optional
+	 * @param null $observer_id unused
 	 *
 	 * @return array board data
 	 */
 	public function get_visible_board($observer_id = null)
 	{
 		call(__METHOD__);
-
-		$observer_id = (int) $observer_id;
-
-		if ( ! $observer_id) {
-			$observer_id = $_SESSION['player_id'];
-		}
 
 		$board = $this->_risk->board;
 
@@ -254,14 +259,66 @@ class Replay extends Game {
 
 
 	/**
-	 * Get the list of steps for this replay
+	 * Get the list of steps for this review
 	 *
-	 * @param void
+	 * @param bool $parsed optional
+	 * @param int|bool $limit optional the index of the last step to pull or false for all
 	 *
 	 * @return array
 	 */
-	public function get_steps( ) {
-		return $this->_file[FILE_GAME_LOG];
+	public function get_steps($parsed = false, $limit = false) {
+		$game_log = $this->_file[FILE_GAME_LOG];
+
+		if (false !== $limit) {
+			$game_log = array_slice($game_log, 0, $limit + 1);
+		}
+
+		if ( ! $parsed) {
+			return $game_log;
+		}
+
+		$game_log = array_reverse($game_log);
+		$trade_bonus = $this->_extra_info['trade_card_bonus'];
+
+		$logs = array( );
+		foreach ($game_log as $data) {
+			$log = array(
+				'data' => $data,
+				'message' => self::parse_move_info($data, $trade_bonus, $game_id = 0, $logs),
+			);
+
+			$logs[] = $log;
+		}
+
+		return $logs;
+	}
+
+
+	/**
+	 * Get the given step string
+	 *
+	 * @param int|bool $step optional step index
+	 *
+	 * @return string step code
+	 */
+	public function get_step($step = false) {
+		if (false === $step) {
+			$step = $this->step;
+		}
+
+		return $this->_file[FILE_GAME_LOG][$step];
+	}
+
+
+	/**
+	 * Get the total number of steps for this review
+	 *
+	 * @param void
+	 *
+	 * @return int
+	 */
+	public function get_steps_count( ) {
+		return count($this->_file[FILE_GAME_LOG]);
 	}
 
 
@@ -381,7 +438,9 @@ class Replay extends Game {
 			$players[$player_id]['order'] = $player['order_num'];
 		}
 
-		$players[$this->_host_id]['host'] = true;
+		if ( ! empty($this->_host_id)) {
+			$players[$this->_host_id]['host'] = true;
+		}
 
 		return $players;
 	}
@@ -783,7 +842,7 @@ fix_extra_info($player['extra_info']);
 
 
 	/** protected function _save
-	 *		Replaces Game::_save
+	 *		Replaces Game::_save to prevent accidental DB writes
 	 *
 	 * @param void
 	 *
@@ -848,9 +907,9 @@ fix_extra_info($player['extra_info']);
 
 
 	/**
-	 * Plays the game to the given step
+	 * Plays the game to the given step (inclusive)
 	 *
-	 * @param $step
+	 * @param int $step to play to (inclusive)
 	 *
 	 * @return void
 	 * @throws MyException
@@ -860,9 +919,9 @@ fix_extra_info($player['extra_info']);
 		call($step);
 
 		try {
-			for ($i = 0; $i < $step; ++$i) {
+			for ($i = 0; $i <= $step; ++$i) {
 				call('--- STEP = ' . $i . ' ---');
-				$this->step = (int) $i;
+				$this->step = $i;
 				$this->do_action($this->_file[FILE_GAME_LOG][$i]);
 			}
 		}
@@ -1021,4 +1080,16 @@ fix_extra_info($player['extra_info']);
 		}
 	}
 
-} // end of Replay class
+
+	/**
+	 * Get a human readable version of the current move
+	 *
+	 * @param void
+	 *
+	 * @return string
+	 */
+	public function get_move_info( ) {
+		return self::parse_move_info($this->_file[FILE_GAME_LOG][(int) $this->step], $this->_extra_info['trade_card_bonus']);
+	}
+
+} // end of Review class

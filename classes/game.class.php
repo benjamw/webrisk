@@ -2953,7 +2953,7 @@ fix_extra_info($player['extra_info']);
 			}
 			else {
 				foreach ($db_lands as $db_land) {
-					$update_land = false;
+					$update_land = array( );
 					$land_id = $db_land['land_id'];
 
 					$rland = $this->_risk->board[$land_id];

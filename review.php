@@ -29,7 +29,6 @@ if (empty($_SESSION['step'])) {
 // always refresh the game data, there may be more than one person online
 try {
 	$Review = new Review($_SESSION['game_file'], $_SESSION['step']);
-	d($Review);
 }
 catch (MyException $e) {
 	if ( ! defined('DEBUG') || ! DEBUG) {
@@ -55,7 +54,6 @@ $meta['head_data'] = '
 		var game_file = '.json_encode($_SESSION['game_file']).';
 		var step = '.json_encode($_SESSION['step']).';
 		var steps = '.json_encode($Review->get_steps( )).';
-		var steps_length = steps.length;
 	/*]]>*/</script>
 	<script type="text/javascript" src="scripts/review.js"></script>
 ';
@@ -85,40 +83,80 @@ echo get_header($meta);
 				</div> <!-- #pathmarkers -->
 
 				<img src="images/blank.gif" width="800" height="449" usemap="#gamemap" alt="" />
-				<?php
-					$board = $Review->get_visible_board( );
-					foreach ($board as $land_id => $data) {
-						$id_box = '';
-						if ( ! empty($_SESSION['admin_id']) || $GLOBALS['Player']->is_admin) {
-							$id_box = ' ['.str_pad($land_id, 2, '0', STR_PAD_LEFT).']';
-						}
 
-						echo '
-							<span class="'.substr($data['color'], 0, 3).$data['resigned'].'" id="sl'.str_pad($land_id, 2, '0', STR_PAD_LEFT).'" title="'.Risk::$TERRITORIES[$land_id][NAME].$id_box.'">'.$data['armies'].'</span>';
-					}
-				?>
+				<?php echo board($Review); ?>
 
 				<div id="next"><?php echo $Review->get_trade_value( ); ?></div>
+
 				<?php echo $Review->draw_players( ); ?>
 
-				<div id="dice"></div>
+				<div id="dice"><?php
+					$move = $Review->get_step( );
+
+					if ('A' === $move{0}) {
+						list($type, $action) = explode(' ', $move);
+						$action = explode(':', $action);
+						$rolls = explode(',', $action[4]);
+
+						$players = $Review->get_players( );
+
+						$attack_class = substr($players[$action[0]]['color'], 0, 3);
+						$defend_class = substr($players[$action[2]]['color'], 0, 3);
+
+						echo '<div class="attack">';
+
+						foreach (str_split($rolls[0]) as $die) {
+							echo '<div class="'.$attack_class.' dc'.$die.'">'.$die.'</div>';
+						}
+
+						echo '</div><div class="defend">';
+
+						foreach (str_split($rolls[1]) as $die) {
+							echo '<div class="'.$defend_class.' dc'.$die.'">'.$die.'</div>';
+						}
+
+						echo '</div>';
+					}
+				?></div>
 
 			</div> <!-- #board -->
 
 			<div id="controls">
 				<div class="review">
+					<div class="steps"><?php echo $_SESSION['step'].' / '.$Review->get_steps_count( ); ?></div>
 					<span class="button prev player" title="Prev Player">&lt; P</span>
 					<span class="button prev state" title="Prev State">&lt; S</span>
 					<span class="button prev action" title="Prev Action">&lt; A</span>
-					<div class="steps"><?php echo $_SESSION['step'].'/'.$Review->get_steps_count( ); ?></div>
 					<span class="button next action" title="Next Action">A &gt;</span>
 					<span class="button next state" title="Next State">S &gt;</span>
 					<span class="button next player" title="Next Player">P &gt;</span>
 				</div>
+
+				<?php
+					$players = $Review->get_players( );
+
+					$colors = array( );
+					foreach ($players as $key => $player) {
+						$colors[$player['color']] = htmlentities($GLOBALS['_PLAYERS'][$key]).' ['.$key.']';
+					}
+
+					$move_info = nl2br($Review->get_move_info( ));
+					call($move_info);
+					$dice = $Review->get_dice( );
+
+					// wrap the player name in a class of the players color
+					foreach ($colors as $color => $player) {
+						if (false !== strpos($move_info, $player)) {
+							$move_info = str_replace($player, '<span class="'.substr($color, 0, 3).'">'.$player.'</span>', $move_info);
+						}
+					}
+				?>
+
+				<div id="move_info"><?php echo $move_info; ?></div>
 			</div> <!-- #controls -->
 
 			<div id="history">
-				<a href="history.php" data-fancybox-type="ajax" class="fancybox">Click for History</a>
+				<a href="review_history.php" data-fancybox-type="ajax" class="fancybox">Click for History</a>
 			</div> <!-- #history -->
 
 			<?php echo game_info($Review); ?>

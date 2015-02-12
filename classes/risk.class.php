@@ -1653,6 +1653,7 @@ class Risk
 
 		$next_states = array(
 			'Trading' => 'Placing' ,
+			'Placing' => 'Attacking' ,
 			'Attacking' => 'Fortifying' ,
 			'Fortifying' => 'Waiting' ,
 		);
@@ -2394,7 +2395,7 @@ class Risk
 
 		$armies = $this->calculate_armies($player_id);
 		$land = $this->get_players_land($player_id);
-		$cont_ids = array_values($this->get_players_continents($player_id));
+		$cont_ids = array_keys($this->get_players_continents($player_id));
 
 		$this->players[$player_id]['armies'] += $armies;
 
@@ -2513,7 +2514,7 @@ class Risk
 	/**
 	 * Give the given player the given card
 	 *
-	 * @note This method for replays only, do not use this method in normal gameplay
+	 * @note This method for reviews only, do not use this method in normal gameplay
 	 *
 	 * @param $player_id
 	 * @param $card_id
