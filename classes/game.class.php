@@ -3153,7 +3153,7 @@ if (isset($data[7])) {
 				if (is_array($logs)) {
 					// we add a few log messages here, but make them in reverse
 					// add the outcome
-					$message = " - - ATTACK: {$player[0]} [{$data[0]}] lost {$attack_lost}, {$player[2]} [{$data[2]}] lost {$defend_lost}";
+					$message = " - - OUTCOME: {$player[0]} [{$data[0]}] lost {$attack_lost}, {$player[2]} [{$data[2]}] lost {$defend_lost}";
 
 					if ( ! empty($data[6])) {
 						$message .= ' and was defeated';
