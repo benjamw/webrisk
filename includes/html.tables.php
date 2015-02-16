@@ -350,12 +350,11 @@ function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_
 	}
 
 	$html = '
-		<script type="text/javascript">//<![CDATA[
-			$(document).ready(function( ) {';
+		<script type="text/javascript">//<![CDATA[';
 
 	if ( ! is_null($init_sort_column)) {
 		$html .= '
-				var c = [';
+			var c = [';
 
 		$sort = '';
 		foreach ($init_sort_column as $col => $dir) {
@@ -363,15 +362,15 @@ function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_
 		}
 
 		$html .= substr($sort, 0, -1).']
-				';
+			';
 	}
 
 	$html .='
-				$("#'.$table_id.'").tablesorter({
-					textExtraction: "complex",
-					widgets: ["zebra"],
-					widgetZebra: {css: ["'.$alt_class.'",""]},
-					headers: {';
+			$("#'.$table_id.'").tablesorter({
+				textExtraction: "complex",
+				widgets: ["zebra"],
+				widgetZebra: {css: ["'.$alt_class.'",""]},
+				headers: {';
 
 	if ('' != $sort_types) {
 		array_trim($sort_types);
@@ -395,16 +394,15 @@ function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_
 	}
 
 	$html .= '
-					}
-				});';
+				}
+			});';
 
 	if ( ! is_null($init_sort_column)) {
 		$html .= '
-				$("#'.$table_id.'").trigger("sorton",[c]);';
+			$("#'.$table_id.'").trigger("sorton",[c]);';
 	}
 
 	$html .= '
-			});
 		//]]></script>';
 
 	return $html;

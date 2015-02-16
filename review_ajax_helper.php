@@ -70,10 +70,10 @@ try {
 	$players = strip_whitespace($Review->draw_players( ));
 	call($players);
 
-	$game_info = strip_whitespace(game_info($Review));
+	$game_info = game_info($Review); // don't strip_whitespace, it breaks the JS included
 	call($game_info);
 
-	$move_info = nl2br($Review->get_move_info( ));
+	$move_info = nl2br(trim(trim($Review->get_move_info( ), " -=+")));
 	// wrap the player name in a class of the players color
 	foreach ($colors as $color => $player) {
 		if (false !== strpos($move_info, $player)) {
@@ -110,7 +110,10 @@ try {
 	}
 	call($dice);
 
-	echo json_encode(compact('board', 'dice', 'game_info', 'move_info', 'players'));
+	$trade = $Review->get_trade_value( );
+	call($trade);
+
+	echo json_encode(compact('board', 'dice', 'game_info', 'move_info', 'players', 'trade'));
 }
 catch (MyException $e) {
 	echo 'ERROR: '.$e->outputMessage( );

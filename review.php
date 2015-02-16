@@ -28,6 +28,21 @@ if (empty($_SESSION['step'])) {
 // load the game
 // always refresh the game data, there may be more than one person online
 try {
+	$file_name = explode('_', $_SESSION['game_file']);
+
+	try {
+		$Game = new Game($file_name[1]); // check and see if the game is finished
+
+		if ('Finished' !== $Game->state) {
+			throw new MyException('Game is not finished', 999);
+		}
+	}
+	catch (MyException $e) {
+		if (999 === $e->getCode( )) {
+			throw $e;
+		}
+	}
+
 	$Review = new Review($_SESSION['game_file'], $_SESSION['step']);
 }
 catch (MyException $e) {

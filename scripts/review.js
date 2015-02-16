@@ -3,41 +3,8 @@ var reload = false; // do not change this
 
 $(document).ready( function( ) {
 
-	// TODO: items on the page that need to be redrawn:
-	// the main board
-	// the move info
-	// the extra info
-	// the player info
-
-	// TODO: things that need to be set using jQuery on( ):
-	// the Game Info button
-	// player card clicks ?
-
-	// TODO: actions to take:
-	// show review buttons
-	//		use multiple buttons? or checkboxes for speed options
-	//			- each player as whole - skip to next N action
-	//			- each state as whole - skip to next action that is not this action (A and O are same)
-	//			- each action - show individual actions
-	// when review button is clicked
-	// disable review buttons
-	// show loading throbber, or dice loader gif ?
-	// calc which step to go to based on speed settings
-	// set new JS step value
-	// ajax and get new game info and board and move info and player info
-	// 		- session['step'] gets updated in back-end
-	// redraw new board, game_info, player info and move info without refresh
-	// enable review buttons
-	// if 'REFRESH' is returned, do that instead
-
-	// TODO: things that need to be made DRY
-	// conquer limit table
-	// trade value table
-	// game info table (right side of main game info box, if it's used on the join page)
-
-
 	// card click function
-	$('#players').find('li').css('cursor', 'pointer').click( function( ) {
+	$('#board').on('click', '#players li', function( ) {
 		var id = $(this).attr('id').slice(2);
 
 		if (debug) {
@@ -55,7 +22,7 @@ $(document).ready( function( ) {
 		});
 
 		return false;
-	});
+	}).find('#players').find('li').css('cursor', 'pointer');
 
 
 	// tha fancybox stuff
@@ -128,9 +95,12 @@ console.log(reply);
 				// redraw
 				$('#board').find('> span').remove( ).end( ).append(reply.board);
 				$('#dice').empty( ).append(reply.dice);
-				$('#game_info').replaceWith(reply.$game_info);
+				$('#game_info').replaceWith(reply.game_info);
+				$('#game_info').hide( );
 				$('#move_info').empty( ).append(reply.move_info);
 				$('#players').replaceWith(reply.players);
+				$('#players').find('li').css('cursor', 'pointer');
+				$('#next').empty( ).text(reply.trade);
 
 				$('div.steps').text(step +' / '+ (steps.length - 1));
 				update_buttons( );
@@ -181,7 +151,7 @@ console.log(reply);
 
 			// the immediate prev/next player
 			case 'player' :
-				while ('N' !== next_step_type) {
+				while (('N' !== next_step_type) && ('D' !== next_step_type)) {
 					next_step += (next ? 1 : -1);
 					next_step_type = steps[next_step].charAt(0);
 				}

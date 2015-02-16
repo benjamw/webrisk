@@ -109,6 +109,7 @@ class Review extends Game {
 		$this->_filename = $file;
 
 		$this->_risk = new Risk( );
+		$this->_risk->is_controlled(true);
 		$this->_risk->halt_redirect = true;
 		$this->_do_log = false;
 
@@ -649,7 +650,7 @@ class Review extends Game {
 		$this->state = 'Placing';
 		$this->capacity = count(preg_split('%\R%', $this->_file[FILE_PLAYER_INFO]));
 		$this->create_date = strtotime($info[1]);
-		$this->modify_date = $this->create_date;
+		$this->modify_date = strtotime($info[2]);
 		$this->paused = false;
 		$this->passhash = '';
 
@@ -944,13 +945,18 @@ fix_extra_info($player['extra_info']);
 		call($action);
 
 		list($type, $action) = explode(' ', $action);
+		$type = strtoupper($type);
 		$action = explode(':', $action);
 
-		// TODO: need to test the current state for the current player
-		// and skip if they are in the wrong state until they get to the right state
-
 		try {
-			switch (strtoupper($type)) {
+			// get the player into the correct state
+			if (in_array($type, array('A', 'F', 'O')) && (0 !== $this->_risk->current_player)) {
+				while ($type !== strtoupper($this->_risk->players[$this->_risk->current_player]['state']{0})) {
+					$this->_risk->set_player_next_state($this->_risk->players[$this->_risk->current_player]['state'], $this->_risk->current_player);
+				}
+			}
+
+			switch ($type) {
 				case 'A' : // Attack
 					$rolls = explode(',', $action[4]);
 

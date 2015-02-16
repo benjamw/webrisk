@@ -3211,6 +3211,21 @@ if (isset($data[7])) {
 
 				if ('' != $data[2]) {
 					$message .= ' and received '.count(explode(',', $data[2])).' cards';
+
+					if (is_null($game_id)) {
+						$message .= ":";
+
+						$cards = array_trim($data[2]);
+
+						foreach ($data[2] as $card_id) {
+							$card = Risk::$CARDS[$card_id];
+
+							$card_type = card_type($card[CARD_TYPE]);
+							$card_territory = ((0 !== $card[TERRITORY_ID]) ? ' - '.Risk::$TERRITORIES[$card[TERRITORY_ID]][NAME] : '');
+
+							$message .= "\n({$card_type}{$card_territory})";
+						}
+					}
 				}
 				break;
 
@@ -4388,16 +4403,27 @@ fix_extra_info($game['extra_info']);
 			WHERE GP.game_id = '{$game_id}'
 			ORDER BY GP.order_num ASC
 		";
-		$players = $Mysql->fetch_array($query);
+		$results = $Mysql->fetch_array($query);
 
-		if ( ! $players) {
+		if ( ! $results) {
 			return false;
+		}
+
+		$players = array( );
+		foreach ($results as $result) {
+			$players[$result['player_id']] = $result;
 		}
 
 		$logs = self::get_logs($game_id, false);
 
 		if (empty($logs)) {
 			return false;
+		}
+
+		$winner = 'Unknown';
+		if ('D' === $logs[0]['data']{0}) {
+			$winner = (int) trim($logs[0]['data'], 'D ');
+			$winner = "{$winner} - {$players[$winner]['username']}";
 		}
 
 		// open the file for writing
@@ -4410,6 +4436,8 @@ fix_extra_info($game['extra_info']);
 
 		fwrite($file, "{$game['game_id']} - {$game['name']} - {$game['game_type']}\n");
 		fwrite($file, date('Y-m-d', strtotime($game['create_date']))."\n"); // don't use ldate() here
+		fwrite($file, date('Y-m-d', strtotime($game['modify_date']))."\n"); // don't use ldate() here
+		fwrite($file, "{$winner}\n");
 		fwrite($file, $GLOBALS['_ROOT_URI']."\n");
 		fwrite($file, "=================================\n");
 		fwrite($file, $game['extra_info']."\n");

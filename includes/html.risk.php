@@ -18,7 +18,8 @@ function game_info($Game) {
 
 		<?php
 			$player_data = $Game->get_players_visible_data( );
-			unset($player_data[0]);
+			unset($player_data[0]); // current player for un-started review games
+			unset($player_data['']); // host for review games
 
 			$ra_table_meta = array(
 				'sortable' => true ,
@@ -345,7 +346,7 @@ function trade_value_table($trade_values) {
 	// show the last value three times
 	if ( ! in_array($trade_values[count($trade_values) - 1][0], array('+','-'))) {
 		$idx = count($trade_values) + 1;
-		$value = $array[count($array) - 1];
+		$value = $trade_values[count($trade_values) - 1];
 		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 
 		++$idx;

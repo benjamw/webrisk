@@ -376,6 +376,15 @@ class Risk
 	protected $_extra_info;
 
 
+	/**
+	 * The game is fully controlled.
+	 * Do minimal automatic actions (give card, etc)
+	 *
+	 * @var bool
+	 */
+	protected $_controlled = false;
+
+
 	/** protected property _DEBUG
 	 *		Holds the DEBUG state for the class
 	 *
@@ -480,6 +489,18 @@ class Risk
 		}
 
 		$this->$property = $value;
+	}
+
+
+	/**
+	 * Setter for _controlled
+	 *
+	 * @param boolean $controlled
+	 *
+	 * @return void
+	 */
+	public function is_controlled($controlled) {
+		$this->_controlled = $controlled;
 	}
 
 
@@ -1956,8 +1977,11 @@ class Risk
 		$winner = $alive[0];
 
 		// perform the winner's occupy
-		$this->occupy(9999);
-		Game::log($this->_game_id, 'D '.$winner);
+		if ( ! $this->_controlled) {
+			$this->occupy(9999);
+		}
+
+		Game::log($this->_game_id, 'D ' . $winner);
 
 		return true;
 	}
@@ -2485,6 +2509,12 @@ class Risk
 		}
 
 		if ( ! $card_id) {
+			// don't give a card in a controlled game
+			// we'll manually award the card later
+			if ($this->_controlled) {
+				return;
+			}
+
 			// remove a random card from the deck
 			shuffle($this->_available_cards);
 			$card_index = array_rand($this->_available_cards);
@@ -2742,7 +2772,6 @@ class Risk
 			call( );
 			call($set);
 
-			$total = 0;
 			$card_types = array( );
 			// make sure the cards are a set
 			foreach ($set as $index) {
