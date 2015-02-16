@@ -151,7 +151,7 @@ console.log(reply);
 
 			// the immediate prev/next player
 			case 'player' :
-				while (('N' !== next_step_type) && ('D' !== next_step_type)) {
+				while (('N' !== next_step_type) && (next_step <= (steps.length - 1))) {
 					next_step += (next ? 1 : -1);
 					next_step_type = steps[next_step].charAt(0);
 				}
