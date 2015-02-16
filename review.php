@@ -155,10 +155,7 @@ echo get_header($meta);
 						$colors[$player['color']] = htmlentities($GLOBALS['_PLAYERS'][$key]).' ['.$key.']';
 					}
 
-					$move_info = nl2br($Review->get_move_info( ));
-					call($move_info);
-					$dice = $Review->get_dice( );
-
+					$move_info = nl2br(trim(trim($Review->get_move_info( ), " -=+")));
 					// wrap the player name in a class of the players color
 					foreach ($colors as $color => $player) {
 						if (false !== strpos($move_info, $player)) {
