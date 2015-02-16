@@ -103,7 +103,13 @@ class Archive extends Game {
 								break;
 
 							case 3 : // game winner
-								list($entry['winner_id'], $entry['winner']) = explode(' - ', $line, 2);
+								$winner = explode(' - ', $line, 2);
+								$entry['winner'] = $winner[0];
+
+								if (2 === count($winner)) {
+									list($entry['winner_id'], $entry['winner']) = $winner;
+								}
+
 								break;
 
 							default :
