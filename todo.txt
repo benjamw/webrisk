@@ -25,7 +25,7 @@ _____/ FIXES \____________
 		see flash of unit placement, etc.
 	there's a bug when a player resigns, he is visible to all
 
-- maybe find a way to functionize the conquer limit table
+- maybe find a way to functionize (DRY) the conquer limit table
 	as well as the trade value table
 
 - look for TODO and fix all found
@@ -71,7 +71,7 @@ _____/ FIXES \____________
 	are as close to in sync as possible
 
 - figure out the cleanest method for Game::get_list
-	and propogate to all scripts
+	and propagate to all scripts
 
 - refactor classes and includes to be less dependant
 	on each other
@@ -123,10 +123,6 @@ _____/ FEATURES \____________
 	chunk when little files drop below 20 or so
 	use built in method if dice file not found
 
-- convert all Mysql NOW( ) and timestamps to UTC
-	and convert all php date functions to convert UTC to current TZ
-	maybe allow player to set own timezone...
-
 - make sure while surfing the site as another player- admin style
 	it doesn't do anything destructive, like mark posts read, etc.
 
@@ -138,8 +134,6 @@ _____/ FEATURES \____________
 
 - make an email confirmation something or other to validate email
 	addresses
-
-- send links with emails to take the user directly to the game
 
 - work on an invitation system add-on where they can send emails to
 	people not registered with the system
@@ -193,5 +187,10 @@ _____/ FEATURES \____________
 	insert his armies, and then just 'retire' him. A card each round for him or just
 	a few cards when he is created would be a bonus to try and eliminate him. This
 	variant should be easy and would be the closest one for a 'bot' with little effort.
+
+- Spies in fog of war games. Add ability once or settable number of times per turn to
+	view either the color, number, or both for armies in a territory covered by fog of
+	war. This will display the information once (in an alert), and then never again for
+	that request.
 
 - Game Variant Suggestions - "The Flop"  - All players cards are shown instead of hidden.
