@@ -67,7 +67,7 @@ $meta['head_data'] = '
 	<script type="text/javascript">//<![CDATA[
 		var state = "watching";
 		var game_file = '.json_encode($_SESSION['game_file']).';
-		var step = '.json_encode($_SESSION['step']).';
+		var step = '.json_encode($Review->step).';
 		var steps = '.json_encode($Review->get_steps( )).';
 	/*]]>*/</script>
 	<script type="text/javascript" src="scripts/review.js"></script>
