@@ -102,7 +102,7 @@ console.log(reply);
 				$('#players').find('li').css('cursor', 'pointer');
 				$('#next').empty( ).text(reply.trade);
 
-				$('div.steps').text(step +' / '+ (steps.length - 1));
+				$('div.steps').text((step + 1) +' / '+ (steps.length));
 				update_buttons( );
 			},
 			error: function( ) {
