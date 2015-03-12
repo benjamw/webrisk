@@ -4176,7 +4176,7 @@ fix_extra_info($game['extra_info']);
 		}
 
 		$tables = array(
-			Risk::GAME_LOG_TABLE ,
+			self::GAME_LOG_TABLE ,
 			self::GAME_LAND_TABLE ,
 			self::GAME_PLAYER_TABLE ,
 			self::GAME_TABLE ,
@@ -4188,7 +4188,7 @@ fix_extra_info($game['extra_info']);
 			OPTIMIZE TABLE ".self::GAME_TABLE."
 				, ".self::GAME_PLAYER_TABLE."
 				, ".self::GAME_LAND_TABLE."
-				, ".Risk::GAME_LOG_TABLE."
+				, ".self::GAME_LOG_TABLE."
 		";
 		$Mysql->query($query);
 	}
