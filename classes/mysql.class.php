@@ -917,26 +917,40 @@ class Mysql {
 	 * This method returns the entire result set in a single call.
 	 *
 	 * @param string $query optional
+	 * @param string $key table column to key the result array on
 	 * @param int $result_type
 	 *
 	 * @return mixed
 	 * @throws MySQLException
 	 */
-	public function fetch_array($query = null, $result_type = PDO::FETCH_ASSOC) {
+	public function fetch_array($query = null, $key = null, $result_type = PDO::FETCH_ASSOC) {
 		$args = func_get_args( );
 
-		// allow the second and third arguments to be switched
+		// allow the query params to be anywhere
 		if ( ! empty($args[1]) && is_array($args[1])) {
-			$this->process_args($args);
+			$this->process_args($args, 1, true);
 
-			// but keep the default value for the second proper argument
-			$result_type = PDO::FETCH_ASSOC;
+			$key = null;
 			if ( ! empty($args[2])) {
-				$result_type = $args[2];
+				$key = $args[2];
+			}
+
+			$result_type = PDO::FETCH_ASSOC;
+			if ( ! empty($args[3])) {
+				$result_type = $args[3];
+			}
+		}
+		elseif ( ! empty($args[2]) && is_array($args[2])) {
+			$this->process_args($args, 2, true);
+
+			// but keep the default value for the third proper argument
+			$result_type = PDO::FETCH_ASSOC;
+			if ( ! empty($args[3])) {
+				$result_type = $args[3];
 			}
 		}
 		else {
-			$this->process_args(func_get_args( ), 2, true);
+			$this->process_args($args, 3, true);
 		}
 
 		if ($query === $this->query) {
@@ -951,7 +965,12 @@ class Mysql {
 
 		$results = array( );
 		foreach ($this->sth as $row) {
-			$results[] = $row;
+			if ( ! is_null($key) && array_key_exists($key, $row)) {
+				$results[$row[$key]] = $row;
+			}
+			else {
+				$results[] = $row;
+			}
 		}
 
 		return $results;
