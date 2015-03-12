@@ -153,6 +153,12 @@ console.log(reply);
 			case 'player' :
 				while (('N' !== next_step_type) && (next_step <= (steps.length - 1))) {
 					next_step += (next ? 1 : -1);
+
+					if (next_step > 0) {
+						next_step = 0;
+						break;
+					}
+
 					next_step_type = steps[next_step].charAt(0);
 				}
 				break;

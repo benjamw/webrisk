@@ -138,7 +138,7 @@ echo get_header($meta);
 
 			<div id="controls">
 				<div class="review">
-					<div class="steps"><?php echo $_SESSION['step'].' / '.$Review->get_steps_count( ); ?></div>
+					<div class="steps"><?php echo ($Review->step + 1).' / '.$Review->get_steps_count( ); ?></div>
 					<span class="button prev player" title="Prev Player">&lt; P</span>
 					<span class="button prev state" title="Prev State">&lt; S</span>
 					<span class="button prev action" title="Prev Action">&lt; A</span>

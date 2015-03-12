@@ -919,6 +919,10 @@ fix_extra_info($player['extra_info']);
 		call(__METHOD__);
 		call($step);
 
+		if ($step > (count($this->_file[FILE_GAME_LOG]) - 1)) {
+			$step = count($this->_file[FILE_GAME_LOG]) - 1;
+		}
+
 		try {
 			for ($i = 0; $i <= $step; ++$i) {
 				call('--- STEP = ' . $i . ' ---');
