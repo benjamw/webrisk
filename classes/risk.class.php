@@ -536,7 +536,7 @@ class Risk
 
 		ksort($log_data);
 
-		Game::log($this->$_game_id, 'I '.implode(',', $log_data));
+		Game::log($this->_game_id, 'I '.implode(',', $log_data));
 	}
 
 
@@ -922,7 +922,7 @@ class Risk
 			}
 		}
 
-		Game::log($this->$_game_id, 'N '.$this->current_player);
+		Game::log($this->_game_id, 'N '.$this->current_player);
 		$this->_add_armies($this->current_player);
 
 		$this->set_player_state('Placing');
@@ -1016,7 +1016,7 @@ class Risk
 			$bonus_card = 0;
 		}
 
-		Game::log($this->$_game_id, 'T '.$player_id.':'.implode(',', $card_ids).':'.$this->_next_trade.':'.$bonus_card);
+		Game::log($this->_game_id, 'T '.$player_id.':'.implode(',', $card_ids).':'.$this->_next_trade.':'.$bonus_card);
 
 		// update the next trade in value
 		$this->_update_trade_value( );
@@ -1089,7 +1089,7 @@ class Risk
 		// remove those armies from the stockpile
 		$this->players[$player_id]['armies'] -= $num_armies;
 
-		Game::log($this->$_game_id, 'P '.$player_id.':'.$num_armies.':'.$land_id);
+		Game::log($this->_game_id, 'P '.$player_id.':'.$num_armies.':'.$land_id);
 
 		return $num_armies;
 	}
@@ -1201,7 +1201,7 @@ class Risk
 			$this->players[$attack_id]['extra_info']['occupy'] = $attack_armies.':'.$attack_land_id.'->'.$defend_land_id;
 		}
 
-		Game::log($this->$_game_id, 'A '.$attack_id.':'.$attack_land_id.':'.$defend_id.':'.$defend_land_id.':'.implode('', $this->previous_dice['attack']).','.implode('', $this->previous_dice['defend']).':'.$attack_dead.','.$defend_dead.':'.(int) $defeated);
+		Game::log($this->_game_id, 'A '.$attack_id.':'.$attack_land_id.':'.$defend_id.':'.$defend_land_id.':'.implode('', $this->previous_dice['attack']).','.implode('', $this->previous_dice['defend']).':'.$attack_dead.','.$defend_dead.':'.(int) $defeated);
 		Game::process_deferred_log($this->_game_id); // because the killed log message should come after the attack message
 
 		// this makes more sense in the _test_killed function, but i needed the occupy info
@@ -1282,7 +1282,7 @@ class Risk
 		$this->board[$from_land_id]['armies'] -= $num_armies;
 		$this->board[$to_land_id]['armies'] += $num_armies;
 
-		Game::log($this->$_game_id, 'O '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
+		Game::log($this->_game_id, 'O '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
 
 		// erase the occupy data and return to an Attacking state
 		$this->players[$player_id]['extra_info']['occupy'] = null;
@@ -1379,7 +1379,7 @@ class Risk
 		$this->board[$from_land_id]['armies'] -= $num_armies;
 		$this->board[$to_land_id]['armies'] += $num_armies;
 
-		Game::log($this->$_game_id, 'F '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
+		Game::log($this->_game_id, 'F '.$player_id.':'.$num_armies.':'.$from_land_id.':'.$to_land_id);
 
 		if ( ! $this->_extra_info['multiple_fortify']) {
 			$this->set_player_state('Waiting');
@@ -1546,7 +1546,7 @@ class Risk
 				break;
 
 			case 'Resigned' :
-				Game::log($this->$_game_id, 'Q '.$player_id);
+				Game::log($this->_game_id, 'Q '.$player_id);
 				break;
 
 			case 'Dead' :
@@ -1905,7 +1905,7 @@ class Risk
 
 		// perform the winner's occupy
 		$this->occupy(9999);
-		Game::log($this->$_game_id, 'D '.$winner);
+		Game::log($this->_game_id, 'D '.$winner);
 
 		return true;
 	}
@@ -2330,7 +2330,7 @@ class Risk
 
 		$this->players[$player_id]['armies'] += $armies;
 
-		Game::log($this->$_game_id, 'R '.$player_id.':'.$armies.':'.count($land).(count($cont_ids) ? ':'.implode(',', $cont_ids) : ''));
+		Game::log($this->_game_id, 'R '.$player_id.':'.$armies.':'.count($land).(count($cont_ids) ? ':'.implode(',', $cont_ids) : ''));
 	}
 
 
@@ -2389,7 +2389,7 @@ class Risk
 		$this->_next_trade = (int) $value;
 
 		if ($log) {
-			Game::log($this->$_game_id, 'V '.$this->_next_trade);
+			Game::log($this->_game_id, 'V '.$this->_next_trade);
 		}
 	}
 
@@ -2426,7 +2426,7 @@ class Risk
 		$this->players[$player_id]['cards'][] = $card_id;
 		$this->players[$player_id]['extra_info']['get_card'] = false;
 
-		Game::log($this->$_game_id, 'C '.$player_id.':'.$card_id);
+		Game::log($this->_game_id, 'C '.$player_id.':'.$card_id);
 	}
 
 
@@ -2515,7 +2515,7 @@ class Risk
 
 		$prev_player = $cur_player;
 
-		Game::log($this->$_game_id, 'N '.$this->current_player);
+		Game::log($this->_game_id, 'N '.$this->current_player);
 		$this->_add_armies($this->current_player);
 
 		// place the next player into an appropriate state based
