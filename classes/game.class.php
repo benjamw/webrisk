@@ -2965,8 +2965,10 @@ fix_extra_info($player['extra_info']);
 	 */
 	public static function process_deferred_log($game_id)
 	{
-		foreach ($GLOBALS['_log_messages'][$game_id] as $log_message) {
-			self::log($game_id, $log_message);
+		if ( ! empty($GLOBALS['_log_messages'][$game_id])) {
+			foreach ($GLOBALS['_log_messages'][$game_id] as $log_message) {
+				self::log($game_id, $log_message);
+			}
 		}
 
 		$GLOBALS['_log_messages'][$game_id] = array( );
