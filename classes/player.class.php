@@ -932,7 +932,7 @@ class Player
 		$params = array(
 			':username' => $username,
 		);
-		$result = $Mysql->fetch_value($query);
+		$result = $Mysql->fetch_value($query, $params);
 
 		if ($result) {
 			throw new MyException(__METHOD__.': The username ('.$username.') is taken', 301);
@@ -954,7 +954,7 @@ class Player
 				':email' => $email,
 				':player_id' => $player_id,
 			);
-			$result = $Mysql->fetch_value($query);
+			$result = $Mysql->fetch_value($query, $params);
 
 			if ($result) {
 				throw new MyException(__METHOD__.': The email address ('.$email.') has already been used', 302);
