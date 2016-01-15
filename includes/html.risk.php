@@ -84,18 +84,20 @@ function game_info($Game) {
 					}
 					else {
 						echo '<table>';
-						echo '<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>';
+						echo '<thead><tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr></thead>';
+						echo '<tbody>';
 
-						$amount = 0;
+						$n = 0;
 						foreach ($trades as $trade) {
 							if ( ! isset($trade[3])) {
 								$trade[3] = 0;
 							}
 
-							echo '<tr'.((++$amount % 2) ? ' class="alt"' : '').'><td>'.$trade[0].'</td><td>'.$trade[1].'</td><td>'.$trade[2].'</td><td>'.$trade[3].'</td></tr>';
+							++$n;
+							echo '<tr'.((0 === ($n % 2)) ? ' class="alt"' : '').'><td>'.$trade[0].'</td><td>'.$trade[1].'</td><td>'.$trade[2].'</td><td>'.$trade[3].'</td></tr>';
 						}
 
-						echo '</table>';
+						echo '</tbody></table>';
 					}
 					?></td>
 			</tr><tr>
@@ -224,8 +226,8 @@ function conquer_limit_table($extra_info) {
 		$conquests = array( );
 		$repeats = 0;
 		$prev_limit = 0;
-		for ($amount = 0; $amount <= 200; ++$amount) {
-			$limit = max((((((int) floor(($amount - $start_count) / $per_number)) + 1) - $skip) * $conquests_per), 0) + $start_at;
+		for ($n = 0; $n <= 200; ++$n) {
+			$limit = max((((((int) floor(($n - $start_count) / $per_number)) + 1) - $skip) * $conquests_per), 0) + $start_at;
 			$limit = ($limit < $minimum) ? $minimum : $limit;
 			$limit = ( ! empty($maximum) && ($limit > $maximum)) ? $maximum : $limit;
 
@@ -236,7 +238,7 @@ function conquer_limit_table($extra_info) {
 				++$repeats;
 			}
 
-			$conquests[$amount] = $limit;
+			$conquests[$n] = $limit;
 
 			// there are only 42 territories, we don't need to calculate any more than that
 			// also stop after 3 repeated max values (max value less than 42)
@@ -264,10 +266,10 @@ function conquer_limit_table($extra_info) {
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ($conquests as $amount => $value) { ?>
+			<?php foreach ($conquests as $n => $value) { ?>
 
-				<tr<?php echo ((0 === ($amount % 2)) ? ' class="alt"' : ''); ?>>
-					<td><?php echo $amount; ?></td>
+				<tr<?php echo ((0 === ($n % 2)) ? ' class="alt"' : ''); ?>>
+					<td><?php echo $n; ?></td>
 					<td><?php echo $value; ?></td>
 				</tr>
 			<?php } ?>
@@ -297,7 +299,6 @@ function trade_value_table($trade_values) {
 
 	$table = '';
 	$prev_value = 0;
-	$amount = 0;
 	foreach ($trade_values as $trade => $value) {
 		$idx = $trade + 1;
 
@@ -310,34 +311,33 @@ function trade_value_table($trade_values) {
 					--$idx;
 					break;
 				}
-				$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
+				$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
 				++$idx;
 			}
 
+			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
 			++$idx;
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
 
+			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
 			++$idx;
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
 
-			++$idx;
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
+			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 		}
 		elseif('+' == $value[0]) {
 			// if plus, go for three then append plus value
 			$next_value = $prev_value;
 			for ($i = 1; $i <= 3; ++$i) {
 				$next_value += (int) $value;
-				$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
+				$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
 				++$idx;
 			}
 
 			$value = '('.$value.')';
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
+			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 		}
 		else {
 			// nothing special, just append the value
-			$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
+			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 			$prev_value = $value;
 		}
 	}
@@ -347,10 +347,10 @@ function trade_value_table($trade_values) {
 	if ( ! in_array($trade_values[count($trade_values) - 1][0], array('+','-'))) {
 		$idx = count($trade_values) + 1;
 		$value = $trade_values[count($trade_values) - 1];
-		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
+		$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 
 		++$idx;
-		$table .= "<tr".((++$amount % 2) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
+		$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
 	}
 
 	return $table;

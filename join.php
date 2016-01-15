@@ -200,12 +200,12 @@ if ('none' != $extra_info['conquer_type']) {
 	}
 
 	$conquests = array( );
-	for ($amount = 0; $amount <= 200; ++$amount) {
-		$limit = max((((((int) floor(($amount - $start_count) / $per_number)) + 1) - $skip) * $conquests_per), 0) + $start_at;
+	for ($n = 0; $n <= 200; ++$n) {
+		$limit = max((((((int) floor(($n - $start_count) / $per_number)) + 1) - $skip) * $conquests_per), 0) + $start_at;
 		$limit = ($limit < $minimum) ? $minimum : $limit;
 		$limit = ( ! empty($maximum) && ($limit > $maximum)) ? $maximum : $limit;
 
-		$conquests[$amount] = $limit;
+		$conquests[$n] = $limit;
 	}
 
 	// don't show 0 count for certain types
@@ -216,10 +216,10 @@ if ('none' != $extra_info['conquer_type']) {
 	$equation = "max( ( ( ( floor( (x - {$start_count}) / <span class=\"per_number\">{$per_number}</span> ) + 1 ) - <span class=\"skip\">{$skip}</span> ) * <span class=\"conquests_per\">{$conquests_per}</span> ) , 0 ) + <span class=\"start_at\">{$start_at}</span>";
 	$conquer_type = ucwords(human(plural(2, $type)));
 	$conquer_table = '';
-	foreach ($conquests as $amount => $value) {
+	foreach ($conquests as $n => $value) {
 		$conquer_table .= '
-			<tr'.(($amount % 2) ? ' class="alt"' : '').'>
-				<td>'.$amount.'</td>
+			<tr'.((0 === ($n % 2)) ? ' class="alt"' : '').'>
+				<td>'.$n.'</td>
 				<td>'.$value.'</td>
 			</tr>';
 	}
@@ -240,13 +240,14 @@ if ($trades) {
 	$trade_array_table = '<table>';
 	$trade_array_table .= '<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>';
 
-	$amount = 0;
+	$n = 0;
 	foreach ($trades as $trade) {
 		if ( ! isset($trade[3])) {
 			$trade[3] = 0;
 		}
 
-		$trade_array_table .= '<tr'.((++$amount % 2) ? ' class="alt"' : '').'><td>'.$trade[0].'</td><td>'.$trade[1].'</td><td>'.$trade[2].'</td><td>'.$trade[3].'</td></tr>';
+		++$n;
+		$trade_array_table .= '<tr'.((0 === ($n % 2)) ? ' class="alt"' : '').'><td>'.$trade[0].'</td><td>'.$trade[1].'</td><td>'.$trade[2].'</td><td>'.$trade[3].'</td></tr>';
 	}
 
 	$trade_array_table .= '</table>';
