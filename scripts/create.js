@@ -42,6 +42,7 @@ function build_conquer_table( ) {
 	skip = isNaN(skip) ? 0 : skip;
 	start_at = isNaN(start_at) ? 0 : start_at;
 	minimum = isNaN(minimum) ? 1 : ((1 > minimum) ? 1 : minimum);
+	maximum = isNaN(maximum) ? 42 : ((1 > maximum) ? 1 : maximum);
 
 	if (isNaN(per_number)) {
 		switch (type.toLowerCase( )) {
@@ -66,15 +67,12 @@ function build_conquer_table( ) {
 		$('#conquer_skip').val(skip);
 		$('#conquer_start_at').val(start_at);
 		$('#conquer_minimum').val(minimum);
-
-		if ( ! isNaN(maximum)) {
-			$('#conquer_maximum').val(maximum);
-		}
+		$('#conquer_maximum').val(maximum);
 
 		// output to the table
 		header = '# of '+((type.replace(/_/, ' ').replace(/^(.)|\s(.)/g, function($1) { return $1.toUpperCase( ); })+'s').replace(/ss$/, 's'));
 
-		var zeros = ['trade_value','trade_count','Continents'];
+		var zeros = ['trade_value', 'trade_count', 'Continents'];
 		for (var key in zeros) {
 			if (type == zeros[key]) {
 				start_count = 0;
@@ -84,10 +82,11 @@ function build_conquer_table( ) {
 
 		// run the calculation
 		var limit = 0;
+		var repeats = 0;
 		var classes;
 		var class_text;
 		for (var i = start_count; i <= 200; ++i) {
-			classes = new Array( );
+			classes = [];
 			equation = 'max( ( ( ( floor( (x - '+start_count+') / <span class="per_number">'+per_number+'</span> ) + 1 ) - <span class="skip">'+skip+'</span> ) * <span class="conquests_per">'+conquests_per+'</span> ) , 0 ) + <span class="start_at">'+start_at+'</span>';
 
 			limit = Math.max((((parseInt(Math.floor((i - start_count) / per_number)) + 1) - skip) * conquests_per), 0) + start_at;
@@ -95,21 +94,26 @@ function build_conquer_table( ) {
 			if (limit < minimum) { classes.push('min'); }
 
 			limit = (limit < minimum) ? minimum : limit;
-			limit = ( ! isNaN(maximum) && (limit > maximum)) ? maximum : limit;
+			limit = (limit > maximum) ? maximum : limit;
 
 			if (0 == (i % 2)) { classes.push('alt'); }
 			if ((i - start_count) < (skip * per_number)) { classes.push('skip'); }
 			if (0 == ((i - start_count) % per_number)) { classes.push('group'); }
 
-			if ( ! isNaN(maximum) && (limit == maximum)) { classes.push('max'); }
+			if (limit == maximum) { classes.push('max'); }
 
 			class_text = (classes.length) ? ' class="'+classes.join(' ')+'"' : '';
 
-			output += '<tr'+class_text+'><td>'+i+'</td><td>'+limit+'</td></tr>';
+			if (limit === maximum) {
+				repeats += 1;
+			}
 
-			if (limit == maximum) {
+			if (3 <= repeats) {
+				output += '<tr'+class_text+'><td>'+i+'</td><td>...</td></tr>';
 				break;
 			}
+
+			output += '<tr'+class_text+'><td>'+i+'</td><td>'+limit+'</td></tr>';
 		}
 	}
 

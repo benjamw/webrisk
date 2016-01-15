@@ -125,7 +125,7 @@ class Game
 			'conquer_skip' => 0,
 			'conquer_start_at' => 0,
 			'conquer_minimum' => 1,
-			'conquer_maximum' => 0,
+			'conquer_maximum' => 42,
 			'custom_rules' => '',
 		);
 
@@ -501,7 +501,7 @@ class Game
 			$_P['conquer_skip'] = 0;
 			$_P['conquer_start_at'] = 0;
 			$_P['conquer_minimum'] = 1;
-			$_P['conquer_maximum'] = 0;
+			$_P['conquer_maximum'] = 42;
 		}
 
 		call($_P);

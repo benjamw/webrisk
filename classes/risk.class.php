@@ -242,7 +242,7 @@ class Risk
 			'conquer_skip' => 0,
 			'conquer_start_at' => 0,
 			'conquer_minimum' => 1,
-			'conquer_maximum' => 0,
+			'conquer_maximum' => 42,
 		);
 
 
@@ -812,9 +812,9 @@ class Risk
 			$start_at = 0;
 		}
 
-		// set the default maximum to infinite
+		// set the default maximum to 42 (the number of territories)
 		if (empty($maximum) || ! (int) $maximum) {
-			$maximum = false;
+			$maximum = 42;
 		}
 
 		// if we are calculating based on trade_value, trade_count, or continents
@@ -826,7 +826,7 @@ class Risk
 
 		$limit = max((((((int) floor(($amount - $start_count) / $per_number)) + 1) - $skip) * $conquests_per), 0) + $start_at;
 		$limit = ($limit < $minimum) ? $minimum : $limit;
-		$limit = ( ! empty($maximum) && ($limit > $maximum)) ? $maximum : $limit;
+		$limit = ($limit > $maximum) ? $maximum : $limit;
 
 		$this->_extra_info['conquer_limit'] = (int) $limit;
 	}

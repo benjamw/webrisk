@@ -211,9 +211,9 @@ function conquer_limit_table($extra_info) {
 			$start_at = 0;
 		}
 
-		// set the default maximum to infinite
+		// set the default maximum to 42 (the number of territories)
 		if (empty($maximum) || ! (int) $maximum) {
-			$maximum = false;
+			$maximum = 42;
 		}
 
 		// if we are calculating based on trade_value, trade_count, or continents
@@ -229,24 +229,20 @@ function conquer_limit_table($extra_info) {
 		for ($n = 0; $n <= 200; ++$n) {
 			$limit = max((((((int) floor(($n - $start_count) / $per_number)) + 1) - $skip) * $conquests_per), 0) + $start_at;
 			$limit = ($limit < $minimum) ? $minimum : $limit;
-			$limit = ( ! empty($maximum) && ($limit > $maximum)) ? $maximum : $limit;
+			$limit = ($limit > $maximum) ? $maximum : $limit;
 
 			if ($limit !== $prev_limit) {
 				$prev_limit = $limit;
 			}
-			elseif ( ! empty($maximum) && ($limit === $maximum)) {
+			elseif ($limit === $maximum) {
 				++$repeats;
 			}
 
 			$conquests[$n] = $limit;
 
-			// there are only 42 territories, we don't need to calculate any more than that
-			// also stop after 3 repeated max values (max value less than 42)
-			if ((42 <= $limit) || (2 <= $repeats)) {
-				if (3 <= $repeats) {
-					$conquests['...'] = $limit;
-				}
-
+			// stop after 3 repeated max values
+			if (3 <= $repeats) {
+				$conquests['...'] = $limit;
 				break;
 			}
 		}

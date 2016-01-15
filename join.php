@@ -187,9 +187,9 @@ if ('none' != $extra_info['conquer_type']) {
 		$start_at = 0;
 	}
 
-	// set the default maximum to infinite
+	// set the default maximum to 42 (the number of territories)
 	if (empty($maximum) || ! (int) $maximum) {
-		$maximum = false;
+		$maximum = 42;
 	}
 
 	// if we are calculating based on trade_value, trade_count, or continents
@@ -200,12 +200,22 @@ if ('none' != $extra_info['conquer_type']) {
 	}
 
 	$conquests = array( );
+	$repeats = 0;
 	for ($n = 0; $n <= 200; ++$n) {
 		$limit = max((((((int) floor(($n - $start_count) / $per_number)) + 1) - $skip) * $conquests_per), 0) + $start_at;
 		$limit = ($limit < $minimum) ? $minimum : $limit;
-		$limit = ( ! empty($maximum) && ($limit > $maximum)) ? $maximum : $limit;
+		$limit = ($limit > $maximum) ? $maximum : $limit;
+
+		if ($limit === $maximum) {
+			++$repeats;
+		}
 
 		$conquests[$n] = $limit;
+
+		if (3 <= $repeats) {
+			$conquests[$n + 1] = '...';
+			break;
+		}
 	}
 
 	// don't show 0 count for certain types
@@ -214,7 +224,8 @@ if ('none' != $extra_info['conquer_type']) {
 	}
 
 	$equation = "max( ( ( ( floor( (x - {$start_count}) / <span class=\"per_number\">{$per_number}</span> ) + 1 ) - <span class=\"skip\">{$skip}</span> ) * <span class=\"conquests_per\">{$conquests_per}</span> ) , 0 ) + <span class=\"start_at\">{$start_at}</span>";
-	$conquer_type = ucwords(human(plural(2, $type)));
+	$plural_type = plural(2, $type);
+	$conquer_type = ucwords(human(('s' === substr($type, -1)) ? $type : $plural_type));
 	$conquer_table = '';
 	foreach ($conquests as $n => $value) {
 		$conquer_table .= '

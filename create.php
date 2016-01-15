@@ -115,7 +115,7 @@ $contents = <<< EOF
 
 					<br /><br />
 					<div><label for="conquer_minimum">Minimum</label><input type="text" id="conquer_minimum" name="conquer_minimum" size="4" /> (Default: 1)</div>
-					<div><label for="conquer_maximum">Maximum</label><input type="text" id="conquer_maximum" name="conquer_maximum" size="4" /> (Default: infinite)</div>
+					<div><label for="conquer_maximum">Maximum</label><input type="text" id="conquer_maximum" name="conquer_maximum" size="4" /> (Default: 42 [infinite])</div>
 					<br />
 					<div><a href="#conquer_limit_table" id="show_conquer_limit_table">Show conquer limit table</a> Equation: max( ( ( ( floor( ( x - start_point ) / <span class="per_number">per_number</span> ) + 1 ) - <span class="skip">skip</span> ) * <span class="conquests_per">conquests_per</span> ) , 0 ) + <span class="start_at">start_at</span></div>
 
