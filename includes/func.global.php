@@ -1,103 +1,106 @@
 <?php
 
-/** function call [dump] [debug]
- *		This function is for debugging only
- *		Outputs given var to screen
- *		or, if no var given, outputs stars to note position
- *
- * @param mixed optional var to output
- * @param bool optional bypass debug value and output anyway
- * @action ouptuts var to screen
- * @return void
- */
-function call($var = 'Th&F=xUFucreSp2*ezAhe=ApuPR*$axe', $bypass = false, $show_from = true, $new_window = false, $error = false)
-{
-	if ((( ! defined('DEBUG') || ! DEBUG) || ! empty($GLOBALS['NODEBUG'])) && ! (bool) $bypass) {
-		return false;
-	}
+if ( ! function_exists('call')) {
+	/** function call [dump] [debug]
+	 *        This function is for debugging only
+	 *        Outputs given var to screen
+	 *        or, if no var given, outputs stars to note position
+	 *
+	 * @param mixed optional var to output
+	 * @param bool  optional bypass debug value and output anyway
+	 *
+	 * @action outputs var to screen
+	 * @return void
+	 */
+	function call($var = 'Th&F=xUFucreSp2*ezAhe=ApuPR*$axe', $bypass = false, $show_from = true, $new_window = false, $error = false)
+	{
+		if ((( ! defined('DEBUG') || ! DEBUG) || ! empty($GLOBALS['NODEBUG'])) && ! (bool) $bypass) {
+			return false;
+		}
 
-	if ('Th&F=xUFucreSp2*ezAhe=ApuPR*$axe' === $var) {
-		$contents = '<span style="font-size:larger;font-weight:bold;color:red;">--==((OO88OO))==--</span>';
-	}
-	else {
-		// begin output buffering so we can escape any html
-		// and print_r is better at catching recursion than var_export
-		ob_start( );
-
-		if ((is_string($var) && ! preg_match('/^\\s*$/', $var))) { // non-whitespace strings
-			print_r($var);
+		if ('Th&F=xUFucreSp2*ezAhe=ApuPR*$axe' === $var) {
+			$contents = '<span style="font-size:larger;font-weight:bold;color:red;">--==((OO88OO))==--</span>';
 		}
 		else {
-			if ( ! function_exists('xdebug_disable')) {
-				if (is_array($var) || is_object($var)) {
-					print_r($var);
+			// begin output buffering so we can escape any html
+			// and print_r is better at catching recursion than var_export
+			ob_start();
+
+			if ((is_string($var) && ! preg_match('/^\\s*$/', $var))) { // non-whitespace strings
+				print_r($var);
+			}
+			else {
+				if ( ! function_exists('xdebug_disable')) {
+					if (is_array($var) || is_object($var)) {
+						print_r($var);
+					}
+					else {
+						var_dump($var);
+					}
 				}
 				else {
 					var_dump($var);
 				}
 			}
-			else {
-				var_dump($var);
+
+			// end output buffering and output the result
+			if ( ! function_exists('xdebug_disable')) {
+				$contents = htmlentities(ob_get_contents());
 			}
+			else {
+				$contents = ob_get_contents();
+			}
+
+			ob_end_clean();
 		}
 
-		// end output buffering and output the result
-		if ( ! function_exists('xdebug_disable')) {
-			$contents = htmlentities(ob_get_contents( ));
-		}
-		else {
-			$contents = ob_get_contents( );
+		$j = 0;
+		$html = '';
+		$debug_funcs = array('dump', 'debug');
+		if ((bool) $show_from) {
+			$called_from = debug_backtrace();
+
+			if (isset($called_from[$j + 1]) && in_array($called_from[$j + 1]['function'], $debug_funcs)) {
+				++$j;
+			}
+
+			$file0 = substr($called_from[$j]['file'], strlen($_SERVER['DOCUMENT_ROOT']));
+			$line0 = $called_from[$j]['line'];
+
+			$called = '';
+			if (isset($called_from[$j + 1]['file'])) {
+				$file1 = substr($called_from[$j + 1]['file'], strlen($_SERVER['DOCUMENT_ROOT']));
+				$line1 = $called_from[$j + 1]['line'];
+				$called = "{$file1} : {$line1} called ";
+			}
+			elseif (isset($called_from[$j + 1])) {
+				$called = $called_from[$j + 1]['class'] . $called_from[$j + 1]['type'] . $called_from[$j + 1]['function'] . ' called ';
+			}
+
+			$html = "<strong>{$called}{$file0} : {$line0}</strong>\n";
 		}
 
-		ob_end_clean( );
+		if ( ! $new_window) {
+			$color = '#000';
+			if ($error) {
+				$color = '#F00';
+			}
+
+			echo "\n\n<pre style=\"background:#FFF;color:{$color};font-size:larger;\">{$html}{$contents}\n<hr /></pre>\n\n";
+		}
+		else { ?>
+			<script language="javascript">
+				myRef = window.open('', 'debugWindow');
+				myRef.document.write('\n\n<pre style="background:#FFF;color:#000;font-size:larger;">');
+				myRef.document.write('<?php echo str_replace("'", "\'", str_replace("\n", "<br />", "{$html}{$contents}")); ?>');
+				myRef.document.write('\n<hr /></pre>\n\n');
+			</script>
+		<?php }
 	}
 
-	$j = 0;
-	$html = '';
-	$debug_funcs = array('dump', 'debug');
-	if ((bool) $show_from) {
-		$called_from = debug_backtrace( );
-
-		if (isset($called_from[$j + 1]) && in_array($called_from[$j + 1]['function'], $debug_funcs)) {
-			++$j;
-		}
-
-		$file0 = substr($called_from[$j]['file'], strlen($_SERVER['DOCUMENT_ROOT']));
-		$line0 = $called_from[$j]['line'];
-
-		$called = '';
-		if (isset($called_from[$j + 1]['file'])) {
-			$file1 = substr($called_from[$j + 1]['file'], strlen($_SERVER['DOCUMENT_ROOT']));
-			$line1 = $called_from[$j + 1]['line'];
-			$called = "{$file1} : {$line1} called ";
-		}
-		elseif (isset($called_from[$j + 1])) {
-			$called = $called_from[$j + 1]['class'].$called_from[$j + 1]['type'].$called_from[$j + 1]['function'].' called ';
-		}
-
-		$html = "<strong>{$called}{$file0} : {$line0}</strong>\n";
-	}
-
-	if ( ! $new_window) {
-		$color = '#000';
-		if ($error) {
-			$color = '#F00';
-		}
-
-		echo "\n\n<pre style=\"background:#FFF;color:{$color};font-size:larger;\">{$html}{$contents}\n<hr /></pre>\n\n";
-	}
-	else { ?>
-		<script language="javascript">
-			myRef = window.open('','debugWindow');
-			myRef.document.write('\n\n<pre style="background:#FFF;color:#000;font-size:larger;">');
-			myRef.document.write('<?php echo str_replace("'", "\'", str_replace("\n", "<br />", "{$html}{$contents}")); ?>');
-			myRef.document.write('\n<hr /></pre>\n\n');
-		</script>
-	<?php }
+	function dump($var = 'Th&F=xUFucreSp2*ezAhe=ApuPR*$axe', $bypass = false, $show_from = true, $new_window = false, $error = false) { call($var, $bypass, $show_from, $new_window, $error); }
+	function debug($var = 'Th&F=xUFucreSp2*ezAhe=ApuPR*$axe', $bypass = true, $show_from = true, $new_window = false, $error = false) { call($var, $bypass, $show_from, $new_window, $error); }
 }
-function dump($var = 'Th&F=xUFucreSp2*ezAhe=ApuPR*$axe', $bypass = false, $show_from = true, $new_window = false, $error = false) { call($var, $bypass, $show_from, $new_window, $error); }
-function debug($var = 'Th&F=xUFucreSp2*ezAhe=ApuPR*$axe', $bypass = true, $show_from = true, $new_window = false, $error = false) { call($var, $bypass, $show_from, $new_window, $error); }
-
 
 
 /** function load_class
