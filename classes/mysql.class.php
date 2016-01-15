@@ -3,7 +3,7 @@
 /*
 +---------------------------------------------------------------------------
 |
-|   mysql.class.php (php 5.1+)
+|   mysql.class.php (php 5.3+)
 |
 |   by Benjam Welker
 |   http://iohelix.net
@@ -268,8 +268,8 @@ class Mysql {
 		foreach ($valid as $key) {
 			if (isset($settings[$key])) {
 				list($type, $idx) = explode('_', $key);
-				$var = $type.'_settings';
-				$this->$var = $settings[$key];
+				$var = $type .'_settings';
+				$this->{$var}[$idx] = $settings[$key];
 			}
 		}
 	}
@@ -290,20 +290,6 @@ class Mysql {
 		$error_level = (int) $error_level;
 		$this->debug_error = (0 != (1 & $error_level));
 		$this->debug_query = (0 != (2 & $error_level));
-	}
-
-
-	/**
-	 * Tests the MySQL connection and tries to reconnect
-	 *
-	 * @deprecated
-	 *
-	 * @param void
-	 *
-	 * @return void
-	 */
-	public function test_connection( ) {
-		// do nothing
 	}
 
 
@@ -365,7 +351,7 @@ class Mysql {
 				}
 			}
 		}
-		catch (PDOException $poo) {
+		catch (PDOException $e) {
 			if (empty($this->tries)) {
 				$this->tries = 0;
 			}
@@ -392,7 +378,6 @@ class Mysql {
 			}
 
 			$this->error = $error_info[1].': '.$error_info[2];
-			$this->_error_report( );
 
 			if ($this->debug_error) {
 				if (('cli' == php_sapi_name( )) && empty($_SERVER['REMOTE_ADDR'])) {
@@ -541,16 +526,40 @@ class Mysql {
 	 * Extract the query parameters and values
 	 * from a conditions array
 	 *
-	 * @param array $where
+	 * @param array $where reference
+	 * @param int $level recursion level
 	 *
 	 * @return array params
 	 */
-	protected function get_params($where) {
+	protected function get_params(& $where, $level = 0) {
 		$params = array( );
-// TODO: not quite sure how to build this
-// maybe parse through the array, and anywhere a value is found
-// insert it into the params array with the key name as it's index,
-// and then replace it with the key name with : appended
+
+		if ( ! is_array($where)) {
+			return $params;
+		}
+
+		foreach ($where as $key => & $value) {
+			if (is_array($value) && ! (bool) count(array_filter(array_keys($value), 'is_string'))) { // non-associative array
+				$value = array_values($value);
+				reset($value);
+				for ($i = 0, $len = count($value); $i < $len; ++$i) {
+					$name = ':' . $key . '_' . $level . '_' . $i . '_whre';
+					$params[$name] = current($value);
+					$where[$key][$i] = $name;
+					next($value);
+				}
+			}
+			else if (is_array($value)) { // associative array or AND / OR array
+				$params = array_merge($params, $this->get_params($value, $level + 1));
+			}
+			else {
+				$name = ':' . $key . '_' . $level . '_whre';
+				$params[$name] = $value;
+				$where[$key] = $name;
+			}
+		}
+		unset($value);
+
 		return $params;
 	}
 
@@ -574,6 +583,7 @@ class Mysql {
 	 */
 	public function insert($table, $data_array, $where = '', $replace = false) {
 		$this->reset( );
+		$query = '';
 
 		if (is_array($where) && ! empty($where)) {
 			$this->params = $this->get_params($where);
@@ -583,7 +593,7 @@ class Mysql {
 		$replace = (bool) $replace;
 
 		if (empty($where)) {
-			$query  = (false == $replace) ? ' INSERT ' : ' REPLACE ';
+			$query .= (false == $replace) ? ' INSERT ' : ' REPLACE ';
 			$query .= ' INTO ';
 			$where = '';
 		}
@@ -598,6 +608,7 @@ class Mysql {
 		}
 		else {
 			$query .= ' SET ';
+			$set = array( );
 			foreach ($data_array as $field => $value) {
 				if (is_null($value)) {
 					$value = 'NULL';
@@ -614,10 +625,12 @@ class Mysql {
 					$value = $key;
 				}
 
-				$query .= " `{$field}` = {$value} , ";
+				$set["`{$field}`"] = $value;
 			}
 
-			$query = substr($query, 0, -2).' '; // remove the last comma (but preserve the spaces)
+			// format the SET clause
+			array_walk($set, function (& $value, $key) { $value = " {$key} = {$value} "; });
+			$query .= implode(' , ', $set);
 		}
 
 		$query .= " {$where} ";
@@ -1205,9 +1218,6 @@ class Mysql {
 		}
 	}
 
-	protected function _error_report( ) {
-		// what is this?
-	}
 
 	/**
 	 * Grab a backtrace so the origin of any errors
@@ -1378,22 +1388,15 @@ class MySQLException extends Exception {
 if ( ! function_exists('microtime_float')) {
 // TODO: convert this to ' microtime(true) ' anywhere it's used
 	function microtime_float( ) {
-die('microtime_float used')		;
-		list($usec, $sec) = explode(' ', microtime( ));
-		return ((float) $usec + (float) $sec);
+		Log::write('Deprecated function "microtime_float( )" used', 'error', true);
+		trigger_error('Deprecated function "microtime_float( )" used', E_USER_ERROR);
 	}
 }
 
 if ( ! function_exists('sani')) {
-	function sani($data) {
-		if (is_array($data)) {
-			return array_map('sani', $data);
-		}
-		else {
-Log::write('Deprecated function "sani( )" used', 'error', true);
-			$Mysql = Mysql::get_instance( );
-			return trim($Mysql->conn->quote($data), "'");
-		}
+	function sani( ) {
+		Log::write('Deprecated function "sani( )" used', 'error', true);
+		trigger_error('Deprecated function "sani( )" used', E_USER_ERROR);
 	}
 }
 
