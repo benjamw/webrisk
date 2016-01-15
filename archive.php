@@ -20,7 +20,7 @@ $contents = '';
 $table_meta = array(
 	'sortable' => true ,
 	'no_data' => '<p>There are no games to show</p>' ,
-	'caption' => 'Current Games' ,
+	'caption' => 'Archived Games' ,
 );
 $table_format = array(
 	array('SPECIAL_HTML', 'true', 'id="[[[short_file]]]"') ,

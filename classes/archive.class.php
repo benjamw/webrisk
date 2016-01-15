@@ -32,7 +32,22 @@ class Archive extends Game {
 	 */
 	public static function get_files( ) {
 		chdir(GAMES_DIR);
-		return glob('WebRisk_*.dat');
+
+		$files = glob('WebRisk_*.dat');
+
+		usort($files, function($a, $b) {
+			$a = explode('.', $a);
+			$a = explode('_', $a[0]);
+			$a = (int) $a[2];
+
+			$b = explode('.', $b);
+			$b = explode('_', $b[0]);
+			$b = (int) $b[2];
+
+			return $b - $a; // reverse order
+		});
+
+		return $files;
 	}
 
 
