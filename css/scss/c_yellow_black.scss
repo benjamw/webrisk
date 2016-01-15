@@ -1,13 +1,12 @@
 
 /* Game colors */
-/* red-black created by Benjam Welker */
+/* yellow-black created by Benjam Welker */
 
 /*
 	all the layout for the webpages are specified in the layout.css
-	file.  the colors have been seperated out for ease of customization
+	file.  the colors have been separated out for ease of customization
 */
 
-// TODO: check webrisk for a yellow-black layout, and change below to match
 
 $back_grad: 1; // set to 1 for a gradient on header and footer
 
@@ -29,7 +28,7 @@ $border_light: #333;
 
 $header_border: #000;
 
-$table_head_back: #000;
+$table_head_back: #333;
 $table_alt_back: #222;
 $table_hover_text: $text;
 $table_hover_back: #880;

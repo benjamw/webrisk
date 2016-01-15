@@ -2,7 +2,7 @@
 @import "compass/css3";
 
 
-// set our default values
+// set our default values (blue-white)
 
 $back_grad: 0 !default; // set to 1 for a gradient on header and footer
 
@@ -310,6 +310,18 @@ td {
 tr.alt,
 tr:nth-child(2n) {
 	background-color: $table_alt_back;
+}
+
+#custom_trades {
+	table.form {
+		tr:nth-child(2n) {
+			background-color: inherit;
+		}
+
+		tr:nth-child(2n-1) {
+			background-color: $table_alt_back;
+		}
+	}
 }
 
 .lowlight ,
