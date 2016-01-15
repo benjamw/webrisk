@@ -826,6 +826,7 @@ class Game
 			$this->_risk->players[$player_id]['state'] = 'Placing';
 			$this->_risk->players[$player_id]['armies'] = $num_armies;
 			$this->_risk->players[$player_id]['order_num'] = $i;
+			$this->_risk->players[$player_id]['last_move'] = null;
 		}
 
 		$this->_risk->order_players( );
@@ -2851,11 +2852,11 @@ fix_extra_info($player['extra_info']);
 				'game_id' => $this->id,
 				'player_id' => $new_player_id,
 				'color' => $this->_players[$new_player_id]['color'],
-				'move_date' => $this->_players[$new_player_id]['move_date'],
 				'order_num' => $this->_risk->players[$new_player_id]['order_num'],
 				'cards' => $this->_risk->players[$new_player_id]['cards'],
 				'armies' => $this->_risk->players[$new_player_id]['armies'],
 				'state' => $this->_risk->players[$new_player_id]['state'],
+				'move_date' => null,
 			);
 
 			$update_player['cards'] = implode(',', $update_player['cards']);
@@ -2876,7 +2877,7 @@ fix_extra_info($player['extra_info']);
 
 		// check the player parts
 		foreach ($db_players as $db_player) {
-			$update_player = false;
+			$update_player = array( );
 			$player_id = $db_player['player_id'];
 
 			$risk_player = $this->_risk->players[$player_id];
@@ -2922,7 +2923,12 @@ fix_extra_info($player['extra_info']);
 				$update_player['extra_info'] = $risk_player['extra_info'];
 			}
 
-			if ($update_player) {
+			// game was started, reset all player's move dates to now
+			if (array_key_exists('move_date', $risk_player)) {
+				$update_player['move_date'] = null;
+			}
+
+			if (count($update_player)) {
 				$update_modified = true;
 				$Mysql->insert(self::GAME_PLAYER_TABLE, $update_player, array('game_id' => $this->id, 'player_id' => $player_id));
 			}
