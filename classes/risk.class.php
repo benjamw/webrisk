@@ -602,6 +602,8 @@ class Risk
 	public function place_start_armies( ) {
 		call(__METHOD__);
 
+		$placed = array( );
+
 		// place the start armies randomly
 		foreach ($this->players as $player_id => $player) {
 			$my_armies = $player['armies'];
