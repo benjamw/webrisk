@@ -249,7 +249,8 @@ $trades = $Game->get_trade_array( );
 $trade_array_table = 'None';
 if ($trades) {
 	$trade_array_table = '<table>';
-	$trade_array_table .= '<tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr>';
+	$trade_array_table .= '<thead><tr><th>Start</th><th>End</th><th>Step</th><th>Times</th></tr></thead>';
+	$trade_array_table .= '<tbody>';
 
 	$n = 0;
 	foreach ($trades as $trade) {
@@ -261,7 +262,7 @@ if ($trades) {
 		$trade_array_table .= '<tr'.((0 === ($n % 2)) ? ' class="alt"' : '').'><td>'.$trade[0].'</td><td>'.$trade[1].'</td><td>'.$trade[2].'</td><td>'.$trade[3].'</td></tr>';
 	}
 
-	$trade_array_table .= '</table>';
+	$trade_array_table .= '</tbody></table>';
 }
 
 $trade_value_table = trade_value_table(Game::calculate_trade_values($trades));
