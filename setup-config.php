@@ -36,7 +36,7 @@ switch($step) {
 		echo get_header($meta);
 ?>
 
-<p>Welcome to WebRisk. Before getting started, we need some information on the database. You will need to know the following items before proceeding.</p>
+<p>Welcome to <?php echo GAME_NAME; ?>. Before getting started, we need some information on the database. You will need to know the following items before proceeding.</p>
 <ol>
 	<li>Database name</li>
 	<li>Database username</li>
@@ -218,7 +218,7 @@ switch($step) {
 
 		echo get_header($meta);
 ?>
-<p>All right sparky! You've made it through this part of the installation. WebRisk can now communicate with your database. If you are ready, time now to&hellip;</p>
+<p>All right sparky! You've made it through this part of the installation. <?php echo GAME_NAME; ?> can now communicate with your database. If you are ready, time now to&hellip;</p>
 
 <p class="step"><a href="install.php" class="button">Run the install</a></p>
 <?php

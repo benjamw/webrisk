@@ -33,7 +33,7 @@ class Archive extends Game {
 	public static function get_files( ) {
 		chdir(GAMES_DIR);
 
-		$files = glob('WebRisk_*.dat');
+		$files = glob(GAME_NAME.'_*.dat');
 
 		usort($files, function($a, $b) {
 			$a = explode('.', $a);
