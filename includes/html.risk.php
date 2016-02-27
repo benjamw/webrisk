@@ -124,7 +124,7 @@ function game_info($Game) {
 			</tr>
 			</thead>
 			<tbody>
-				<?php echo trade_value_table($Game); ?>
+				<?php echo trade_value_table($Game, $Game->get_trade_count( )); ?>
 			</tbody>
 		</table> <!-- .custom_trades -->
 
@@ -135,6 +135,34 @@ function game_info($Game) {
 	$html = ob_get_clean( );
 
 	return $html;
+}
+
+
+/**
+ * Return the class string for the table row
+ * based on the current idx and count
+ *
+ * @param int $idx
+ * @param int $count
+ *
+ * @return string
+ */
+function get_html_class($idx, $count) {
+	$classes = array();
+
+	if (0 === ($idx % 2)) {
+		$classes[] = 'alt';
+	}
+
+	if ($idx === $count) {
+		$classes[] = 'highlight';
+	}
+
+	if ($classes) {
+		return ' class="' . implode(' ', $classes) . '"';
+	}
+
+	return '';
 }
 
 
@@ -288,12 +316,14 @@ function conquer_limit_table($extra_info) {
  *
  * @return string trade table rows
  */
-function trade_value_table($trade_values) {
+function trade_value_table($trade_values, $trade_count = 0) {
 	if (is_a($trade_values, 'Game')) {
 		$trade_values = Review::calculate_trade_values($trade_values->get_trade_array( ));
 	}
 
-	$table = '';
+	$trade_count++; // highlight the _next_ trade
+
+	$table = $classes = '';
 	$prev_value = 0;
 	foreach ($trade_values as $trade => $value) {
 		$idx = $trade + 1;
@@ -307,46 +337,71 @@ function trade_value_table($trade_values) {
 					--$idx;
 					break;
 				}
-				$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
+				$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
 				++$idx;
 			}
 
-			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
+			while ($idx <= $trade_count) {
+				$table .= "<tr" . get_html_class($idx, $trade_count) . "><td>{$idx}</td><td>0</td></tr>\n";
+				++$idx;
+			}
+
+			$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>0</td></tr>\n";
 			++$idx;
 
-			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>0</td></tr>\n";
+			$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>0</td></tr>\n";
 			++$idx;
 
-			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
+			$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>...</td></tr>\n";
 		}
 		elseif('+' == $value[0]) {
 			// if plus, go for three then append plus value
 			$next_value = $prev_value;
+
+			while ($idx <= $trade_count) {
+				$next_value += (int) $value;
+				$table .= "<tr" . get_html_class($idx, $trade_count) . "><td>{$idx}</td><td>{$next_value}</td></tr>\n";
+				++$idx;
+			}
+
 			for ($i = 1; $i <= 3; ++$i) {
 				$next_value += (int) $value;
-				$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
+				$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>{$next_value}</td></tr>\n";
 				++$idx;
 			}
 
 			$value = '('.$value.')';
-			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
+			$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>{$value}</td></tr>\n";
 		}
 		else {
 			// nothing special, just append the value
-			$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
+			$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>{$value}</td></tr>\n";
 			$prev_value = $value;
 		}
 	}
 
 	// if the last value was not a changer
 	// show the last value three times
+	$extended = false;
 	if ( ! in_array($trade_values[count($trade_values) - 1][0], array('+','-'))) {
 		$idx = count($trade_values) + 1;
 		$value = $trade_values[count($trade_values) - 1];
-		$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>{$value}</td></tr>\n";
 
+		while ($idx <= $trade_count) {
+			$extended = true;
+			$table .= "<tr" . get_html_class($idx, $trade_count) . "><td>{$idx}</td><td>{$value}</td></tr>\n";
+			++$idx;
+		}
+
+		if ($extended) {
+			$table .= "<tr" . get_html_class($idx, $trade_count) . "><td>{$idx}</td><td>{$value}</td></tr>\n";
+			++$idx;
+		}
+
+		$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>{$value}</td></tr>\n";
 		++$idx;
-		$table .= "<tr".((0 === ($idx % 2)) ? ' class="alt"' : '')."><td>{$idx}</td><td>...</td></tr>\n";
+
+		$table .= "<tr".get_html_class($idx, $trade_count)."><td>{$idx}</td><td>...</td></tr>\n";
 	}
 
 	return $table;
