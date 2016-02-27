@@ -3600,7 +3600,10 @@ if (isset($data[7])) {
 
 		if (1 == $count) {
 			$this->state = 'Finished';
+
 			$this->_players[$alive[0]]['object']->add_win( );
+			self::log($this->id, 'D ' . $alive[0]);
+
 			Email::send('finished', array_keys($this->_players), array('game_id' => $this->id, 'name' => $this->name, 'winner' => $this->_players[$alive[0]]['object']->username));
 
 			self::write_game_file($this->id);
