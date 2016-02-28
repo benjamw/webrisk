@@ -67,8 +67,10 @@ class Email
 	 *		Class constructor
 	 *
 	 * @param void
+	 *
 	 * @action instantiates object
-	 * @return void
+	 *
+	 * @return Email
 	 */
 	protected function __construct( )
 	{
@@ -83,11 +85,14 @@ class Email
 	/** protected function _send
 	 *		Sends email messages of various types [optional data contents]
 	 *
-	 * @param string message type
-	 * @param mixed player id OR email address OR mixed array of both
-	 * @param array optional message data
+	 * @param string $type message type
+	 * @param mixed $to player id OR email address OR mixed array of both
+	 * @param array $data optional message data
+	 *
 	 * @action send emails
+	 *
 	 * @return bool success
+	 * @throws MyException
 	 */
 	protected function _send($type, $to, $data = array( ))
 	{
@@ -118,12 +123,12 @@ class Email
 
 			// test if this user accepts emails
 			$query = "
-				SELECT P.email
-					, PE.allow_email
-				FROM ".Player::PLAYER_TABLE." AS P
-					LEFT JOIN ".GamePlayer::EXTEND_TABLE." AS PE
-						ON P.player_id = PE.player_id
-				WHERE P.player_id = '{$player_id}'
+				SELECT `P`.`email`
+					, `PE`.`allow_email`
+				FROM `".Player::PLAYER_TABLE."` AS `P`
+					LEFT JOIN `".GamePlayer::EXTEND_TABLE."` AS `PE`
+						ON `P`.`player_id` = `PE`.`player_id`
+				WHERE `P`.`player_id` = '{$player_id}'
 			";
 			list($email, $allow) = Mysql::get_instance( )->fetch_row($query);
 			call($email);call($allow);
@@ -204,8 +209,9 @@ and should not be replied to.
 	/** protected function _strip
 	 *		Strips out the bad stuff from the email
 	 *
-	 * @param string the string to clean
-	 * @param bool optional this is a message string
+	 * @param string $value the string to clean
+	 * @param bool $message optional this is a message string
+	 *
 	 * @return string clean string
 	 */
 	protected function _strip($value, $message = false) {
@@ -228,8 +234,10 @@ and should not be replied to.
 	/** protected function _log
 	 *		Report messages to a file
 	 *
-	 * @param string message
+	 * @param string $msg message
+	 *
 	 * @action log messages to file
+	 *
 	 * @return void
 	 */
 	protected function _log($msg)
@@ -246,7 +254,9 @@ and should not be replied to.
 	 *		of the Email Object as a reference
 	 *
 	 * @param void
+	 *
 	 * @action optionally creates the instance
+	 *
 	 * @return Email Object reference
 	 */
 	static public function get_instance( )
@@ -262,11 +272,14 @@ and should not be replied to.
 	/** static public function send
 	 *		Static access for _send
 	 *
-	 * @param string message type
-	 * @param mixed player id OR email address OR mixed array of both
-	 * @param array optional message data
+	 * @param string $type message type
+	 * @param mixed $to player id OR email address OR mixed array of both
+	 * @param array $data optional message data
+	 *
 	 * @action send emails
+	 *
 	 * @return bool success
+	 *
 	 * @see _send
 	 */
 	static public function send($type, $to, $data = array( ))

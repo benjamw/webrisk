@@ -288,7 +288,7 @@ class Game
 	 *
 	 * @action instantiates object
 	 *
-	 * @return Game Object reference
+	 * @return Game
 	 * @throws MyException
 	 */
 	public function __construct($id = 0)
@@ -320,8 +320,10 @@ class Game
 	 *		Gets object ready for destruction
 	 *
 	 * @param void
+	 *
 	 * @action saves changed data
 	 * @action destroys object
+	 *
 	 * @return void
 	 */
 	public function __destruct( )
@@ -347,7 +349,7 @@ class Game
 	 *		Returns the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string $property name
+	 * @param string $property property name
 	 *
 	 * @return mixed property value
 	 * @throws MyException
@@ -371,7 +373,7 @@ class Game
 	 *		Sets the requested property if the
 	 *		requested property is not _private
 	 *
-	 * @param string $property name
+	 * @param string $property property name
 	 * @param mixed $value property value
 	 *
 	 * @action optional validation
@@ -604,6 +606,7 @@ class Game
 	 *		Returns an array of the colors still available
 	 *
 	 * @param void
+	 *
 	 * @return array of colors
 	 */
 	public function get_avail_colors( )
@@ -636,7 +639,8 @@ class Game
 	/** public function is_player
 	 *		Tests if the given player is already in this game or not
 	 *
-	 * @param int player id
+	 * @param int $player_id player id
+	 *
 	 * @return bool is player in game
 	 */
 	public function is_player($player_id)
@@ -656,7 +660,8 @@ class Game
 	/** public function is_host
 	 *		Tests if the given player is the game host
 	 *
-	 * @param int player id
+	 * @param int $player_id player id
+	 *
 	 * @return bool is host
 	 */
 	public function is_host($player_id)
@@ -677,8 +682,11 @@ class Game
 	 *		Joins a game that is waiting
 	 *
 	 * @param void
+	 *
 	 * @action inserts the join into the database
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	public function join( )
 	{
@@ -755,8 +763,11 @@ class Game
 	 *		Invite players to a game that is waiting
 	 *
 	 * @param void
+	 *
 	 * @action send emails to the invited players
+	 *
 	 * @return array player ids the email was sent to
+	 * @throws MyException
 	 */
 	public function invite( )
 	{
@@ -876,9 +887,9 @@ class Game
 	/** public function trade_cards
 	 *		Trades cards for more armies
 	 *
-	 * @param int $player id
-	 * @param array card ids to trade
-	 * @param int bonus land id
+	 * @param int $player_id player id
+	 * @param array $card_ids card ids to trade
+	 * @param int $bonus_card bonus land id
 	 *
 	 * @action saves the game
 	 *
@@ -913,7 +924,7 @@ class Game
 	/** public function get_cards
 	 *		Returns the cards owned by the given player
 	 *
-	 * @param int $player_id
+	 * @param int $player_id player id
 	 *
 	 * @return string card values
 	 * @throws MyException
@@ -991,12 +1002,15 @@ class Game
 	/** public function attack
 	 *		ATTACK !!!
 	 *
-	 * @param int player id
-	 * @param int number of armies to attack with
-	 * @param int attack from land id
-	 * @param int attack to (defend) land id
+	 * @param int $player_id player id
+	 * @param int $num_armies number of armies to attack with
+	 * @param int $attack_land_id attack from land id
+	 * @param int $defend_land_id attack to (defend) land id
+	 *
 	 * @action saves the game
+	 *
 	 * @return bool defeated
+	 * @throws MyException
 	 */
 	public function attack($player_id, $num_armies, $attack_land_id, $defend_land_id)
 	{
@@ -1045,11 +1059,13 @@ class Game
 	 *		Runs the attack function until either the defender is dead
 	 *		or the attacker has no more attackable armies left
 	 *
-	 * @param int player id
-	 * @param int number of armies to attack with
-	 * @param int attack from land id
-	 * @param int attack to (defend) land id
+	 * @param int $player_id player id
+	 * @param int $num_armies number of armies to attack with
+	 * @param int $attack_land_id attack from land id
+	 * @param int $defend_land_id attack to (defend) land id
+	 *
 	 * @return bool defeated
+	 * @throws MyException
 	 */
 	public function attack_till_dead($player_id, $num_armies, $attack_land_id, $defend_land_id)
 	{
@@ -1090,11 +1106,13 @@ class Game
 	 *		using attack till dead on each and fortifying the maximum amount each time
 	 *		until the path is complete or the attacker has no more attackable armies left
 	 *
-	 * @param int player id
-	 * @param int number of armies to attack with
-	 * @param int attack from land id
-	 * @param array if int attack to (defend) land ids
+	 * @param int $player_id player id
+	 * @param int $num_armies number of armies to attack with
+	 * @param int $attack_land_id attack from land id
+	 * @param array $defend_land_ids if int attack to (defend) land ids
+	 *
 	 * @return bool defeated
+	 * @throws MyException
 	 */
 	public function attack_path($player_id, $num_armies, $attack_land_id, $defend_land_ids)
 	{
@@ -1257,7 +1275,8 @@ class Game
 	 *		Forces a resignation from the game
 	 *		Regardless of current state
 	 *
-	 * @param int player id
+	 * @param int $player_id player id
+	 *
 	 * @return void
 	 */
 	public function force_resign($player_id)
@@ -1357,8 +1376,10 @@ class Game
 	/** public function nudge
 	 *		Nudges the inactive players to make their moves
 	 *
-	 * @param int player id who nudged
+	 * @param int $nudger_id player id who nudged
+	 *
 	 * @return bool success
+	 * @throws MyException
 	 */
 	public function nudge($nudger_id)
 	{
@@ -3614,8 +3635,9 @@ if (isset($data[7])) {
 	/** protected function _test_nudge
 	 *		Tests if the current player can be nudged or not
 	 *
-	 * @param optional array or string csv of player ids
-	 * @return bool can nudge player
+	 * @param mixed $ids optional array or string csv of player ids
+	 *
+	 * @return array of nudgable ids
 	 */
 	protected function _test_nudge($ids = null)
 	{
@@ -3645,10 +3667,10 @@ if (isset($data[7])) {
 			// find all players who are not waiting or dead
 			// in case we are in the placing state
 			$query = "
-				SELECT GP.player_id
-				FROM ".self::GAME_PLAYER_TABLE." AS GP
-				WHERE GP.game_id = '{$this->id}'
-					AND GP.state NOT IN ('Waiting', 'Resigned', 'Dead')
+				SELECT `GP`.`player_id`
+				FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+				WHERE `GP`.`game_id` = '{$this->id}'
+					AND `GP`.`state` NOT IN ('Waiting', 'Resigned', 'Dead')
 			";
 			$ids = $Mysql->fetch_value_array($query);
 		}
@@ -3660,17 +3682,17 @@ if (isset($data[7])) {
 			// 'now' is taken from the DB because it may
 			// have a different time from the PHP server
 			$query = "
-				SELECT GP.state
-					, GP.move_date
-					, GN.nudged
-					, NOW( ) AS now
-				FROM ".self::GAME_PLAYER_TABLE." AS GP
-					LEFT JOIN ".self::GAME_NUDGE_TABLE." AS GN
-						ON (GN.game_id = GP.game_id
-							AND GN.player_id = GP.player_id)
-				WHERE GP.game_id = '{$this->id}'
-					AND GP.player_id = '{$id}'
-					AND GP.state NOT IN ('Waiting', 'Resigned', 'Dead')
+				SELECT `GP`.`state`
+					, `GP`.`move_date`
+					, `GN`.`nudged`
+					, NOW( ) AS `now`
+				FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+					LEFT JOIN `".self::GAME_NUDGE_TABLE."` AS `GN`
+						ON (`GN`.`game_id` = `GP`.`game_id`
+							AND `GN`.`player_id` = `GP`.`player_id`)
+				WHERE `GP`.`game_id` = '{$this->id}'
+					AND `GP`.`player_id` = '{$id}'
+					AND `GP`.`state` NOT IN ('Waiting', 'Resigned', 'Dead')
 			";
 			$player = $Mysql->fetch_assoc($query);
 
@@ -3698,8 +3720,10 @@ if (isset($data[7])) {
 	 *		Begins the game proper
 	 *
 	 * @param void
+	 *
 	 * @action begins the game
 	 * @action saves the game
+	 *
 	 * @return void
 	 */
 	protected function _begin( )
@@ -3718,7 +3742,8 @@ if (isset($data[7])) {
 	/** protected function _hash_pass
 	 *		Hashs the game password
 	 *
-	 * @param string password
+	 * @param string $password password
+	 *
 	 * @return string salted password hash
 	 */
 	protected function _hash_pass($password)
@@ -3904,7 +3929,8 @@ if (isset($data[7])) {
 	 *		Returns a list array of all games in the database
 	 *		with games which need the users attention highlighted
 	 *
-	 * @param int optional player's id
+	 * @param int $player_id optional player's id
+	 *
 	 * @return array game list (or bool false on failure)
 	 */
 	static public function get_list($player_id = 0)
@@ -3914,39 +3940,39 @@ if (isset($data[7])) {
 		$player_id = (int) $player_id;
 
 		$query = "
-			SELECT G.*
+			SELECT `G`.*
 				-- this stops the query from pulling 0 from the player table if no moves have been made
 				-- or if there are no players in the game yet (don't know why that would be, but...)
-				, IF((0 = MAX(GP.move_date)) OR MAX(GP.move_date) IS NULL, G.create_date, MAX(GP.move_date)) AS last_move
-				, 0 AS in_game
-				, 0 AS highlight
-				, COUNT(DISTINCT GP.player_id) AS players
-				, P.username AS hostname
-				, C.username AS username
+				, IF((0 = MAX(`GP`.`move_date`)) OR MAX(`GP`.`move_date`) IS NULL, `G`.`create_date`, MAX(`GP`.`move_date`)) AS `last_move`
+				, 0 AS `in_game`
+				, 0 AS `highlight`
+				, COUNT(DISTINCT `GP`.`player_id`) AS `players`
+				, `P`.`username` AS `hostname`
+				, `C`.`username` AS `username`
 			FROM `".self::GAME_TABLE."` AS `G`
 				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `GP`
-					ON GP.game_id = G.game_id
+					ON `GP`.`game_id` = `G`.`game_id`
 				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `CP`
-					ON (CP.game_id = G.game_id
-						AND CP.state NOT IN ('Waiting', 'Resigned', 'Dead'))
+					ON (`CP`.`game_id` = `G`.`game_id`
+						AND `CP`.`state` NOT IN ('Waiting', 'Resigned', 'Dead'))
 				LEFT JOIN `".Player::PLAYER_TABLE."` AS `P`
-					ON P.player_id = G.host_id
+					ON `P`.`player_id` = `G`.`host_id`
 				LEFT JOIN `".Player::PLAYER_TABLE."` AS `C`
-					ON C.player_id = CP.player_id
-			GROUP BY game_id
-			ORDER BY state ASC
-				, last_move DESC
+					ON `C`.`player_id` = `CP`.`player_id`
+			GROUP BY `G`.`game_id`
+			ORDER BY `G`.`state` ASC
+				, `G`.`last_move` DESC
 		";
 		$list = $Mysql->fetch_array($query);
 
 		// get player's state for games they are in
 		$query = "
-			SELECT GP.game_id
-				, GP.state
+			SELECT `GP`.`game_id`
+				, `GP`.`state`
 			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
 				LEFT JOIN `".self::GAME_TABLE."` AS `G`
-					USING (game_id)
-			WHERE GP.player_id = '{$player_id}'
+					USING (`game_id`)
+			WHERE `GP`.`player_id` = '{$player_id}'
 		";
 		$results = $Mysql->fetch_array($query);
 
@@ -3970,7 +3996,6 @@ fix_extra_info($game['extra_info']);
 				foreach ($extra_info as $field => $value) {
 					$game[$field] = $value;
 				}
-
 
 				$game['get_fortify'] = self::_get_fortify($extra_info);
 				$game['get_kamikaze'] = self::_get_kamikaze($extra_info);
@@ -3999,7 +4024,8 @@ fix_extra_info($game['extra_info']);
 	 *		Returns a list array of all games in the database
 	 *		that the player given is currently playing in
 	 *
-	 * @param int player's id
+	 * @param int $player_id player's id
+	 *
 	 * @return array player's game list (or bool false on failure)
 	 */
 	static public function get_my_list($player_id)
@@ -4009,14 +4035,14 @@ fix_extra_info($game['extra_info']);
 		$player_id = (int) $player_id;
 
 		$query = "
-			SELECT G.*
-				, G.state AS game_state
-				, GP.*
-				, GP.state AS player_state
+			SELECT `G`.*
+				, `G`.`state` AS `game_state`
+				, `GP`.*
+				, `GP`.`state` AS `player_state`
 			FROM `".self::GAME_TABLE."` AS `G`
 				LEFT JOIN `".self::GAME_PLAYER_TABLE."` AS `GP`
-					ON GP.game_id = G.game_id
-			WHERE GP.player_id = '{$player_id}'
+					ON `GP`.`game_id` = `G`.`game_id`
+			WHERE `GP`.`player_id` = '{$player_id}'
 		";
 		$list = $Mysql->fetch_array($query);
 
@@ -4076,7 +4102,8 @@ fix_extra_info($game['extra_info']);
 	 *		the number of games the given player is currently playing,
 	 *		the number of games where it is the current player's turn
 	 *
-	 * @param void
+	 * @param int $player_id optional player id
+	 *
 	 * @return array (int current game count, int total game count, int player game count, int player turn count)
 	 */
 	static public function get_count($player_id = 0)
@@ -4089,37 +4116,37 @@ fix_extra_info($game['extra_info']);
 		$query = "
 			SELECT COUNT(*)
 			FROM `".self::GAME_TABLE."`
-			WHERE state <> 'Finished'
+			WHERE `state` <> 'Finished'
 		";
 		$count = $Mysql->fetch_value($query);
 
 		// total games
 		$query = "
-			SELECT MAX(game_id)
+			SELECT MAX(`game_id`)
 			FROM `".self::GAME_TABLE."`
 		";
 		$next = $Mysql->fetch_value($query);
 
 		// my games
 		$query = "
-			SELECT COUNT(GP.player_id)
+			SELECT COUNT(`GP`.`player_id`)
 			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
-				LEFT JOIN ".self::GAME_TABLE." AS G
-					USING (game_id)
-			WHERE GP.player_id = '{$player_id}'
-				AND G.state <> 'Finished'
+				LEFT JOIN `".self::GAME_TABLE."` AS `G`
+					USING (`game_id`)
+			WHERE `GP`.`player_id` = '{$player_id}'
+				AND `G`.`state` <> 'Finished'
 		";
 		$mine = $Mysql->fetch_value($query);
 
 		// my turns
 		$query = "
-			SELECT COUNT(GP.player_id)
+			SELECT COUNT(`GP`.`player_id`)
 			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
 				LEFT JOIN `".self::GAME_TABLE."` AS `G`
-					USING (game_id)
-			WHERE  GP.player_id = '{$player_id}'
-				AND G.state <> 'Finished'
-				AND GP.state NOT IN ('Waiting', 'Resigned', 'Dead')
+					USING (`game_id`)
+			WHERE `GP`.`player_id` = '{$player_id}'
+				AND `G`.`state` <> 'Finished'
+				AND `GP`.`state` NOT IN ('Waiting', 'Resigned', 'Dead')
 		";
 		$turns = $Mysql->fetch_value($query);
 
@@ -4130,7 +4157,8 @@ fix_extra_info($game['extra_info']);
 	/** static public function check_turns
 	 *		Checks if it's the given player's turn in any games
 	 *
-	 * @param int player id
+	 * @param int $player_id player id
+	 *
 	 * @return number of games player has a turn in
 	 */
 	static public function check_turns($player_id)
@@ -4146,13 +4174,13 @@ fix_extra_info($game['extra_info']);
 		$Mysql = Mysql::get_instance( );
 
 		$query = "
-			SELECT COUNT(GP.player_id)
-			FROM ".self::GAME_PLAYER_TABLE." AS GP
-				LEFT JOIN ".self::GAME_TABLE." AS G
-					USING (game_id)
-			WHERE  GP.player_id = '{$player_id}'
-				AND G.state <> 'Finished'
-				AND GP.state NOT IN ('Waiting', 'Resigned', 'Dead')
+			SELECT COUNT(`GP`.`player_id`)
+			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+				LEFT JOIN `".self::GAME_TABLE."` AS `G`
+					USING (`game_id`)
+			WHERE `GP`.`player_id` = '{$player_id}'
+				AND `G`.`state` <> 'Finished'
+				AND `GP`.`state` NOT IN ('Waiting', 'Resigned', 'Dead')
 		";
 		$turn = $Mysql->fetch_value($query);
 
@@ -4163,8 +4191,10 @@ fix_extra_info($game['extra_info']);
 	/** static public function delete
 	 *		Deletes the given game and all related data
 	 *
-	 * @param mixed array or csv of game ids
+	 * @param mixed $ids array or csv of game ids
+	 *
 	 * @action deletes the game and all related data from the database
+	 *
 	 * @return void
 	 */
 	static public function delete($ids)
@@ -4194,10 +4224,10 @@ fix_extra_info($game['extra_info']);
 		$Mysql->multi_delete($tables, array('game_id' => $ids));
 
 		$query = "
-			OPTIMIZE TABLE ".self::GAME_TABLE."
-				, ".self::GAME_PLAYER_TABLE."
-				, ".self::GAME_LAND_TABLE."
-				, ".self::GAME_LOG_TABLE."
+			OPTIMIZE TABLE `".self::GAME_TABLE."`
+				, `".self::GAME_PLAYER_TABLE."`
+				, `".self::GAME_LAND_TABLE."`
+				, `".self::GAME_LOG_TABLE."`
 		";
 		$Mysql->query($query);
 	}
@@ -4206,8 +4236,9 @@ fix_extra_info($game['extra_info']);
 	/** static public function delete_inactive
 	 *		Deletes the inactive games from the database
 	 *
-	 * @param int age in days
-	 * @return void
+	 * @param int $age age in days
+	 *
+	 * @return bool
 	 */
 	static public function delete_inactive($age)
 	{
@@ -4224,22 +4255,25 @@ fix_extra_info($game['extra_info']);
 
 		// don't auto delete paused games
 		$query = "
-			SELECT game_id
-			FROM ".self::GAME_TABLE."
-			WHERE modify_date < DATE_SUB(NOW( ), INTERVAL {$age} DAY)
-				AND paused = 0
+			SELECT `game_id`
+			FROM `".self::GAME_TABLE."`
+			WHERE `modify_date` < DATE_SUB(NOW( ), INTERVAL {$age} DAY)
+				AND `paused` = 0
 		";
 		$ids = $Mysql->fetch_value_array($query);
 
 		self::delete($ids);
+
+		return true;
 	}
 
 
 	/** static public function delete_finished
 	 *		Deletes the finished games from the database
 	 *
-	 * @param int age in days
-	 * @return void
+	 * @param int $age age in days
+	 *
+	 * @return bool
 	 */
 	static public function delete_finished($age)
 	{
@@ -4255,23 +4289,28 @@ fix_extra_info($game['extra_info']);
 		$Mysql = Mysql::get_instance( );
 
 		$query = "
-			SELECT game_id
-			FROM ".self::GAME_TABLE."
-			WHERE modify_date < DATE_SUB(NOW( ), INTERVAL {$age} DAY)
-				AND state = 'Finished'
+			SELECT `game_id`
+			FROM `".self::GAME_TABLE."`
+			WHERE `modify_date` < DATE_SUB(NOW( ), INTERVAL {$age} DAY)
+				AND `state` = 'Finished'
 		";
 		$ids = $Mysql->fetch_value_array($query);
 
 		self::delete($ids);
+
+		return true;
 	}
 
 
 	/** static public function player_deleted
 	 *		Resigns the given players from any games they are in
 	 *
-	 * @param mixed array or csv of player ids
-	 * @action resignes the players from the games
+	 * @param mixed $player_ids array or csv of player ids
+	 *
+	 * @action resigns the players from the games
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	static public function player_deleted($player_ids)
 	{
@@ -4289,13 +4328,13 @@ fix_extra_info($game['extra_info']);
 		foreach ($player_ids as $player_id) {
 			// grab the games this player is in
 			$query = "
-				SELECT GP.game_id
-					, GP.state AS p_state
-					, G.state AS g_state
-				FROM ".self::GAME_PLAYER_TABLE." AS GP
-					LEFT JOIN ".self::GAME_TABLE." AS G
-						USING (game_id)
-				WHERE GP.player_id = '{$player_id}'
+				SELECT `GP`.`game_id`
+					, `GP`.`state` AS `p_state`
+					, `G`.`state` AS `g_state`
+				FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
+					LEFT JOIN `".self::GAME_TABLE."` AS `G`
+						USING (`game_id`)
+				WHERE `GP`.`player_id` = '{$player_id}'
 			";
 			$games = $Mysql->fetch_array($query);
 
@@ -4311,9 +4350,9 @@ fix_extra_info($game['extra_info']);
 						// just remove them from the game completely
 						$query = "
 							DELETE
-							FROM ".self::GAME_PLAYER_TABLE."
-							WHERE player_id = '{$player_id}'
-								AND game_id = '{$game['game_id']}'
+							FROM `".self::GAME_PLAYER_TABLE."`
+							WHERE `player_id` = '{$player_id}'
+								AND `game_id` = '{$game['game_id']}'
 						";
 						$Mysql->query($query);
 						continue;
@@ -4344,10 +4383,13 @@ fix_extra_info($game['extra_info']);
 	/** static public function pause
 	 *		Pauses the given games
 	 *
-	 * @param mixed array or csv of game ids
-	 * @param bool optional pause game (false = unpause)
+	 * @param mixed $ids array or csv of game ids
+	 * @param bool $pause optional pause game (false = unpause)
+	 *
 	 * @action pauses the games
+	 *
 	 * @return void
+	 * @throws MyException
 	 */
 	static public function pause($ids, $pause = true)
 	{
@@ -4361,15 +4403,17 @@ fix_extra_info($game['extra_info']);
 			throw new MyException(__METHOD__.': No game ids given');
 		}
 
-		$Mysql->insert(self::GAME_TABLE, array('paused' => $pause), " WHERE game_id IN (".implode(',', $ids).") ");
+		$Mysql->insert(self::GAME_TABLE, array('paused' => $pause), " WHERE `game_id` IN (".implode(',', $ids).") ");
 	}
 
 
 	/** static public function write_game_file
 	 *		Writes the game logs to a file for storage
 	 *
-	 * @param int game id
+	 * @param int $game_id game id
+	 *
 	 * @action writes the game data to a file
+	 *
 	 * @return bool success
 	 */
 	static public function write_game_file($game_id)
@@ -4389,7 +4433,7 @@ fix_extra_info($game['extra_info']);
 		$query = "
 			SELECT *
 			FROM `".self::GAME_TABLE."`
-			WHERE game_id = '{$game_id}'
+			WHERE `game_id` = '{$game_id}'
 		";
 		$game = $Mysql->fetch_assoc($query);
 
@@ -4402,15 +4446,15 @@ fix_extra_info($game['extra_info']);
 		}
 
 		$query = "
-			SELECT P.player_id
-				, P.username
-				, GP.color
-				, GP.order_num
+			SELECT `P`.`player_id`
+				, `P`.`username`
+				, `GP`.`color`
+				, `GP`.`order_num`
 			FROM `".self::GAME_PLAYER_TABLE."` AS `GP`
 				JOIN `".Player::PLAYER_TABLE."` AS `P`
-					ON (P.player_id = GP.player_id)
-			WHERE GP.game_id = '{$game_id}'
-			ORDER BY GP.order_num ASC
+					ON (`P`.`player_id` = `GP`.`player_id`)
+			WHERE `GP`.`game_id` = '{$game_id}'
+			ORDER BY `GP`.`order_num` ASC
 		";
 		$results = $Mysql->fetch_array($query);
 
