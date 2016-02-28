@@ -1124,6 +1124,8 @@ class Game
 			throw new MyException(__METHOD__.': Trying to perform an action on a paused game');
 		}
 
+		$defeated = false;
+
 		try {
 			foreach ($defend_land_ids as $defend_land_id) {
 				$defeated = $this->attack_till_dead($player_id, $num_armies, $attack_land_id, $defend_land_id);
@@ -1182,7 +1184,7 @@ class Game
 		}
 
 		try {
-			$to_land_id = $this->_risk->occupy($num_armies);
+			$this->_risk->occupy($num_armies);
 		}
 		catch (MyException $e) {
 			throw $e;
@@ -1226,7 +1228,7 @@ class Game
 		}
 
 		try {
-			$moved_armies = $this->_risk->fortify($num_armies, $from_land_id, $to_land_id);
+			$this->_risk->fortify($num_armies, $from_land_id, $to_land_id);
 		}
 		catch (MyException $e) {
 			throw $e;
@@ -1326,7 +1328,7 @@ class Game
 				break;
 
 			case 'Fortifying' :
-				$this->set_player_state('Waiting', $player_id);
+				$this->_risk->set_player_state('Waiting', $player_id);
 				break;
 
 			default :
