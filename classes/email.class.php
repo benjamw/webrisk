@@ -195,6 +195,7 @@ and should not be replied to.
 		$headers = "From: ".GAME_NAME." <{$from_email}>\r\n";
 
 		$message = html_entity_decode($message);
+		$message = html_entity_decode($message);
 
 		$this->_log($email."\n".$headers."\n".$subject."\n".$message);
 		call($subject);call($message);call($headers);
