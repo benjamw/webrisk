@@ -292,7 +292,7 @@ function conquer_limit_table($extra_info) {
 			<tbody>
 			<?php foreach ($conquests as $n => $value) { ?>
 
-				<tr<?php echo ((0 === ($n % 2)) ? ' class="alt"' : ''); ?>>
+				<tr<?php echo ((0 !== ($n % 2)) ? ' class="alt"' : ''); ?>>
 					<td><?php echo $n; ?></td>
 					<td><?php echo $value; ?></td>
 				</tr>
