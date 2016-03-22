@@ -18,7 +18,7 @@
 	$GLOBALS['_ROOT_ADMIN']  = 'yourname'; // Permanent admin username (case-sensitive)
 	$GLOBALS['_ROOT_URI']    = 'http://www.yoursite.com/webrisk/'; // The root URL of the game script (include closing / )
 	$GLOBALS['_USEEMAIL']    = true; // SMTP operations.  Test it before putting it into production
-	$GLOBALS['_DETECTHACKS'] = true; // disable this if it causes problems
+	$GLOBALS['_DETECTHACKS'] = true; // hack detection. disable this if it causes problems
 
 
 /* Date settings */

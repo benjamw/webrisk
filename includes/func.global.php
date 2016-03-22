@@ -118,7 +118,7 @@ function load_class($class_name) {
 	if (class_exists($class_name)) {
 		return true;
 	}
-	elseif (file_exists($class_file)) {
+	elseif (file_exists($class_file) && is_readable($class_file)) {
 		require_once $class_file;
 		return true;
 	}
@@ -187,6 +187,8 @@ function test_debug( ) {
 		return false;
 	}
 
+	$GLOBALS['_&_DEBUG_QUERY'] = '&DEBUG='.$_GET['DEBUG'];
+	$GLOBALS['_?_DEBUG_QUERY'] = '?DEBUG='.$_GET['DEBUG'];
 	return true;
 }
 
@@ -202,13 +204,12 @@ function test_debug( ) {
 function expandFEN($FEN)
 {
 	$FEN = preg_replace('/\s+/', '', $FEN); // remove spaces
-
-	$FEN = preg_replace_callback('/\d+/', 'replace_callback', $FEN); // unpack the 0s
+	$FEN = preg_replace_callback('/\d+/', 'expand_replace_callback', $FEN); // unpack the 0s
 	$xFEN = str_replace('/', '', $FEN); // remove the row separators
 
 	return $xFEN;
 }
-function replace_callback($match) {
+function expand_replace_callback($match) {
 	return (((int) $match[0]) ? str_repeat('0', (int) $match[0]) : $match[0]);
 }
 
@@ -226,11 +227,63 @@ function packFEN($xFEN, $row_length = 10)
 {
 	$xFEN = preg_replace('/\s+/', '', $xFEN); // remove spaces
 	$xFEN = preg_replace('/\//', '', $xFEN); // remove any row separators
-
 	$xFEN = trim(chunk_split($xFEN, $row_length, '/'), '/'); // add the row separators
-	$FEN = preg_replace('/(0+)/e', "strlen('\\1')", $xFEN); // pack the 0s
+	$FEN = preg_replace_callback('/(0+)/', 'pack_replace_callback', $xFEN); // pack the 0s
 
 	return $FEN;
+}
+function pack_replace_callback($match) {
+	return strlen($match[1]);
+}
+
+
+
+/** function get_index
+ *
+ *	Gets the FEN string index for a 2D location
+ *	of a square array of blocks each containing
+ *	a square array of elements within those blocks
+ *
+ *	This was designed for use within foreach structures
+ *	The first foreach ($i) is the outer blocks, and the
+ *	second ($j)	is for the inner elements.
+ *
+ *	Example Structure:
+ *		+----+----+----++----+----+----+
+ *		|  0 |  1 |  2 ||  3 |  4 |  5 |
+ *		+----+----+----++----+----+----+
+ *		|  6 |  7 |  8 ||  9 | 10 | 11 |
+ *		+----+----+----++----+----+----+
+ *		| 12 | 13 | 14 || 15 | 16 | 17 |
+ *		+====+====+====++====+====+====+
+ *		| 18 | 19 | 20 || 21 | 22 | 23 |
+ *		+----+----+----++----+----+----+
+ *		| 24 | 25 | 26 || 27 | 28 | 29 |
+ *		+----+----+----++----+----+----+
+ *		| 30 | 31 | 32 || 33 | 34 | 35 |
+ *		+----+----+----++----+----+----+
+ *
+ *	Where $i = 2 (bottom left big block)
+ *	  and $j = 5 (center element)
+ *	 $blocks = 2 (number of blocks per side)
+ *	  $elems = 3 (numer of elements per side in each block)
+ *	will return 25 (the index of the string)
+ *
+ * @param int the current block number
+ * @param int the current element number
+ * @param int the number of blocks per side
+ * @param int the number of elements per side per block
+ * @return int the FEN string index
+ */
+function get_index($i, $j, $blocks = 3, $elems = 3) {
+	$bits = array(
+		($j % $elems), // across within block (across elems)
+		((int) floor($j / $elems) * $blocks * $elems), // down within block (down elems)
+		(($i % $blocks) * $elems), // across blocks
+		((int) floor($i / $blocks) * $blocks * $elems * $elems), // down blocks
+	);
+
+	return array_sum($bits);
 }
 
 

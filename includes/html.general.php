@@ -223,7 +223,7 @@ EOF;
  * @return string HTML footer for page
  */
 function get_footer($meta = array( )) {
-	$foot_data = (isset($meta['foot_data'])) ? $meta['foot_data'] : '';
+	$foot_data = isset($meta['foot_data']) ? $meta['foot_data'] : '';
 
 	$players = GamePlayer::get_count( );
 	list($cur_games, $total_games) = Game::get_count( );
@@ -304,11 +304,15 @@ function get_item($contents, $hint, $title = '', $extra_html = '') {
  * @param string link URL to test against
  * @return string HTML active class attribute (or empty string)
  */
-function get_active($value) {
+function get_active( ) {
+	$values = func_get_args( );
+
 	$self = substr(basename($_SERVER['SCRIPT_NAME']), 0, -4);
 
-	if ($value == $self) {
-		return ' class="active"';
+	foreach ($values as $value) {
+		if ($value == $self) {
+			return ' class="active"';
+		}
 	}
 
 	return '';

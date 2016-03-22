@@ -186,8 +186,9 @@ class GamePlayer
 		// this will redirect and exit upon failure
 		parent::log_in( );
 
-		// test an arbitrary property for existance, so we don't _pull twice unnecessarily
-		if (is_null($this->color)) {
+		// test an arbitrary property for existence, so we don't _pull twice unnecessarily
+		// but don't test color, because it might actually be null when valid
+		if (is_null($this->last_online)) {
 			$this->_mysql->insert(self::EXTEND_TABLE, array('player_id' => $this->id));
 
 			$this->_pull( );
@@ -224,7 +225,11 @@ class GamePlayer
 		}
 
 		if ($this->id) {
+			// add the user to the table
 			$this->_mysql->insert(self::EXTEND_TABLE, array('player_id' => $this->id));
+
+			// update the last_online time so we don't break things later
+			$this->_mysql->insert(self::EXTEND_TABLE, array('last_online' => NULL), " WHERE player_id = '{$this->id}' ");
 		}
 	}
 
@@ -283,7 +288,7 @@ class GamePlayer
 	/** public function admin_delete
 	 *		Deletes the given players from the players database
 	 *
-	 * @param mixed csv or array of user ids
+	 * @param mixed csv or array of player IDs
 	 * @action deletes the players from the database
 	 * @return void
 	 */
@@ -311,19 +316,19 @@ class GamePlayer
 	/** public function admin_add_admin
 	 *		Gives the given players admin status
 	 *
-	 * @param mixed csv or array of user ids
+	 * @param mixed csv or array of player IDs
 	 * @action gives the given players admin status
 	 * @return void
 	 */
-	public function admin_add_admin($user_ids)
+	public function admin_add_admin($player_ids)
 	{
 		// make sure the user doing this is an admin
 		if ( ! $this->is_admin) {
 			throw new MyException(__METHOD__.': Player is not an admin');
 		}
 
-		array_trim($user_ids, 'int');
-		$user_ids[] = 0; // make sure we have at least one entry
+		array_trim($player_ids, 'int');
+		$player_ids[] = 0; // make sure we have at least one entry
 
 		if (isset($GLOBALS['_ROOT_ADMIN'])) {
 			$query = "
@@ -331,29 +336,29 @@ class GamePlayer
 				FROM ".Player::PLAYER_TABLE."
 				WHERE username = '{$GLOBALS['_ROOT_ADMIN']}'
 			";
-			$user_ids[] = (int) $this->_mysql->fetch_value($query);
+			$player_ids[] = (int) $this->_mysql->fetch_value($query);
 		}
 
-		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 1), " WHERE player_id IN (".implode(',', $user_ids).") ");
+		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 1), " WHERE player_id IN (".implode(',', $player_ids).") ");
 	}
 
 
 	/** public function admin_remove_admin
 	 *		Removes admin status from the given players
 	 *
-	 * @param mixed csv or array of user ids
+	 * @param mixed csv or array of player IDs
 	 * @action removes the given players admin status
 	 * @return void
 	 */
-	public function admin_remove_admin($user_ids)
+	public function admin_remove_admin($player_ids)
 	{
 		// make sure the user doing this is an admin
 		if ( ! $this->is_admin) {
 			throw new MyException(__METHOD__.': Player is not an admin');
 		}
 
-		array_trim($user_ids, 'int');
-		$user_ids[] = 0; // make sure we have at least one entry
+		array_trim($player_ids, 'int');
+		$player_ids[] = 0; // make sure we have at least one entry
 
 		if (isset($GLOBALS['_ROOT_ADMIN'])) {
 			$query = "
@@ -363,12 +368,18 @@ class GamePlayer
 			";
 			$root_admin = (int) $this->_mysql->fetch_value($query);
 
-			if (in_array($root_admin, $user_ids)) {
-				unset($user_ids[array_search($root_admin, $user_ids)]);
+			if (in_array($root_admin, $player_ids)) {
+				unset($player_ids[array_search($root_admin, $player_ids)]);
 			}
 		}
 
-		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 0), " WHERE player_id IN (".implode(',', $user_ids).") ");
+		// remove the player doing the removing
+		unset($player_ids[array_search($_SESSION['player_id'], $player_ids)]);
+
+		// remove the admin doing the removing
+		unset($player_ids[array_search($_SESSION['admin_id'], $player_ids)]);
+
+		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 0), " WHERE player_id IN (".implode(',', $player_ids).") ");
 	}
 
 
@@ -480,10 +491,11 @@ return false;
 	/** static public function get_list
 	 *		Returns a list array of all game players
 	 *		in the database
-	 *		This function supercedes the parent's function and
+	 *		This function supersedes the parent's function and
 	 *		just grabs the whole lot in one query
 	 *
-	 * @param bool restrict to approved players
+	 * @param bool $only_approved restrict to approved players
+	 *
 	 * @return array game player list (or bool false on failure)
 	 */
 	static public function get_list($only_approved = false)
@@ -534,11 +546,11 @@ return false;
 
 
 	/** static public function get_maxed
-	 *		Returns an array of all player ids
+	 *		Returns an array of all player IDs
 	 *		who have reached their max games count
 	 *
 	 * @param void
-	 * @return array of int player ids
+	 * @return array of int player IDs
 	 */
 	static public function get_maxed( )
 	{
@@ -596,7 +608,8 @@ return false;
 	/** static public function delete_inactive
 	 *		Deletes the inactive users from the database
 	 *
-	 * @param int age in days
+	 * @param int $age age in days
+	 *
 	 * @return void
 	 */
 	static public function delete_inactive($age)
@@ -608,7 +621,7 @@ return false;
 		$age = (int) abs($age);
 
 		if (0 == $age) {
-			return false;
+			return;
 		}
 
 		$exception_ids = array( );
@@ -642,7 +655,7 @@ return false;
 		$results = $Mysql->fetch_value_array($query);
 		$exception_ids = array_merge($exception_ids, $results);
 
-		$exception_ids[] = 0;
+		$exception_ids[] = 0; // don't break the IN clause
 		$exception_id_list = implode(',', $exception_ids);
 
 		// select unused accounts
@@ -679,7 +692,7 @@ CREATE TABLE IF NOT EXISTS `wr_wr_player` (
   `allow_email` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `invite_opt_out` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `max_games` tinyint(2) unsigned NOT NULL DEFAULT '0',
-  `color` varchar(25) NOT NULL DEFAULT 'blue_white',
+  `color` varchar(25) NULL DEFAULT NULL,
   `wins` smallint(5) unsigned NOT NULL DEFAULT '0',
   `kills` smallint(5) unsigned NOT NULL DEFAULT '0',
   `losses` smallint(5) unsigned NOT NULL DEFAULT '0',
