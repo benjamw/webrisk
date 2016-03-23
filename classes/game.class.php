@@ -3963,7 +3963,7 @@ if (isset($data[7])) {
 					ON `C`.`player_id` = `CP`.`player_id`
 			GROUP BY `G`.`game_id`
 			ORDER BY `G`.`state` ASC
-				, `G`.`last_move` DESC
+				, `last_move` DESC
 		";
 		$list = $Mysql->fetch_array($query);
 
