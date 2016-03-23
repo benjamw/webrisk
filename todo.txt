@@ -1,3 +1,7 @@
+add a highlight for the game info page custom conquer limit table to show where it's currently at... just like the custom trade table
+although it will be a bit trickier as it's based on several different attributes of the game
+
+
 make the custom trade and custom conquer table generators into a function so it's
 not repeated all over the place
 
