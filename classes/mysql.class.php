@@ -482,7 +482,14 @@ class Mysql {
 							return ' 1 = 1 ';
 						}
 						elseif ( ! empty($value)) {
-							$clauses[] = $clause." IN ('".implode("','", $value)."')";
+							foreach ($value as & $item) {
+								if ((0 !== strpos($item, ':')) && ('?' !== $item)) {
+									$item = "'{$item}'";
+								}
+							}
+							unset($item);
+
+							$clauses[] = $clause." IN (".implode(",", $value).")";
 						}
 					}
 					else {
@@ -504,7 +511,14 @@ class Mysql {
 							return ' 1 = 1 ';
 						}
 						elseif ( ! empty($value)) {
-							$clauses[] = $clause." ANY ('".implode("','", $value)."')";
+							foreach ($value as & $item) {
+								if ((0 !== strpos($item, ':')) && ('?' !== $item)) {
+									$item = "'{$item}'";
+								}
+							}
+							unset($item);
+
+							$clauses[] = $clause." ANY (".implode(",", $value).")";
 						}
 					}
 					else {
