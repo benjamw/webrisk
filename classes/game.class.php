@@ -970,7 +970,7 @@ class Game
 	 *
 	 * @action saves the game
 	 *
-	 * @return bool success
+	 * @return void
 	 * @throws MyException
 	 */
 	public function place_armies($player_id, $num_armies, $land_id, $skip_pause = false)
@@ -984,6 +984,10 @@ class Game
 		$player_id = (int) $player_id;
 		$num_armies = (int) $num_armies;
 		$land_id = (int) $land_id;
+
+		if (0 === $num_armies) {
+			return;
+		}
 
 		if (empty($player_id) || empty($num_armies) || empty($land_id)) {
 			throw new MyException(__METHOD__.': Missing required argument');

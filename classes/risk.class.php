@@ -1135,6 +1135,11 @@ class Risk
 			throw new MyException(__METHOD__.': Player #'.$player_id.' does not occupy territory #'.$land_id.' ('.self::$TERRITORIES[$land_id][NAME].')');
 		}
 
+		// make sure this player is placing armies
+		if (0 === $num_armies) {
+			return $num_armies;
+		}
+
 		// make sure this player has enough armies to place
 		if ($num_armies > $this->players[$player_id]['armies']) {
 			$num_armies = $this->players[$player_id]['armies'];
