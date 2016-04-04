@@ -117,7 +117,7 @@ function get_table($table_format, $table_data, $meta = null)
 			<thead>
 			<tr>';
 
-	$total_cols = array( );
+	$total_cols = $sort_types = array( );
 	foreach ($table_format as $col) {
 		// test for SPECIAL data first
 		if ( ! is_array($col[TYPE]) && ('SPECIAL_' == substr($col[TYPE], 0, 8))) {

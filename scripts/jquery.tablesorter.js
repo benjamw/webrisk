@@ -822,7 +822,7 @@ var thing;
 	    format: function(s) {
 	        return $.tablesorter.formatFloat(new Date("2000/01/01 " + s).getTime());
 	    },
-	  type: "numeric"
+	    type: "numeric"
 	});
 
 
@@ -834,7 +834,48 @@ var thing;
 	    format: function(s) {
 	        return $.tablesorter.formatFloat(s.replace(/^(\d+)\s*\/\s*(\d+)$/, "$2.$1"));
 	    },
-	  type: "numeric"
+	    type: "numeric"
+	});
+
+
+	ts.addParser({
+		id: "nextturn",
+		is: function (s) {
+			return /^[\d-]+\s*\/\s*[\d-]+$/.test(s);
+		},
+		format: function (s) {
+			s = s.replace(/-+/g, "0");
+			return $.tablesorter.formatFloat(s.replace(/^(\d+)\s*\/\s*(\d+)$/, "$2.$1"));
+		},
+		type: "numeric"
+	});
+
+
+	ts.addParser({
+		id: "digitmissing",
+		is: function (s) {
+			return /^[\d-]+$/.test(s);
+		},
+		format: function (s) {
+			s = s.replace(/-+/g, "-999999");
+			s = s.replace(/\?+/g, "-0.000001");
+			return $.tablesorter.formatFloat(s);
+		},
+		type: "numeric"
+	});
+
+
+	ts.addParser({
+		id: "percentmissing",
+		is: function (s) {
+			return /[%-]$/.test($.trim(s));
+		},
+		format: function (s) {
+			s = s.replace(/-+/g, "-999999 %");
+			s = s.replace(/\?+/g, "-0.000001");
+			return $.tablesorter.formatFloat(s.replace(new RegExp(/%/g), ""));
+		},
+		type: "numeric"
 	});
 
 

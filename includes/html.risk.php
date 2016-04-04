@@ -30,17 +30,17 @@ function game_info($Game) {
 			$ra_table_format = array(
 				array('SPECIAL_CLASS', 'true', '###substr(\'[[[color]]]\', 0, 3).((\'Dead\' == \'[[[state]]]\') ? \' dead\' : \'\')'),
 
-				array('Order', 'order') ,
-				array('Player', 'username') ,
-				array('State', 'state') ,
-				array('Round', 'round') ,
-				array('Turn', 'turn') ,
-				array('Armies', 'armies') ,
-				array('Land', 'land') ,
-				array('Conts', 'cont_list') ,
-				array('Cards', 'card_count') ,
-				array('% trade', 'trade_perc') ,
-				array('Next turn', '[[[next_armies]]] / [[[next_armies_trade]]]') ,
+				array('Order', 'order', 'digit') ,
+				array('Player', 'username', 'text') ,
+				array('State', 'state', 'text') ,
+				array('Round', 'round', 'digit') ,
+				array('Turn', 'turn', 'digit') ,
+				array('Armies', 'armies', 'digitmissing') ,
+				array('Land', 'land', 'digitmissing') ,
+				array('Conts', 'cont_list', 'digitmissing') ,
+				array('Cards', 'card_count', 'digitmissing') ,
+				array('% trade', 'trade_perc', 'percentmissing') ,
+				array('Next turn', '[[[next_armies]]] / [[[next_armies_trade]]]', 'nextturn') ,
 			);
 
 			echo get_table($ra_table_format, $player_data, $ra_table_meta);
