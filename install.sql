@@ -103,8 +103,8 @@ DROP TABLE IF EXISTS `wr2_game_log`;
 CREATE TABLE IF NOT EXISTS `wr2_game_log` (
 	`game_id` int(11) unsigned NOT NULL DEFAULT '0',
 	`data` varchar(255) COLLATE utf8_general_ci DEFAULT NULL,
-	`create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`microsecond` int(10) unsigned NOT NULL DEFAULT '0'
+	`create_date` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000',
+	`microsecond` decimal(18,8) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
