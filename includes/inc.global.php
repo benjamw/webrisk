@@ -199,3 +199,7 @@ if (isset($Mysql)) {
 	$GLOBALS['_PLAYERS'] = Player::get_array( );
 }
 
+// test for microseconds
+if ( ! defined('SUPPORTS_MICROSECONDS') && isset($Mysql)) {
+    define('SUPPORTS_MICROSECONDS', $Mysql->support_microseconds( ));
+}

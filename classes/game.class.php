@@ -3049,17 +3049,30 @@ fix_extra_info($player['extra_info']);
 			return;
 		}
 
-		usleep(100); // sleep for 1/10,000th of a second to prevent duplicate keys
+		usleep(1000); // sleep for 1/1,000th of a second to prevent duplicate keys
 		// because computers are just too fast now
 
 		$Mysql = Mysql::get_instance( );
 
-		$Mysql->insert(self::GAME_LOG_TABLE, array(
+		$data = array(
 			'game_id' => $game_id,
 			'data' => $log_data,
-			'create_date' => date('Y-m-d H:i:s'), // don't use ldate() here
-			'microsecond' => substr(microtime( ), 2, 8),
-		));
+		);
+
+        // all this kerfuffle is because there is a very small but real
+        // discrepancy between the values returned by date() and microtime()
+        $now = microtime( );
+        list($usec, $sec) = explode(' ', $now);
+        $now = substr(bcadd($usec, $sec, strlen($usec) - 2), 0, -2);
+
+		if (defined('SUPPORTS_MICROSECONDS') && SUPPORTS_MICROSECONDS) {
+			$data['create_date'] = DateTime::createFromFormat('U.u', $now)->format('-m-d H:i:s.u');
+		}
+		else {
+			$data['microsecond'] = $now;
+		}
+
+		$Mysql->insert(self::GAME_LOG_TABLE, $data);
 	}
 
 

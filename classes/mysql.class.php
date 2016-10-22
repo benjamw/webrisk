@@ -293,6 +293,29 @@ class Mysql {
 	}
 
 
+    /**
+     * Test the server for the support of microseconds
+     *
+     * @param void
+     *
+     * @return bool
+     */
+	public function support_microseconds( ) {
+	    $query = "
+	        SELECT NOW(6)
+	    ";
+
+        $return = $this->fetch_value($query);
+
+        if ( ! $return) {
+            return false;
+        }
+
+        // what are the chances of hitting .000000 right on the nose?
+        return ('000000' !== substr($return, -6));
+    }
+
+
 	/**
 	 * Run the query
 	 * Include named parameters as second argument
