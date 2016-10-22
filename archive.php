@@ -32,6 +32,7 @@ $table_format = array(
 	array('Extra Info', '<abbr title="Fortify: [[[get_fortify]]] | Kamikaze: [[[get_kamikaze]]] | Warmonger: [[[get_warmonger]]] | FoW Armies: [[[get_fog_of_war_armies]]] | FoW Colors: [[[get_fog_of_war_colors]]] | Conquer Limit: [[[get_conquer_limit]]] | Custom Rules: [[[clean_custom_rules]]]">Hover</abbr>') ,
 	array('Players', '[[[players]]]') ,
 	array('Start Date', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[start_date]]]\'))', null, ' class="date"') ,
+	array('End Date', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[end_date]]]\'))', null, ' class="date"') ,
 );
 $contents .= '
 	<div class="tableholder">
