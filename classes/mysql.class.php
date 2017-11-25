@@ -105,7 +105,7 @@ class Mysql {
 	protected $debug_query = false;
 
 	/**
-	 * @var PDO error
+	 * @var string PDO error
 	 */
 	public $error;
 
@@ -343,6 +343,11 @@ class Mysql {
 		$done = true;
 
 		try {
+			if ($this->sth) {
+				$this->sth->closeCursor( );
+				$this->sth = null;
+			}
+
 			$time = microtime(true);
 			if ( ! empty($this->params)) {
 				if ( ! $this->prepared && ! empty($this->query)) {
@@ -1003,11 +1008,16 @@ class Mysql {
 			$this->process_args($args, 3, true);
 		}
 
+		$return = true;
 		if ($query === $this->query) {
-			$this->query( );
+			$return = $this->query( );
 		}
 
-		if ( ! $this->sth) {
+		if ( ! $return && $this->error) {
+			throw new MySQLException(__METHOD__.': '.$this->error);
+		}
+
+		if ( ! $this->error && ! $this->sth) {
 			throw new MySQLException(__METHOD__.': Query Result Handler Missing');
 		}
 
