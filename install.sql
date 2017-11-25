@@ -41,11 +41,11 @@ CREATE TABLE IF NOT EXISTS `player` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_chat`
+-- Table structure for table `wr_chat`
 --
 
-DROP TABLE IF EXISTS `wr2_chat`;
-CREATE TABLE IF NOT EXISTS `wr2_chat` (
+DROP TABLE IF EXISTS `wr_chat`;
+CREATE TABLE IF NOT EXISTS `wr_chat` (
 	`chat_id` int(10) unsigned NOT NULL,
 	`message` text COLLATE utf8_general_ci NOT NULL,
 	`from_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -57,11 +57,11 @@ CREATE TABLE IF NOT EXISTS `wr2_chat` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_game`
+-- Table structure for table `wr_game`
 --
 
-DROP TABLE IF EXISTS `wr2_game`;
-CREATE TABLE IF NOT EXISTS `wr2_game` (
+DROP TABLE IF EXISTS `wr_game`;
+CREATE TABLE IF NOT EXISTS `wr_game` (
 	`game_id` int(11) unsigned NOT NULL,
 	`host_id` int(11) unsigned NOT NULL DEFAULT '0',
 	`name` varchar(255) COLLATE utf8_general_ci NOT NULL DEFAULT '',
@@ -82,11 +82,11 @@ CREATE TABLE IF NOT EXISTS `wr2_game` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_game_land`
+-- Table structure for table `wr_game_land`
 --
 
-DROP TABLE IF EXISTS `wr2_game_land`;
-CREATE TABLE IF NOT EXISTS `wr2_game_land` (
+DROP TABLE IF EXISTS `wr_game_land`;
+CREATE TABLE IF NOT EXISTS `wr_game_land` (
 	`game_id` int(10) unsigned NOT NULL DEFAULT '0',
 	`land_id` int(10) unsigned NOT NULL DEFAULT '0',
 	`player_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -96,25 +96,25 @@ CREATE TABLE IF NOT EXISTS `wr2_game_land` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_game_log`
+-- Table structure for table `wr_game_log`
 --
 
-DROP TABLE IF EXISTS `wr2_game_log`;
-CREATE TABLE IF NOT EXISTS `wr2_game_log` (
+DROP TABLE IF EXISTS `wr_game_log`;
+CREATE TABLE IF NOT EXISTS `wr_game_log` (
 	`game_id` int(11) unsigned NOT NULL DEFAULT '0',
 	`data` varchar(255) COLLATE utf8_general_ci DEFAULT NULL,
-	`create_date` datetime(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000',
+	`create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00.000000',
 	`microsecond` decimal(18,8) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_game_nudge`
+-- Table structure for table `wr_game_nudge`
 --
 
-DROP TABLE IF EXISTS `wr2_game_nudge`;
-CREATE TABLE IF NOT EXISTS `wr2_game_nudge` (
+DROP TABLE IF EXISTS `wr_game_nudge`;
+CREATE TABLE IF NOT EXISTS `wr_game_nudge` (
 	`game_id` int(10) unsigned NOT NULL DEFAULT '0',
 	`player_id` int(10) unsigned NOT NULL DEFAULT '0',
 	`nudged` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -123,11 +123,11 @@ CREATE TABLE IF NOT EXISTS `wr2_game_nudge` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_game_player`
+-- Table structure for table `wr_game_player`
 --
 
-DROP TABLE IF EXISTS `wr2_game_player`;
-CREATE TABLE IF NOT EXISTS `wr2_game_player` (
+DROP TABLE IF EXISTS `wr_game_player`;
+CREATE TABLE IF NOT EXISTS `wr_game_player` (
 	`game_id` int(11) unsigned NOT NULL DEFAULT '0',
 	`player_id` int(11) unsigned NOT NULL DEFAULT '0',
 	`order_num` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -144,11 +144,11 @@ CREATE TABLE IF NOT EXISTS `wr2_game_player` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_message`
+-- Table structure for table `wr_message`
 --
 
-DROP TABLE IF EXISTS `wr2_message`;
-CREATE TABLE IF NOT EXISTS `wr2_message` (
+DROP TABLE IF EXISTS `wr_message`;
+CREATE TABLE IF NOT EXISTS `wr_message` (
 	`message_id` int(10) unsigned NOT NULL,
 	`subject` varchar(255) COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	`message` text COLLATE utf8_general_ci NOT NULL,
@@ -158,11 +158,11 @@ CREATE TABLE IF NOT EXISTS `wr2_message` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_message_glue`
+-- Table structure for table `wr_message_glue`
 --
 
-DROP TABLE IF EXISTS `wr2_message_glue`;
-CREATE TABLE IF NOT EXISTS `wr2_message_glue` (
+DROP TABLE IF EXISTS `wr_message_glue`;
+CREATE TABLE IF NOT EXISTS `wr_message_glue` (
 	`message_glue_id` int(10) unsigned NOT NULL,
 	`message_id` int(10) unsigned NOT NULL DEFAULT '0',
 	`from_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -177,11 +177,11 @@ CREATE TABLE IF NOT EXISTS `wr2_message_glue` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_roll_log`
+-- Table structure for table `wr_roll_log`
 --
 
-DROP TABLE IF EXISTS `wr2_roll_log`;
-CREATE TABLE IF NOT EXISTS `wr2_roll_log` (
+DROP TABLE IF EXISTS `wr_roll_log`;
+CREATE TABLE IF NOT EXISTS `wr_roll_log` (
 	`id` int(11) unsigned NOT NULL,
 	`attack_1` tinyint(1) unsigned NOT NULL DEFAULT '0',
 	`attack_2` tinyint(1) unsigned DEFAULT NULL,
@@ -193,11 +193,11 @@ CREATE TABLE IF NOT EXISTS `wr2_roll_log` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_settings`
+-- Table structure for table `wr_settings`
 --
 
-DROP TABLE IF EXISTS `wr2_settings`;
-CREATE TABLE IF NOT EXISTS `wr2_settings` (
+DROP TABLE IF EXISTS `wr_settings`;
+CREATE TABLE IF NOT EXISTS `wr_settings` (
 	`setting` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
 	`value` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
 	`notes` text CHARACTER SET utf8 COLLATE utf8_general_ci,
@@ -205,10 +205,10 @@ CREATE TABLE IF NOT EXISTS `wr2_settings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `wr2_settings`
+-- Dumping data for table `wr_settings`
 --
 
-INSERT INTO `wr2_settings` (`setting`, `value`, `notes`, `sort`) VALUES
+INSERT INTO `wr_settings` (`setting`, `value`, `notes`, `sort`) VALUES
 	('site_name', 'Your Site Name', 'The name of your site', 10),
 	('default_color', 'c_yellow_black.css', 'The default theme color for the game pages', 20),
 	('nav_links', '<!-- your links here -->', 'HTML code for your site''s navigation links to display on the game pages', 30),
@@ -234,11 +234,11 @@ INSERT INTO `wr2_settings` (`setting`, `value`, `notes`, `sort`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `wr2_wr2_player`
+-- Table structure for table `wr_wr_player`
 --
 
-DROP TABLE IF EXISTS `wr2_wr2_player`;
-CREATE TABLE IF NOT EXISTS `wr2_wr2_player` (
+DROP TABLE IF EXISTS `wr_wr_player`;
+CREATE TABLE IF NOT EXISTS `wr_wr_player` (
 	`player_id` int(11) unsigned NOT NULL DEFAULT '0',
 	`game_settings` text COLLATE utf8_general_ci NOT NULL,
 	`is_admin` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -265,54 +265,54 @@ ALTER TABLE `player`
 	ADD UNIQUE KEY `email` (`email`);
 
 --
--- Indexes for table `wr2_chat`
+-- Indexes for table `wr_chat`
 --
-ALTER TABLE `wr2_chat`
+ALTER TABLE `wr_chat`
 	ADD PRIMARY KEY (`chat_id`),
 	ADD KEY `game_id` (`game_id`),
 	ADD KEY `private` (`private`),
 	ADD KEY `from_id` (`from_id`);
 
 --
--- Indexes for table `wr2_game`
+-- Indexes for table `wr_game`
 --
-ALTER TABLE `wr2_game`
+ALTER TABLE `wr_game`
 	ADD PRIMARY KEY (`game_id`);
 
 --
--- Indexes for table `wr2_game_land`
+-- Indexes for table `wr_game_land`
 --
-ALTER TABLE `wr2_game_land`
+ALTER TABLE `wr_game_land`
 	ADD UNIQUE KEY `game_land` (`game_id`,`land_id`);
 
 --
--- Indexes for table `wr2_game_log`
+-- Indexes for table `wr_game_log`
 --
-ALTER TABLE `wr2_game_log`
+ALTER TABLE `wr_game_log`
 	ADD UNIQUE KEY `game_id` (`game_id`,`create_date`,`microsecond`);
 
 --
--- Indexes for table `wr2_game_nudge`
+-- Indexes for table `wr_game_nudge`
 --
-ALTER TABLE `wr2_game_nudge`
+ALTER TABLE `wr_game_nudge`
 	ADD UNIQUE KEY `game_player` (`game_id`,`player_id`);
 
 --
--- Indexes for table `wr2_game_player`
+-- Indexes for table `wr_game_player`
 --
-ALTER TABLE `wr2_game_player`
+ALTER TABLE `wr_game_player`
 	ADD UNIQUE KEY `game_player` (`game_id`,`player_id`);
 
 --
--- Indexes for table `wr2_message`
+-- Indexes for table `wr_message`
 --
-ALTER TABLE `wr2_message`
+ALTER TABLE `wr_message`
 	ADD PRIMARY KEY (`message_id`);
 
 --
--- Indexes for table `wr2_message_glue`
+-- Indexes for table `wr_message_glue`
 --
-ALTER TABLE `wr2_message_glue`
+ALTER TABLE `wr_message_glue`
 	ADD PRIMARY KEY (`message_glue_id`),
 	ADD KEY `outbox` (`from_id`,`message_id`),
 	ADD KEY `created` (`create_date`),
@@ -321,22 +321,22 @@ ALTER TABLE `wr2_message_glue`
 	ADD KEY `message_id` (`message_id`,`to_id`);
 
 --
--- Indexes for table `wr2_roll_log`
+-- Indexes for table `wr_roll_log`
 --
-ALTER TABLE `wr2_roll_log`
+ALTER TABLE `wr_roll_log`
 	ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `wr2_settings`
+-- Indexes for table `wr_settings`
 --
-ALTER TABLE `wr2_settings`
+ALTER TABLE `wr_settings`
 	ADD UNIQUE KEY `setting` (`setting`),
 	ADD KEY `sort` (`sort`);
 
 --
--- Indexes for table `wr2_wr2_player`
+-- Indexes for table `wr_wr_player`
 --
-ALTER TABLE `wr2_wr2_player`
+ALTER TABLE `wr_wr_player`
 	ADD UNIQUE KEY `id` (`player_id`);
 
 --
@@ -349,27 +349,27 @@ ALTER TABLE `wr2_wr2_player`
 ALTER TABLE `player`
 	MODIFY `player_id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT for table `wr2_chat`
+-- AUTO_INCREMENT for table `wr_chat`
 --
-ALTER TABLE `wr2_chat`
+ALTER TABLE `wr_chat`
 	MODIFY `chat_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT for table `wr2_game`
+-- AUTO_INCREMENT for table `wr_game`
 --
-ALTER TABLE `wr2_game`
+ALTER TABLE `wr_game`
 	MODIFY `game_id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT for table `wr2_message`
+-- AUTO_INCREMENT for table `wr_message`
 --
-ALTER TABLE `wr2_message`
+ALTER TABLE `wr_message`
 	MODIFY `message_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT for table `wr2_message_glue`
+-- AUTO_INCREMENT for table `wr_message_glue`
 --
-ALTER TABLE `wr2_message_glue`
+ALTER TABLE `wr_message_glue`
 	MODIFY `message_glue_id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT for table `wr2_roll_log`
+-- AUTO_INCREMENT for table `wr_roll_log`
 --
-ALTER TABLE `wr2_roll_log`
+ALTER TABLE `wr_roll_log`
 	MODIFY `id` int(11) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
