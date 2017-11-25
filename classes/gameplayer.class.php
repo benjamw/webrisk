@@ -330,13 +330,16 @@ class GamePlayer
 		array_trim($player_ids, 'int');
 		$player_ids[] = 0; // make sure we have at least one entry
 
+		// add the root admin, just for funsies
 		if (isset($GLOBALS['_ROOT_ADMIN'])) {
 			$query = "
 				SELECT player_id
 				FROM ".Player::PLAYER_TABLE."
 				WHERE username = '{$GLOBALS['_ROOT_ADMIN']}'
 			";
-			$player_ids[] = (int) $this->_mysql->fetch_value($query);
+			$root_admin = (int) $this->_mysql->fetch_value($query);
+
+			$player_ids[] = $root_admin;
 		}
 
 		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 1), " WHERE player_id IN (".implode(',', $player_ids).") ");
@@ -360,6 +363,7 @@ class GamePlayer
 		array_trim($player_ids, 'int');
 		$player_ids[] = 0; // make sure we have at least one entry
 
+		// remove the root admin
 		if (isset($GLOBALS['_ROOT_ADMIN'])) {
 			$query = "
 				SELECT player_id
@@ -374,10 +378,14 @@ class GamePlayer
 		}
 
 		// remove the player doing the removing
-		unset($player_ids[array_search($_SESSION['player_id'], $player_ids)]);
+		if (array_key_exists('player_id', $_SESSION) && in_array($_SESSION['player_id'], $player_ids)) {
+			unset($player_ids[array_search($_SESSION['player_id'], $player_ids)]);
+		}
 
 		// remove the admin doing the removing
-		unset($player_ids[array_search($_SESSION['admin_id'], $player_ids)]);
+		if (array_key_exists('admin_id', $_SESSION) && in_array($_SESSION['admin_id'], $player_ids)) {
+			unset($player_ids[array_search($_SESSION['admin_id'], $player_ids)]);
+		}
 
 		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 0), " WHERE player_id IN (".implode(',', $player_ids).") ");
 	}
