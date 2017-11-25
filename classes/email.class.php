@@ -228,7 +228,10 @@ and should not be replied to.
 			$value = preg_replace($search, '', $value);
 		}
 
-		return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
+		$value = strip_tags($value);
+
+		return $value;
+//		return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
 	}
 
 
