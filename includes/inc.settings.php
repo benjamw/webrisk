@@ -4,5 +4,5 @@
 
 define('GAME_NAME', 'WebRisk');
 
-$GLOBALS['_VERSION'] = '0.9.14';
-$GLOBALS['_UPDATED'] = '2010-10-23';
+$GLOBALS['_VERSION'] = '0.9.15';
+$GLOBALS['_UPDATED'] = '2017-11-25';

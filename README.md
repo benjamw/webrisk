@@ -1,8 +1,5 @@
-WebRisk v0.9.9
-2009-06-23
-
-Benjam Welker (http://iohelix.net)
-
+# WebRisk v0.9.15
+Last Updated: 2017-11-25
 
 REQUIREMENTS
 ----------------------------------
