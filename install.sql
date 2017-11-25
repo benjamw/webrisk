@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `wr_game` (
 	`next_bonus` tinyint(3) unsigned NOT NULL DEFAULT '4',
 	`state` enum('Waiting','Placing','Playing','Finished') COLLATE utf8_general_ci NOT NULL DEFAULT 'Waiting',
 	`extra_info` text COLLATE utf8_general_ci,
-	`game_settings` text COLLATE utf8_general_ci NOT NULL,
+	`game_settings` text COLLATE utf8_general_ci DEFAULT NULL,
 	`paused` tinyint(1) NOT NULL DEFAULT '0',
 	`create_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP
@@ -240,7 +240,7 @@ INSERT INTO `wr_settings` (`setting`, `value`, `notes`, `sort`) VALUES
 DROP TABLE IF EXISTS `wr_wr_player`;
 CREATE TABLE IF NOT EXISTS `wr_wr_player` (
 	`player_id` int(11) unsigned NOT NULL DEFAULT '0',
-	`game_settings` text COLLATE utf8_general_ci NOT NULL,
+	`game_settings` text COLLATE utf8_general_ci DEFAULT NULL,
 	`is_admin` tinyint(1) unsigned NOT NULL DEFAULT '0',
 	`allow_email` tinyint(1) unsigned NOT NULL DEFAULT '1',
 	`color` varchar(25) COLLATE utf8_general_ci NOT NULL DEFAULT 'yellow_black',
