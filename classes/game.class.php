@@ -3656,7 +3656,7 @@ if (isset($data[7])) {
 	 *
 	 * @param mixed $ids optional array or string csv of player ids
 	 *
-	 * @return array of nudgable ids
+	 * @return array of nudgeable ids
 	 */
 	protected function _test_nudge($ids = null)
 	{
