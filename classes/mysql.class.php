@@ -1220,15 +1220,13 @@ class Mysql {
 		}
 
 		if ( ! empty($query)) {
-			if ($query !== $this->query) {
-				$this->prepared = false;
+			$this->prepared = false;
 
-				if ($this->sth) {
-					$this->sth->closeCursor( );
-				}
-
-				$this->sth = null;
+			if ($this->sth) {
+				$this->sth->closeCursor( );
 			}
+
+			$this->sth = null;
 
 			$this->query = $query;
 			$this->params = array( );
