@@ -7,6 +7,9 @@ This script requires the [BC Math](https://secure.php.net/manual/en/book.bc.php)
 If you are using PHP v7+ on linux (Ubuntu), BC Math is not automatically included with PHP, so you'll 
 need to run: `sudo apt-get install php-bcmath`.
 
+This script requires your MySQL (or equivalent) Server to be able to handle fractional seconds to 
+6 decimal place precision (microseconds). This can be tested by creating a field of type `DATETIME(6)`,
+and if this is successful, your server supports it. MySQL v5.6+ supports fractional seconds.
 
 INSTALLATION
 ----------------------------------

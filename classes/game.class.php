@@ -3066,11 +3066,9 @@ fix_extra_info($player['extra_info']);
         $now = substr(bcadd($usec, $sec, strlen($usec) - 2), 0, -2);
 
 		if (defined('SUPPORTS_MICROSECONDS') && SUPPORTS_MICROSECONDS) {
-			$data['create_date'] = DateTime::createFromFormat('U.u', $now)->format('-m-d H:i:s.u');
+			$data['create_date'] = DateTime::createFromFormat('U.u', $now)->format('Y-m-d H:i:s.u');
 		}
-		else {
-			$data['microsecond'] = $now;
-		}
+		$data['microsecond'] = $now;
 
 		$Mysql->insert(self::GAME_LOG_TABLE, $data);
 	}
