@@ -410,10 +410,14 @@ class Mysql {
 			if ($this->debug_error) {
 				if (('cli' == php_sapi_name( )) && empty($_SERVER['REMOTE_ADDR'])) {
 					$extra = strip_tags($extra);
-					echo "\n\nMYSQL ERROR - There was an error in your query{$extra}:\nERROR: {$this->error}\nQUERY: {$this->query}\n\n";
+					echo "\n\nMYSQL ERROR - There was an error in your query{$extra}:\nERROR: {$this->error}\nQUERY: {$this->query}\nPARAMS:";
+					print_r($this->params);
+					echo "\n\n";
 				}
 				else {
-					echo "<div style='background:#900;color:#FFF;'>There was an error in your query{$extra}:<br />ERROR: {$this->error}<br />QUERY: {$this->query}</div>";
+					echo "<div style='background:#900;color:#FFF;'>There was an error in your query{$extra}:<br />ERROR: {$this->error}<br />QUERY: {$this->query}<br />PARAMS:";
+					call($this->params, true, false);
+					echo "<br /></div>";
 				}
 			}
 			else {
