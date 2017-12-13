@@ -119,6 +119,7 @@ if (empty($parts['extension'])) {
 	$path .= $parts['basename'];
 }
 $path = str_replace('\\', '/', $path).'/';
+$path = str_replace('//', '/', $path);
 
 session_set_cookie_params(0, $path);
 session_start( );
