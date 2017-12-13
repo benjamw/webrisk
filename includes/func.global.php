@@ -150,7 +150,7 @@ function test_token($keep = false) {
 	if ( ! isset($_SESSION['token']) || ! isset($_REQUEST['token'])
 		|| (0 !== strcmp($_SESSION['token'], $_REQUEST['token'])))
 	{
-		die('Hacking attempt detected.<br /><br />If you have reached this page in error, please go back,<br />clear your cache, refresh the page, and try again.');
+		die('Invalid request attempt detected.<br /><br />If you have reached this page in error, please go back,<br />clear your cache, refresh the page, and try again.');
 	}
 
 	// renew the token
