@@ -12,7 +12,6 @@ try {
 		else {
 			call('GAME IS PLAYING, REDIRECTED TO GAME AND QUIT');
 		}
-
 		exit;
 	}
 }
@@ -55,7 +54,7 @@ if (isset($_POST['invite'])) {
 
 		// send the messages
 		$message = 'You have been invited to join the game "'.htmlentities($Game->name, ENT_QUOTES, 'UTF-8', false).'".'."\n\n".'If you wish to play in this game, please join it from the home page.';
-		$message .= "\n\n==== Message ===========================================\n\n".htmlentities($_POST['extra_text'], ENT_QUOTES, 'UTF-8', false);
+		$message .= "\n\n==== Message ==============================\n\n".htmlentities($_POST['extra_text'], ENT_QUOTES, 'UTF-8', false);
 		$Message->send_message('Invitation to "'.htmlentities($Game->name, ENT_QUOTES, 'UTF-8', false).'"', $message, $player_ids, false, ldate('m/d/Y', strtotime('1 week')));
 
 		Flash::store('Game Invitations Sent Successfully');
@@ -294,6 +293,12 @@ $contents = '
 				<th>Warmonger</th>
 				<td>'.$Game->get_warmonger( ).'</td>
 			</tr><tr>
+				<th>Nuke</th>
+				<td>'.$Game->get_nuke( ).'</td>
+			</tr><tr>
+			<th>Turncoat</th>
+				<td>'.$Game->get_turncoat( ).'</td>
+			</tr><tr>
 				<th>Fog of War</th>
 				<td>Armies: '.$fog_of_war['armies'].'<br />Colors: '.$fog_of_war['colors'].'</td>
 			</tr><tr>
@@ -459,4 +464,3 @@ echo get_header($meta);
 echo get_item($contents, $hints, $meta['title']);
 call($GLOBALS);
 echo get_footer( );
-
