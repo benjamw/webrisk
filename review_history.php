@@ -43,6 +43,12 @@ try {
 				$log['message'] = str_replace('and was defeated', '<span class="defeat">and was defeated</span>', $log['message']);
 			}
 
+            {
+				$log['message'] = str_replace('">', ' attack">', $log['message']);
+				$log['message'] = str_replace('nuked', '<span class="trade">nuked</span>', $log['message']);
+				$log['message'] = str_replace('turned', '<span class="trade">turned</span>', $log['message']);
+			}
+			
 			// test the data or the message and add a class to the message
 			$class = '';
 			switch ($log['data'][0]) {
@@ -82,7 +88,6 @@ catch (MyExecption $e) {
 }
 
 echo $history;
-
 
 function make_class($matches) {
 	return $matches[1].'<span class="'.strtolower($matches[2]).'">'.$matches[2].'</span>';
