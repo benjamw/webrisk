@@ -1109,7 +1109,7 @@ class Risk
 				$bonus_card = 0;
 			}
 		}
-		
+
 		Game::log($this->_game_id, 'T '.$player_id.':'.implode(',', $card_ids).':'.$this->_next_trade.':'.$bonus_card.':'.$is_nuke.':'.$is_turncoat);
 
 		// update the next trade in value
