@@ -1,5 +1,5 @@
 <?php
- 
+
 // this page should only be accessed via AJAX
 // as it contains invalid markup otherwise
 
