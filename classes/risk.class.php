@@ -2368,7 +2368,6 @@ public function get_turncoat_territory($player_id = 0) {
 			rsort($defend_roll);
 
 			Game::log_roll($attack_roll, $defend_roll);
-		
 		}
 
 		$this->previous_dice = array('attack' => $attack_roll, 'defend' => $defend_roll);
