@@ -1,3 +1,46 @@
+<?php
+
+// this page should only be accessed via AJAX
+// as it contains invalid markup otherwise
+
+require_once 'includes/inc.global.php';
+
+if (empty($_SESSION['game_file'])) {
+	exit;
+}
+
+try {
+	$Review = new Review($_SESSION['game_file'], $_SESSION['step']);
+
+	$table_format = array(
+		array('SPECIAL_CLASS', true, '[[[class]]]') ,
+		array(' ', ' *** ') ,
+		array('Message', 'message') ,
+	);
+	$table_meta = array(
+		'no_data' => '<p>There is nothing to show yet</p>' ,
+		'caption' => 'Game History &nbsp; &nbsp; <span class="info">Newest entries on top</span>' ,
+		'class' => 'history' ,
+		'alt_class' => '' ,
+	);
+
+	if ( ! isset($history)) {
+		$logs = $Review->get_steps(true, $_SESSION['step']);
+		$players = $Review->get_players( );
+
+		$colors = array( );
+		foreach ($players as $key => $player) {
+			$colors[$player['color']] = htmlentities($GLOBALS['_PLAYERS'][$key]).' ['.$key.']';
+		}
+
+		foreach ($logs as & $log) {
+			// wrap the first all uppercase word in a class of the same name
+			$log['message'] = preg_replace_callback('/^([ -+=]*)([A-Z]+)/', 'make_class', $log['message']);
+
+			// add outcome class to attack outcome
+			if (' - - ' == substr($log['message'], 0, 5)) {
+				$log['message'] = str_replace('">', ' outcome">', $log['message']);
+				$log['message'] = str_replace('and was defeated', '<span class="defeat">and was defeated</span>', $log['message']);
 			}
 
             {
@@ -45,7 +88,6 @@ catch (MyExecption $e) {
 }
 
 echo $history;
-
 
 function make_class($matches) {
 	return $matches[1].'<span class="'.strtolower($matches[2]).'">'.$matches[2].'</span>';
