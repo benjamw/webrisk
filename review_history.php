@@ -89,6 +89,7 @@ catch (MyExecption $e) {
 
 echo $history;
 
+
 function make_class($matches) {
 	return $matches[1].'<span class="'.strtolower($matches[2]).'">'.$matches[2].'</span>';
 }
