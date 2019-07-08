@@ -3046,3 +3046,4 @@ function shorten_territory_name($name) {
 
 	return $name;
 }
+
