@@ -12,7 +12,7 @@ try {
 		else {
 			call('GAME IS PLAYING, REDIRECTED TO GAME AND QUIT');
 		}
-		
+
 		exit;
 	}
 }
