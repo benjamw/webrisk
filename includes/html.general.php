@@ -318,3 +318,4 @@ function get_active( ) {
 
 	return '';
 }
+
