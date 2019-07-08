@@ -4,7 +4,7 @@ require_once 'includes/inc.global.php';
 
 try {
 	$Game = new Game((int) $_GET['id']);
-	
+
 	if ('Waiting' != $Game->state) {
 		if ( ! defined('DEBUG') || ! DEBUG) {
 			header('Location: game.php?id='.(int) $_GET['id'].$GLOBALS['_&_DEBUG_QUERY']);
