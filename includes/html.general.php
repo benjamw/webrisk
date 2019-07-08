@@ -174,6 +174,7 @@ EOF;
 			<ul>
 				<li'.get_active('index').'><a href="index.php'.$GLOBALS['_?_DEBUG_QUERY'].'" title="(Your Turn | Your Games | Total Games)"'.(($allow_blink && $menu_data['my_turn']) ? ' class="blink"' : '').'>Games ('.$menu_data['my_turn'].'|'.$menu_data['my_games'].'|'.$menu_data['games'].')</a></li>
 				<li'.get_active('create').'><a href="create.php'.$GLOBALS['_?_DEBUG_QUERY'].'">Create Game</a></li>
+				<li'.get_active('faq').'><a href="faq.php'.$GLOBALS['_?_DEBUG_QUERY'].'">Frequently Asked Questions</a></li>
 				<li'.get_active('archive').'><a href="archive.php'.$GLOBALS['_?_DEBUG_QUERY'].'" title="(Total Games)">Game Archive ('.$menu_data['archive'].')</a></li>
 				<li'.get_active('messages').'><a href="messages.php'.$GLOBALS['_?_DEBUG_QUERY'].'" title="(New Messages | Total Messages)"'.(($allow_blink && $menu_data['new_msgs']) ? ' class="blink"' : '').'>Messages ('.$menu_data['new_msgs'].'|'.$menu_data['msgs'].')</a></li>
 				<li'.get_active('stats').'><a href="stats.php'.$GLOBALS['_?_DEBUG_QUERY'].'">Statistics</a></li>
@@ -317,4 +318,3 @@ function get_active( ) {
 
 	return '';
 }
-
