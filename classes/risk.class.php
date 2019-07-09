@@ -1825,7 +1825,7 @@ class Risk
 		return $land;
 	}
 	
-/** public function get_turncoat_territory
+	/** public function get_turncoat_territory
 	 *		Grab all the land NOT owned by the current player
 	 *		and return it as an array where the land_id is the key
 	 *		and the land_name is the value
@@ -1835,7 +1835,7 @@ class Risk
 	 * @return array players land
 	 */
 
-public function get_turncoat_territory($player_id = 0) {
+	public function get_turncoat_territory($player_id = 0) {
 	   call(__METHOD__);
 
 		$player_id = (int) $player_id;
@@ -1846,22 +1846,22 @@ public function get_turncoat_territory($player_id = 0) {
 
 		// grab all the players land
 		$land = array( );
-		foreach ($this->board as $land_id => $territory) {
-
-            $ids = array();
-            foreach ($this->board as $data) {
-
-                if (count($this->get_players_territory($data['player_id']))>1){
-                    $ids[] = $data['player_id'];
-                }
-            }
 		
-		    $opponent = $ids;
-    
-            if ($player_id != $territory['player_id'] && in_array($territory['player_id'],($opponent))) {
-		    $land[$land_id] = self::$TERRITORIES[$land_id][NAME];
-	        }
-	    }
+		foreach ($this->board as $land_id => $territory) {
+			$ids = array();
+			
+			foreach ($this->board as $data) {
+				
+				if (count($this->get_players_territory($data['player_id']))>1){
+					$ids[] = $data['player_id'];
+				}
+			}
+			$opponent = $ids;
+			
+			if ($player_id != $territory['player_id'] && in_array($territory['player_id'],($opponent))) {
+				$land[$land_id] = self::$TERRITORIES[$land_id][NAME];
+			}
+		}
 		asort($land);
 		return $land;
 	}
