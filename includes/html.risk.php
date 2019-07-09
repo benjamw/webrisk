@@ -39,7 +39,7 @@ function game_info($Game) {
 				array('Land', 'land', 'digitmissing') ,
 				array('Conts', 'cont_list', 'digitmissing') ,
 				array('Cards', 'card_count', 'digitmissing') ,
-				array('% trade', 'trade_perc', 'percentmissing') ,
+			//	array('% trade', 'trade_perc', 'percentmissing') ,
 				array('Next turn', '[[[next_armies]]] / [[[next_armies_trade]]]', 'nextturn') ,
 			);
 
@@ -67,6 +67,12 @@ function game_info($Game) {
 			</tr><tr>
 				<th>Warmonger</th>
 				<td><?php echo $Game->get_warmonger( ); ?></td>
+			</tr><tr>
+				<th>Nuke</th>
+				<td><?php echo $Game->get_nuke( ); ?></td>	
+			</tr><tr>
+			 	<th>Turncoat</th>
+				<td><?php echo $Game->get_turncoat( ); ?></td>		
 			</tr><tr>
 				<th>Fog of War</th>
 				<td><?php $fog_of_war = $Game->get_fog_of_war( );
