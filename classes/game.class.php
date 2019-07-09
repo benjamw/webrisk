@@ -114,6 +114,8 @@ class Game
 			'initial_army_limit' => 0,
 			'kamikaze' => false,
 			'warmonger' => false,
+			'nuke' => false,
+			'turncoat' => false,
 			'fog_of_war_armies' => 'all',
 			'fog_of_war_colors' => 'all',
 			'trade_number' => 0,
@@ -436,6 +438,8 @@ class Game
 		$_P['initial_army_limit'] = (int) $_P['initial_army_limit'];
 		$_P['kamikaze'] = (isset($_P['kamikaze']) && ('yes' == $_P['kamikaze']));
 		$_P['warmonger'] = (isset($_P['warmonger']) && ('yes' == $_P['warmonger']));
+		$_P['nuke'] = (isset($_P['nuke']) && ('yes' == $_P['nuke']));
+		$_P['turncoat'] = (isset($_P['turncoat']) && ('yes' == $_P['turncoat']));
 		$_P['conquer_type'] = strtolower($_P['conquer_type']);
 
 		// fog of war cleanup
@@ -516,6 +520,8 @@ class Game
 			'initial_army_limit' => (int) $_P['initial_army_limit'],
 			'kamikaze' => (bool) $_P['kamikaze'],
 			'warmonger' => (bool) $_P['warmonger'],
+			'nuke' => (bool) $_P['nuke'],
+			'turncoat' => (bool) $_P['turncoat'],
 			'fog_of_war_armies' => $_P['fog_of_war_armies'],
 			'fog_of_war_colors' => $_P['fog_of_war_colors'],
 			'trade_number' => 0,
@@ -1679,10 +1685,18 @@ class Game
 					if ('Wild' != $type) {
 						$type = substr($type, 0, 3);
 					}
-
-					if (('Wild' != $type) && (array_key_exists($card_id, $players_territory))) {
+					if ( $this->_extra_info['nuke'] || $this->_extra_info['turncoat']) {
+                        		$turncoat_territory = $this->_risk->get_turncoat_territory($_SESSION['player_id']);
+                 
+                        			if (('Wild' != $type) && (array_key_exists($card_id, $turncoat_territory)) && (count($turncoat_territory) > 1)) {
+                            			$bonus_land[$card_id] = Risk::$TERRITORIES[$card_id];
+					    	} 
+					}					
+                    			if ( !$this->_extra_info['nuke'] && !$this->_extra_info['turncoat'] ) {
+						if (('Wild' != $type) && (array_key_exists($card_id, $players_territory))) {
 						$bonus_land[$card_id] = Risk::$TERRITORIES[$card_id];
-					}
+					    	}
+                    			}					
 
 					$html .= '<div class="card"><label class="inline"><input type="checkbox" name="cards[]" value="'.$card_id.'" />'
 								.$type.' - '.(('Wild' == $type) ? 'None' : shorten_territory_name(Risk::$TERRITORIES[$card_id][NAME])).'</label></div>';
@@ -2276,6 +2290,58 @@ class Game
 	static protected function _get_warmonger($data)
 	{
 		return ($data['warmonger'] ? 'Yes' : 'No');
+	}
+
+
+
+    /** public function get_nuke
+	 *		Grabs the nuke method
+	 *
+	 * @param void
+	 *
+	 * @return string nuke method
+	 */
+	public function get_nuke( )
+	{
+		return self::_get_nuke($this->_extra_info);
+	}
+	
+	
+	 /** public function get_turncoat
+	 *		Grabs the turncoat method
+	 *
+	 * @param void
+	 *
+	 * @return string turncoat method
+	 */
+	public function get_turncoat( )
+	{
+		return self::_get_turncoat($this->_extra_info);
+	}
+	
+
+    /** static protected function _get_nuke
+	 *		Grabs the nuke method
+	 *
+	 * @param array $data extra info
+	 *
+	 * @return string nuke method
+	 */
+	static protected function _get_nuke($data)
+	{
+		return ($data['nuke'] ? 'Yes' : 'No');
+	}
+
+	/** static protected function _get_turncoat
+	 *		Grabs the turncoat method
+	 *
+	 * @param array $data extra info
+	 *
+	 * @return string turncoat method
+	 */
+	static protected function _get_turncoat($data)
+	{
+		return ($data['turncoat'] ? 'Yes' : 'No');
 	}
 
 
@@ -2961,7 +3027,55 @@ fix_extra_info($player['extra_info']);
 			}
 		}
 
-		if ('Waiting' != $this->state) {
+		if ( ! $this->_extra_info['nuke'] || ! $this->_extra_info['turncoat'] ) {
+			if ('Waiting' != $this->state) {
+			// update the land data
+			$query = "
+				SELECT *
+				FROM `".self::GAME_LAND_TABLE."`
+				WHERE game_id = :game_id
+			";
+			$params = array(
+				':game_id' => $this->id,
+			);
+			$db_lands = $Mysql->fetch_array($query, $params);
+
+				if ( ! $db_lands) {
+				$board = $this->_risk->board;
+
+					foreach ($board as $land_id => $land) {
+						$land['game_id'] = $this->id;
+						$land['land_id'] = $land_id;
+						$Mysql->insert(self::GAME_LAND_TABLE, $land);
+					}
+
+					$update_modified = true;
+				}
+				else {
+					foreach ($db_lands as $db_land) {
+						$update_land = array( );
+						$land_id = $db_land['land_id'];
+
+						$rland = $this->_risk->board[$land_id];
+
+						if ($db_land['player_id'] != $rland['player_id']) {
+							$update_land['player_id'] = $rland['player_id'];
+						}
+
+						if ($db_land['armies'] != $rland['armies']) {
+							$update_land['armies'] = $rland['armies'];
+						}
+
+						if ($update_land) {
+							$update_modified = true;
+							$Mysql->insert(self::GAME_LAND_TABLE, $update_land, " WHERE game_id = '{$this->id}' AND land_id = '{$land_id}' ");
+						}
+					}
+				}
+			}
+    	}
+    else
+    {
 			// update the land data
 			$query = "
 				SELECT *
@@ -3005,7 +3119,8 @@ fix_extra_info($player['extra_info']);
 					}
 				}
 			}
-		}
+		
+    }
 
 		// update the game modified date
 		if ($update_modified) {
@@ -3314,11 +3429,34 @@ if (isset($data[7])) {
 				break;
 
 			case 'T' : // Trade
-				$message = "TRADE: {$player[0]} [{$data[0]}] traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
-
-				if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
-					$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+		            	$message = "TRADE: {$player[0]} traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
+                
+                		// add traded cards to message    
+                		if (isset($data[1])) {
+					$data[1] = explode(',', $data[1]);
+					foreach ($data[1] as $card_id) {
+		            			$message .= ' ( '.Risk::$TERRITORIES[$card_id][NAME] .' ) ';
+					}
+		
 				}
+
+			    	if ( 0 == (int) $data[4] && 0 == (int) $data[5] && (0 !== (int) $trade_bonus)) {	
+			    		if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
+						$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+				    	}
+				} else
+				{
+					if (1 == (int) $data[4] && 0 == (int) $data[5]){    
+				 		$message .= " and nuked the armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
+					}
+					if (0 == (int) $data[4] && 1 == (int) $data[5]){    
+			     			$message .= " and turned the armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." ";
+					}
+					if (1 == (int) $data[4] && 1 == (int) $data[5]){    
+			     			$message .= " and nuked and turned the armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." ";
+					}
+				}
+			   	
 				break;
 
 			case 'V' : // Value
@@ -4017,6 +4155,8 @@ fix_extra_info($game['extra_info']);
 				$game['get_fortify'] = self::_get_fortify($extra_info);
 				$game['get_kamikaze'] = self::_get_kamikaze($extra_info);
 				$game['get_warmonger'] = self::_get_warmonger($extra_info);
+				$game['get_nuke'] = self::_get_nuke($extra_info);
+				$game['get_turncoat'] = self::_get_turncoat($extra_info);
 				$game['get_conquer_limit'] = self::_get_conquer_limit($extra_info);
 				$game['get_custom_rules'] = self::_get_custom_rules($extra_info);
 				$game['get_fog_of_war'] = self::_get_fog_of_war($extra_info);
