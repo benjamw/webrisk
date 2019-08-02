@@ -42,7 +42,7 @@ $table_format = array(
 	array('State', '###(([[[paused]]]) ? \'Paused\' : ((\'Waiting\' == \'[[[state]]]\') ? ((\'\' != \'[[[password]]]\') ? \'<span class="highlight password">[[[state]]]</span>\' : \'<span class="highlight">[[[state]]]</span>\') : \'[[[state]]]\'))') ,
 	array('Current Player', '###((\'\' == \'[[[username]]]\') ? \'[[[hostname]]]\' : \'[[[username]]]\')') ,
 //	array('Game Type', 'game_type') ,
-	array('Extra Info', '<abbr title="Fortify: [[[get_fortify]]] | Kamikaze: [[[get_kamikaze]]] | Warmonger: [[[get_warmonger]]] | FoW Armies: [[[get_fog_of_war_armies]]] | FoW Colors: [[[get_fog_of_war_colors]]] | Conquer Limit: [[[get_conquer_limit]]] | Custom Rules: [[[clean_custom_rules]]]">Hover</abbr>') ,
+	array('Extra Info', '<abbr title="Fortify: [[[get_fortify]]] | Kamikaze: [[[get_kamikaze]]] | Warmonger: [[[get_warmonger]]] | Nuke: [[[get_nuke]]] | Turncoat: [[[get_turncoat]]] | FoW Armies: [[[get_fog_of_war_armies]]] | FoW Colors: [[[get_fog_of_war_colors]]] | Conquer Limit: [[[get_conquer_limit]]] | Custom Rules: [[[clean_custom_rules]]]">Hover</abbr>') ,
 	array('Players', '[[[players]]] / [[[capacity]]]') ,
 	array('Last Move', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"') ,
 );

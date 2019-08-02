@@ -60,7 +60,7 @@ $contents = <<< EOF
 
 			<div><label for="name">Game Name</label><input type="text" id="name" name="name" maxlength="255" /></div>
 
-			<div><label for="capacity">Capacity</label><select id="capacity" name="capacity"><option>2</option><option>3</option><option selected="selected">4</option><option>5</option><option>6</option></select></div>
+			<div><label for="capacity">Capacity</label><select id="capacity" name="capacity"><option>2</option><option>3</option><option>4</option><option>5</option><option selected="selected">6</option></select></div>
 
 			<div><label>Fortifications</label><label class="inline"><input type="radio" name="fortify" value="no" /> No</label>
 				<label class="inline"><input type="radio" name="fortify" value="yes" checked="checked" /> Yes</label> |
@@ -80,7 +80,9 @@ $contents = <<< EOF
 				<label class="inline"><input type="radio" name="fog_of_war_colors" value="adjacent" /> Show Adjacent</label>
 				<label class="inline"><input type="radio" name="fog_of_war_colors" value="none" /> Show None</label>
 			</div>
-
+			
+			<div><label>Nuclear War</label><label class="inline"><input type="checkbox" name="nuke" value="yes" /> Trade card DEDUCTS from ENEMY land</label></div>
+			<div><label>Turncoat</label><label class="inline"><input type="checkbox" name="turncoat" value="yes" /> Trade card turns enemy allegiance to your army</label></div>
 			<div><label>Placement</label><label class="inline"><input type="checkbox" name="place_initial_armies" value="yes" />Randomly Place ALL starting armies</label></div>
 			<div><label>Placement Limit</label><input type="text" name="initial_army_limit" value="0" size="5" maxlength="3" /></div>
 
