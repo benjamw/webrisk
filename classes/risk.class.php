@@ -1091,10 +1091,8 @@ class Risk
 		   
 			// playing turncoat card
 			if ( ! empty($bonus_card) && $this->_extra_info['turncoat']) {
-			
 				$is_turncoat = 1;
 			}
-			
 		} else
 			// not using nuke or turncoat game config
 		{
