@@ -12,23 +12,23 @@ if (empty($_SESSION['game_file'])) {
 try {
 	$Review = new Review($_SESSION['game_file'], $_SESSION['step']);
 
-	$table_format = array(
-		array('SPECIAL_CLASS', true, '[[[class]]]') ,
-		array(' ', ' *** ') ,
-		array('Message', 'message') ,
-	);
-	$table_meta = array(
+	$table_format = [
+		['SPECIAL_CLASS', true, '[[[class]]]'],
+		[' ', ' *** '],
+		['Message', 'message'],
+	];
+	$table_meta = [
 		'no_data' => '<p>There is nothing to show yet</p>' ,
 		'caption' => 'Game History &nbsp; &nbsp; <span class="info">Newest entries on top</span>' ,
 		'class' => 'history' ,
 		'alt_class' => '' ,
-	);
+	];
 
 	if ( ! isset($history)) {
 		$logs = $Review->get_steps(true, $_SESSION['step']);
 		$players = $Review->get_players( );
 
-		$colors = array( );
+		$colors = [];
 		foreach ($players as $key => $player) {
 			$colors[$player['color']] = htmlentities($GLOBALS['_PLAYERS'][$key]).' ['.$key.']';
 		}

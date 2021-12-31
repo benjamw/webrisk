@@ -221,7 +221,7 @@ class Chat
 		}
 
 		// save the message
-		$this->_mysql->insert(self::CHAT_TABLE, array('message' => $message, 'private' => (int) $private, 'from_id' => $this->_user_id, 'game_id' => $this->_game_id));
+		$this->_mysql->insert(self::CHAT_TABLE, ['message' => $message, 'private' => (int) $private, 'from_id' => $this->_user_id, 'game_id' => $this->_game_id]);
 	}
 
 } // end of Chat class

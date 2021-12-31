@@ -189,14 +189,14 @@ class GamePlayer
 		// test an arbitrary property for existence, so we don't _pull twice unnecessarily
 		// but don't test color, because it might actually be null when valid
 		if (is_null($this->last_online)) {
-			$this->_mysql->insert(self::EXTEND_TABLE, array('player_id' => $this->id));
+			$this->_mysql->insert(self::EXTEND_TABLE, ['player_id' => $this->id]);
 
 			$this->_pull( );
 		}
 
 		// don't update the last online time if we logged in as an admin
 		if ( ! isset($_SESSION['admin_id'])) {
-			$this->_mysql->insert(self::EXTEND_TABLE, array('last_online' => NULL), " WHERE player_id = '{$this->id}' ");
+			$this->_mysql->insert(self::EXTEND_TABLE, ['last_online' => NULL], " WHERE player_id = '{$this->id}' ");
 		}
 
 		return true;
@@ -226,10 +226,10 @@ class GamePlayer
 
 		if ($this->id) {
 			// add the user to the table
-			$this->_mysql->insert(self::EXTEND_TABLE, array('player_id' => $this->id));
+			$this->_mysql->insert(self::EXTEND_TABLE, ['player_id' => $this->id]);
 
 			// update the last_online time so we don't break things later
-			$this->_mysql->insert(self::EXTEND_TABLE, array('last_online' => NULL), " WHERE player_id = '{$this->id}' ");
+			$this->_mysql->insert(self::EXTEND_TABLE, ['last_online' => NULL], " WHERE player_id = '{$this->id}' ");
 		}
 	}
 
@@ -247,7 +247,7 @@ class GamePlayer
 		$this->wins++;
 
 		// note the trailing space on the field name, it's not a typo
-		$this->_mysql->insert(self::EXTEND_TABLE, array('wins ' => 'wins + 1'), " WHERE player_id = '{$this->id}' ");
+		$this->_mysql->insert(self::EXTEND_TABLE, ['wins ' => 'wins + 1'], " WHERE player_id = '{$this->id}' ");
 	}
 
 
@@ -264,7 +264,7 @@ class GamePlayer
 		$this->kills++;
 
 		// note the trailing space on the field name, it's not a typo
-		$this->_mysql->insert(self::EXTEND_TABLE, array('kills ' => 'kills + 1'), " WHERE player_id = '{$this->id}' ");
+		$this->_mysql->insert(self::EXTEND_TABLE, ['kills ' => 'kills + 1'], " WHERE player_id = '{$this->id}' ");
 	}
 
 
@@ -281,7 +281,7 @@ class GamePlayer
 		$this->losses++;
 
 		// note the trailing space on the field name, it's not a typo
-		$this->_mysql->insert(self::EXTEND_TABLE, array('losses ' => 'losses + 1'), " WHERE player_id = '{$this->id}' ");
+		$this->_mysql->insert(self::EXTEND_TABLE, ['losses ' => 'losses + 1'], " WHERE player_id = '{$this->id}' ");
 	}
 
 
@@ -342,7 +342,7 @@ class GamePlayer
 			$player_ids[] = $root_admin;
 		}
 
-		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 1), " WHERE player_id IN (".implode(',', $player_ids).") ");
+		$this->_mysql->insert(self::EXTEND_TABLE, ['is_admin' => 1], " WHERE player_id IN (".implode(',', $player_ids).") ");
 	}
 
 
@@ -387,7 +387,7 @@ class GamePlayer
 			unset($player_ids[array_search($_SESSION['admin_id'], $player_ids)]);
 		}
 
-		$this->_mysql->insert(self::EXTEND_TABLE, array('is_admin' => 0), " WHERE player_id IN (".implode(',', $player_ids).") ");
+		$this->_mysql->insert(self::EXTEND_TABLE, ['is_admin' => 0], " WHERE player_id IN (".implode(',', $player_ids).") ");
 	}
 
 
@@ -580,7 +580,7 @@ return false;
 		";
 		$maxed_players = $Mysql->fetch_array($query);
 
-		$player_ids = array( );
+		$player_ids = [];
 		foreach ($maxed_players as $data) {
 			if ($data['game_count'] >= $data['max_games']) {
 				$player_ids[] = $data['player_id'];
@@ -632,7 +632,7 @@ return false;
 			return;
 		}
 
-		$exception_ids = array( );
+		$exception_ids = [];
 
 		// make sure the 'unused' player is not an admin
 		$query = "

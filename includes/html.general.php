@@ -36,13 +36,13 @@ function get_header($meta = null) {
 
 	if ($show_menu) {
 		if ( ! $menu_data) {
-			$menu_data = array(
+			$menu_data = [
 				'my_turn' => 0,
 				'my_games' => 0,
 				'games' => 0,
 				'new_msgs' => 0,
 				'msgs' => 0,
-			);
+			];
 
 			list($menu_data['games'], , $menu_data['my_games'], $menu_data['my_turn']) = Game::get_count($_SESSION['player_id']);
 			$menu_data['archive'] = Archive::get_count( );
@@ -223,7 +223,7 @@ EOF;
  * @param array option meta info
  * @return string HTML footer for page
  */
-function get_footer($meta = array( )) {
+function get_footer($meta = []) {
 	$foot_data = isset($meta['foot_data']) ? $meta['foot_data'] : '';
 
 	$players = GamePlayer::get_count( );

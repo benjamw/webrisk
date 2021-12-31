@@ -38,10 +38,10 @@ $meta['head_data'] = '
 	<script type="text/javascript" src="scripts/create.js"></script>
 ';
 
-$hints = array(
+$hints = [
 	'Create a game by filling out your desired game options.' ,
 	'<span class="highlight">WARNING!</span><br />Games will be deleted after '.Settings::read('expire_games').' days of inactivity.' ,
-);
+];
 
 // make sure this user is not full
 $submit_button = '<div><input type="submit" name="create" value="Create Game" /></div>';

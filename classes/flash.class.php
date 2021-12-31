@@ -30,7 +30,7 @@ class Flash
 	 *
 	 * @param array
 	 */
-	protected $_messages = array( );
+	protected $_messages = [];
 
 
 	/** protected property _location
@@ -246,7 +246,7 @@ class Flash
 				//]]></script>';
 		}
 
-		$_this->_messages = array( );
+		$_this->_messages = [];
 
 		return $html;
 	}

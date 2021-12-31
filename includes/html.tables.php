@@ -93,7 +93,7 @@ define('FALS', 3);
 // init_sort_column is an array of the format col => dir where dir is 0 for ASC and 1 for DESC
 function get_table($table_format, $table_data, $meta = null)
 {
-	$meta_defaults = array(
+	$meta_defaults = [
 		'alt_class' => 'alt',
 		'caption' => '',
 		'class' => 'datatable',
@@ -102,7 +102,7 @@ function get_table($table_format, $table_data, $meta = null)
 		'no_data' => 'There is no data',
 		'sortable' => false,
 		'totals' => false,
-	);
+	];
 
 	$opts = array_merge($meta_defaults, $meta);
 
@@ -117,7 +117,7 @@ function get_table($table_format, $table_data, $meta = null)
 			<thead>
 			<tr>';
 
-	$total_cols = $sort_types = array( );
+	$total_cols = $sort_types = [];
 	foreach ($table_format as $col) {
 		// test for SPECIAL data first
 		if ( ! is_array($col[TYPE]) && ('SPECIAL_' == substr($col[TYPE], 0, 8))) {

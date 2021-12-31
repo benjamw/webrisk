@@ -150,7 +150,7 @@ echo get_header($meta);
 				<?php
 					$players = $Review->get_players( );
 
-					$colors = array( );
+					$colors = [];
 					foreach ($players as $key => $player) {
 						$colors[$player['color']] = htmlentities($GLOBALS['_PLAYERS'][$key]).' ['.$key.']';
 					}

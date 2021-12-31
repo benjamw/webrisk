@@ -205,7 +205,7 @@ class Log
 		}
 
 		if (is_array($message)) {
-			extract(array_merge(array('type' => null, 'backtrace' => null), $message));
+			extract(array_merge(['type' => null, 'backtrace' => null], $message));
 		}
 
 		$_this = self::get_instance( );

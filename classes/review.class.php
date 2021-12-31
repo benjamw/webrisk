@@ -191,7 +191,7 @@ class Review extends Game {
 		}
 
 		// check to see if we killed our opponent
-		if (in_array($this->_risk->players[$defend_id]['state'], array('Resigned', 'Dead'))) {
+		if (in_array($this->_risk->players[$defend_id]['state'], ['Resigned', 'Dead'])) {
 			$this->_test_winner( );
 		}
 
@@ -281,12 +281,12 @@ class Review extends Game {
 		$game_log = array_reverse($game_log);
 		$trade_bonus = $this->_extra_info['trade_card_bonus'];
 
-		$logs = array( );
+		$logs = [];
 		foreach ($game_log as $data) {
-			$log = array(
+			$log = [
 				'data' => $data,
 				'message' => self::parse_move_info($data, $trade_bonus, $game_id = 0, $logs),
-			);
+			];
 
 			$logs[] = $log;
 		}
@@ -344,7 +344,7 @@ class Review extends Game {
 		$continents = $this->_risk->get_players_continents($player_id);
 
 		if ( ! $continents) {
-			return array( );
+			return [];
 		}
 
 		return $continents;
@@ -360,7 +360,7 @@ class Review extends Game {
 	 */
 	public function draw_players( )
 	{
-		$players = array( );
+		$players = [];
 		foreach ($this->_risk->players as $player_id => $player) {
 			$players[$player_id]['player_id'] = $player_id;
 			$players[$player_id]['color'] = $this->_players[$player_id]['color'];
@@ -372,7 +372,7 @@ class Review extends Game {
 
 		// sort the players by order
 		asort($order);
-		$temp_players = array( );
+		$temp_players = [];
 		foreach ($order as $player_id => $order_num) {
 			$temp_players[$player_id] = $players[$player_id];
 		}
@@ -502,19 +502,19 @@ class Review extends Game {
 		$visible_board = $this->get_visible_board($observer_id);
 
 		// run through the visible board and count some things
-		$visible_land = array( );
+		$visible_land = [];
 		foreach ($visible_board as $land) {
 			if ( ! is_array($land)) {
 				continue;
 			}
 
 			if ( ! isset($visible_land[$land['player_id']])) {
-				$visible_land[$land['player_id']] = array(
+				$visible_land[$land['player_id']] = [
 					'player_id' => $land['player_id'],
 					'resigned' => $land['resigned'],
 					'land' => 0,
 					'armies' => 0,
-				);
+				];
 			}
 
 			$visible_land[$land['player_id']]['armies'] += $land['armies'];
@@ -523,20 +523,20 @@ class Review extends Game {
 
 		$trade_value = $this->_risk->get_trade_value( );
 
-		$temp_players = array( );
-		$order = array( );
+		$temp_players = [];
+		$order = [];
 		foreach ($this->_players as $id => $player) {
 			// make sure we have a board entry for everybody
 			if ( ! isset($visible_land[$id])) {
-				$visible_land[$id] = array(
+				$visible_land[$id] = [
 					'player_id' => $id,
 					'resigned' => '',
 					'land' => '--',
 					'armies' => '--',
-				);
+				];
 			}
 
-			$temp_players[$id] = array(
+			$temp_players[$id] = [
 				'player_id' => $player['player_id'],
 				'username' => $player['name'],
 				'color' => $player['color'],
@@ -544,14 +544,14 @@ class Review extends Game {
 				'state' => $this->_risk->players[$id]['state'],
 				'round' => $this->_risk->players[$id]['extra_info']['round'],
 				'turn' => $this->_risk->players[$id]['extra_info']['turn'],
-			);
+			];
 
 			$order[$id] = $temp_players[$id]['order'];
 		}
 
 		asort($order);
 
-		$players = array( );
+		$players = [];
 		foreach ($order as $id => $null) {
 			$players[$id] = $temp_players[$id];
 		}
@@ -560,7 +560,7 @@ class Review extends Game {
 			// continents
 			$player['conts'] = $this->get_players_visible_continents($player_id, $observer_id);
 
-			$player['cont_names'] = array( );
+			$player['cont_names'] = [];
 			foreach ($player['conts'] as $cont) {
 				$player['cont_names'][] = $cont[0];
 			}
@@ -609,10 +609,10 @@ class Review extends Game {
 			$player['armies'] = $visible_land[$player_id]['armies'];
 
 			if ('Dead' == $player['state']) {
-				$player['cards'] = array( );
+				$player['cards'] = [];
 				$player['card_count'] = '--';
 				$player['trade_perc'] = '--';
-				$player['conts'] = array( );
+				$player['conts'] = [];
 				$player['cont_list'] = '--';
 				$player['next_armies'] = '--';
 				$player['next_armies_trade'] = '--';
@@ -683,7 +683,7 @@ fix_extra_info($this->_file[FILE_EXTRA_INFO]);
 	 * @TODO: not sure if this method is really needed
 	 */
 	protected function _write_faux_db( ) {
-		$this->_faux_db[TABLE_GAME] = array(
+		$this->_faux_db[TABLE_GAME] = [
 			'game_id' => $this->id,
 			'name' => $this->name,
 			'capacity' => $this->capacity,
@@ -691,11 +691,11 @@ fix_extra_info($this->_file[FILE_EXTRA_INFO]);
 			'next_bonus' => 4,
 			'state' => $this->state,
 			'extra_info' => $this->_extra_info,
-		);
+		];
 
 		$this->_faux_db[TABLE_PLAYERS] = $this->_players;
 
-		$land = array( );
+		$land = [];
 		foreach (Risk::$TERRITORIES as $id => $null) {
 
 		}
@@ -725,7 +725,7 @@ fix_extra_info($this->_file[FILE_EXTRA_INFO]);
 		$count = count($players);
 		foreach ($players as $player) {
 			$player = explode(' - ', $player);
-			$player = array_combine(array('player_id', 'color', 'name'), $player);
+			$player = array_combine(['player_id', 'color', 'name'], $player);
 			$player['order_num'] = $n;
 
 			$this->_set_player_data($player, $count);
@@ -764,7 +764,7 @@ fix_extra_info($player['extra_info']);
 			array_trim($player['cards'], 'int');
 		}
 		else {
-			$player['cards'] = array( );
+			$player['cards'] = [];
 		}
 
 		$player['game_id'] = $this->id;
@@ -772,25 +772,25 @@ fix_extra_info($player['extra_info']);
 		// move any data we need to over to the risk class player data
 		$risk_player = $player;
 
-		$player_keys = array(
+		$player_keys = [
 			'player_id',
 			'color',
 			'name',
-		);
+		];
 
 		$player = array_clean($player, $player_keys);
 
 		$risk_player['armies'] = $this->_risk->get_start_armies($count);
 		$risk_player['state'] = 'Placing';
 
-		$risk_player_keys = array(
+		$risk_player_keys = [
 			'player_id',
 			'order_num',
 			'cards',
 			'armies',
 			'state',
 			'extra_info',
-		);
+		];
 
 		$risk_player = array_clean($risk_player, $risk_player_keys);
 
@@ -820,7 +820,7 @@ fix_extra_info($player['extra_info']);
 		// find out who the current player is
 		if (('Playing' == $this->state) || ('Finished' == $this->state)) {
 			foreach ($this->_risk->players as $player_id => $player) {
-				if ( ! in_array($player['state'], array('Waiting', 'Resigned', 'Dead'))) {
+				if ( ! in_array($player['state'], ['Waiting', 'Resigned', 'Dead'])) {
 					$this->_risk->current_player = $player_id;
 					break;
 				}
@@ -830,12 +830,12 @@ fix_extra_info($player['extra_info']);
 			$this->_risk->current_player = 0;
 		}
 
-		$board = array( );
+		$board = [];
 		foreach ($this->_faux_db[TABLE_LAND] as $land) {
-			$board[$land['land_id']] = array(
+			$board[$land['land_id']] = [
 				'player_id' => $land['player_id'] ,
 				'armies' => $land['armies'] ,
-			);
+			];
 		}
 
 		$this->_risk->board = $board;
@@ -879,7 +879,7 @@ fix_extra_info($player['extra_info']);
 		// check the players and see if there are any more alive
 		$count = 0;
 		foreach ($this->_risk->players as $player) {
-			if ( ! in_array($player['state'], array('Resigned', 'Dead'))) {
+			if ( ! in_array($player['state'], ['Resigned', 'Dead'])) {
 				++$count;
 				$alive[] = $player['player_id'];
 			}
@@ -958,7 +958,7 @@ fix_extra_info($player['extra_info']);
 
 		try {
 			// get the player into the correct state
-			if (in_array($type, array('A', 'F', 'O')) && (0 !== $this->_risk->current_player)) {
+			if (in_array($type, ['A', 'F', 'O']) && (0 !== $this->_risk->current_player)) {
 				while ($type !== strtoupper($this->_risk->players[$this->_risk->current_player]['state']{0})) {
 					$this->_risk->set_player_next_state($this->_risk->players[$this->_risk->current_player]['state'], $this->_risk->current_player);
 				}

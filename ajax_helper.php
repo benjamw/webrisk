@@ -110,7 +110,7 @@ $Game = new Game((int) $_SESSION['game_id']);
 // run the card clicks
 if (isset($_POST['cardcheck'])) {
 	// easter egg?  maybe...
-	$notice = array(
+	$notice = [
 		'Nice Try',
 		'Keep trying to cheat, and we\'ll gang up on you',
 		'I\'m telling your parents or legal guardians that you\'re trying to cheat',
@@ -123,7 +123,7 @@ if (isset($_POST['cardcheck'])) {
 		'It would be easier to ask them what their cards are',
 		'I don\'t think they would appreciate you trying to cheat',
 		'I\'ve just sucked one year of your life away',
-	);
+	];
 
 	if ($_POST['id'] != $_SESSION['player_id']) {
 		echo $notice[mt_rand(0, count($notice) - 1)];
@@ -164,7 +164,7 @@ if (($player_id != $_SESSION['player_id']) && ! $GLOBALS['Player']->is_admin) {
 
 // run the 'Nudge' button
 if (isset($_POST['nudge'])) {
-	$return = array( );
+	$return = [];
 	$return['token'] = $_SESSION['token'];
 
 	try {
@@ -181,7 +181,7 @@ if (isset($_POST['nudge'])) {
 
 // run the 'Skip' button
 if (isset($_POST['skip'])) {
-	$return = array( );
+	$return = [];
 	$return['token'] = $_SESSION['token'];
 
 	try {
@@ -199,7 +199,7 @@ if (isset($_POST['skip'])) {
 
 // run the game actions
 if (isset($_POST['state'])) {
-	$return = array( );
+	$return = [];
 	$return['token'] = $_SESSION['token'];
 
 	switch ($_POST['state']) {
@@ -269,7 +269,7 @@ if (isset($_POST['state'])) {
 					$return['num_on_defend'] = '?';
 
 					if (isset($return['dice']['defend'])) {
-						$return['dice']['defend'] = array('?','?','?');
+						$return['dice']['defend'] = ['?', '?', '?'];
 					}
 				}
 

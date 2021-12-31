@@ -67,7 +67,7 @@ debug('TEST FAILED');
 	if ( ! isset($_POST['create']) || $invalid) {
 		require_once INCLUDE_DIR.'config.php.sample';
 
-		$fields = array(
+		$fields = [
 			'db_hostname' => $GLOBALS['_DEFAULT_DATABASE']['hostname'],
 			'db_username' => $GLOBALS['_DEFAULT_DATABASE']['username'],
 			'db_password' => $GLOBALS['_DEFAULT_DATABASE']['password'],
@@ -85,7 +85,7 @@ debug('TEST FAILED');
 			'email' => '',
 			'password' => '',
 			'passworda' => '',
-		);
+		];
 
 		foreach ($fields as $key => $default) {
 			if (isset($_POST[$key])) {
@@ -146,11 +146,11 @@ debug('TEST FAILED');
 			<!-- TODO: add some javascript validation here -->
 		';
 
-		$hints = array(
+		$hints = [
 			'Make sure your database has been created and the user you are setting has the required permissions to create the tables.',
 			'The master prefix allows you to have more than one game set installed at a time.',
 			'The game prefix allows you to install more than one iohelix game and use the same player database, this should not be left blank.',
-		);
+		];
 	}
 
 	echo get_header($meta);
@@ -168,7 +168,7 @@ debug(__FUNCTION__);
 	$file = file_get_contents(INCLUDE_DIR.'config.php.sample');
 
 	// fill in the values
-	$find = array(
+	$find = [
 		'$GLOBALS[\'_DEFAULT_DATABASE\'][\'hostname\'] = \'localhost\';',
 		'$GLOBALS[\'_DEFAULT_DATABASE\'][\'username\'] = \'username_here\';',
 		'$GLOBALS[\'_DEFAULT_DATABASE\'][\'password\'] = \'password_here\';',
@@ -180,14 +180,14 @@ debug(__FUNCTION__);
 
 		'$master_prefix = \'\';',
 		'$game_prefix   = \'wr_\';',
-	);
+	];
 
 	$root_uri = trim($_POST['root_uri']);
 	if ('/' != $root_uri[strlen($root_uri) - 1]) {
 		$root_uri .= '/';
 	}
 
-	$replace = array(
+	$replace = [
 		'$GLOBALS[\'_DEFAULT_DATABASE\'][\'hostname\'] = \''.$_POST['db_hostname'].'\';',
 		'$GLOBALS[\'_DEFAULT_DATABASE\'][\'username\'] = \''.$_POST['db_username'].'\';',
 		'$GLOBALS[\'_DEFAULT_DATABASE\'][\'password\'] = \''.$_POST['db_password'].'\';',
@@ -199,7 +199,7 @@ debug(__FUNCTION__);
 
 		'$master_prefix = \''.trim($_POST['master_prefix']).'\';',
 		'$game_prefix   = \''.trim($_POST['game_prefix']).'\';',
-	);
+	];
 
 	$file = str_replace($find, $replace, $file);
 debug($file);

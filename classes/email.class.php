@@ -55,7 +55,7 @@ class Email
 	 *
 	 * @var array
 	 */
-	protected $email_data = array( );
+	protected $email_data = [];
 
 
 
@@ -94,7 +94,7 @@ class Email
 	 * @return bool success
 	 * @throws MyException
 	 */
-	protected function _send($type, $to, $data = array( ))
+	protected function _send($type, $to, $data = [])
 	{
 		call(__METHOD__);
 		call($type);
@@ -150,18 +150,18 @@ class Email
 		$message = $this->email_data[$type]['message'];
 
 		// replace the meta vars
-		$replace = array(
+		$replace = [
 			'/\[\[\[GAME_NAME\]\]\]/' => GAME_NAME,
 			'/\[\[\[site_name\]\]\]/' => $site_name,
 			'/\[\[\[extra_text\]\]\]/' => $this->_strip(@$_POST['extra_text']),
 			'/\[\[\[export_data\]\]\]/' => var_export($data, true),
-		);
+		];
 
-		$extras = array(
+		$extras = [
 			'name' => 'game_name',
 			'player' => 'sender',
 			'winner' => 'winner',
-		);
+		];
 
 		foreach ($extras as $extra => $text) {
 			if ( ! empty($data[$extra])) {
@@ -286,7 +286,7 @@ and should not be replied to.
 	 *
 	 * @see _send
 	 */
-	static public function send($type, $to, $data = array( ))
+	static public function send($type, $to, $data = [])
 	{
 		call(__METHOD__);
 		call($type);

@@ -63,14 +63,14 @@ class Risk
 	 *
 	 * @var array (index starts at 1)
 	 */
-	static public $CONTINENTS = array( 1 =>
-	/* 1*/	array('North America', 5, array(1, 2, 3, 4, 5, 6, 7, 8, 9)) ,
-			array('South America', 2, array(10, 11, 12, 13)) ,
-			array('Europe', 5, array(14, 15, 16, 17, 18, 19, 20)) ,
-			array('Africa', 3, array(21, 22, 23, 24, 25, 26)) ,
-	/* 5*/	array('Asia', 7, array(27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38)) ,
-			array('Australia', 2, array(39, 40, 41, 42)) ,
-		);
+	static public $CONTINENTS = [ 1 =>
+	/* 1*/	['North America', 5, [1, 2, 3, 4, 5, 6, 7, 8, 9]],
+			['South America', 2, [10, 11, 12, 13]],
+			['Europe', 5, [14, 15, 16, 17, 18, 19, 20]],
+			['Africa', 3, [21, 22, 23, 24, 25, 26]],
+	/* 5*/	['Asia', 7, [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]],
+			['Australia', 2, [39, 40, 41, 42]],
+	];
 
 
 	/** static protected property TERRITORIES
@@ -82,61 +82,61 @@ class Risk
 	 *
 	 * @var array (index starts at 1)
 	 */
-	static public $TERRITORIES = array( 1 =>
+	static public $TERRITORIES = [ 1 =>
 			// North America
-	/* 1*/	array('Alaska', array(2, 6, 32), 1) ,
-			array('Alberta', array(1, 6, 7, 9), 1) ,
-			array('Central America', array(4, 9, 13), 1) ,
-			array('Eastern United States', array(3, 7, 8, 9), 1) ,
-	/* 5*/	array('Greenland', array(6, 7, 8, 15), 1) ,
-			array('Northwest Territory', array(1, 2, 5, 7), 1) ,
-			array('Ontario', array(2, 4, 5, 6, 8, 9), 1) ,
-			array('Quebec', array(4, 5, 7), 1) ,
-	/* 9*/	array('Western United States', array(2, 3, 4, 7), 1) ,
+	/* 1*/	['Alaska', [2, 6, 32], 1],
+			['Alberta', [1, 6, 7, 9], 1],
+			['Central America', [4, 9, 13], 1],
+			['Eastern United States', [3, 7, 8, 9], 1],
+	/* 5*/	['Greenland', [6, 7, 8, 15], 1],
+			['Northwest Territory', [1, 2, 5, 7], 1],
+			['Ontario', [2, 4, 5, 6, 8, 9], 1],
+			['Quebec', [4, 5, 7], 1],
+	/* 9*/	['Western United States', [2, 3, 4, 7], 1],
 
-			// South America
-	/*10*/	array('Argentina', array(11, 12), 2) ,
-			array('Brazil', array(10, 12, 13, 25), 2) ,
-			array('Peru', array(10, 11, 13), 2) ,
-	/*13*/	array('Venezuela', array(3, 11, 12), 2) ,
+		// South America
+	/*10*/	['Argentina', [11, 12], 2],
+			['Brazil', [10, 12, 13, 25], 2],
+			['Peru', [10, 11, 13], 2],
+	/*13*/	['Venezuela', [3, 11, 12], 2],
 
-			// Europe
-	/*14*/	array('Great Britain', array(15, 16, 17, 20), 3) , // officially 'Great Britain and Ireland', but it's too long
-	/*15*/	array('Iceland', array(5, 14, 17), 3) ,
-			array('Northern Europe', array(14, 17, 18, 19, 20), 3) ,
-			array('Scandinavia', array(14, 15, 16, 19), 3) ,
-			array('Southern Europe', array(16, 19, 20, 23, 25, 33), 3) ,
-			array('Ukraine', array(16, 17, 18, 27, 33, 37), 3) ,
-	/*20*/	array('Western Europe', array(14, 16, 18, 25), 3) ,
+		// Europe
+	/*14*/	['Great Britain', [15, 16, 17, 20], 3],// officially 'Great Britain and Ireland', but it's too long
+	/*15*/	['Iceland', [5, 14, 17], 3],
+			['Northern Europe', [14, 17, 18, 19, 20], 3],
+			['Scandinavia', [14, 15, 16, 19], 3],
+			['Southern Europe', [16, 19, 20, 23, 25, 33], 3],
+			['Ukraine', [16, 17, 18, 27, 33, 37], 3],
+	/*20*/	['Western Europe', [14, 16, 18, 25], 3],
 
-			// Africa
-	/*21*/	array('Congo', array(22, 25, 26), 4) ,
-			array('East Africa', array(21, 23, 24, 25, 26, 33), 4) ,
-			array('Egypt', array(18, 22, 25, 33), 4) ,
-			array('Madagascar', array(22, 26), 4) ,
-	/*25*/	array('North Africa', array(11, 18, 20, 21, 22, 23), 4) ,
-	/*26*/	array('South Africa', array(21, 22, 24), 4) ,
+		// Africa
+	/*21*/	['Congo', [22, 25, 26], 4],
+			['East Africa', [21, 23, 24, 25, 26, 33], 4],
+			['Egypt', [18, 22, 25, 33], 4],
+			['Madagascar', [22, 26], 4],
+	/*25*/	['North Africa', [11, 18, 20, 21, 22, 23], 4],
+	/*26*/	['South Africa', [21, 22, 24], 4],
 
-			// Asia
-	/*27*/	array('Afghanistan', array(19, 28, 29, 33, 37), 5) ,
-			array('China', array(27, 29, 34, 35, 36, 37), 5) ,
-			array('India', array(27, 28, 33, 35), 5) ,
-	/*30*/	array('Irkutsk', array(32, 34, 36, 38), 5) ,
-			array('Japan', array(32, 34), 5) ,
-			array('Kamchatka', array(1, 30, 31, 34, 38), 5) ,
-			array('Middle East', array(18, 19, 22, 23, 27, 29), 5) ,
-			array('Mongolia', array(28, 30, 31, 32, 36), 5) ,
-	/*35*/	array('Siam', array(28, 29, 40), 5) ,
-			array('Siberia', array(28, 30, 34, 37, 38), 5) ,
-			array('Ural', array(19, 27, 28, 36), 5) ,
-	/*38*/	array('Yakutsk', array(30, 32, 36), 5) ,
+		// Asia
+	/*27*/	['Afghanistan', [19, 28, 29, 33, 37], 5],
+			['China', [27, 29, 34, 35, 36, 37], 5],
+			['India', [27, 28, 33, 35], 5],
+	/*30*/	['Irkutsk', [32, 34, 36, 38], 5],
+			['Japan', [32, 34], 5],
+			['Kamchatka', [1, 30, 31, 34, 38], 5],
+			['Middle East', [18, 19, 22, 23, 27, 29], 5],
+			['Mongolia', [28, 30, 31, 32, 36], 5],
+	/*35*/	['Siam', [28, 29, 40], 5],
+			['Siberia', [28, 30, 34, 37, 38], 5],
+			['Ural', [19, 27, 28, 36], 5],
+	/*38*/	['Yakutsk', [30, 32, 36], 5],
 
-			// Australia
-	/*39*/	array('Eastern Australia', array(41, 42), 6) ,
-	/*40*/	array('Indonesia', array(35, 41, 42), 6) ,
-			array('New Guinea', array(39, 40, 42), 6) ,
-	/*42*/	array('Western Australia', array(39, 40, 41), 6) ,
-		);
+		// Australia
+	/*39*/	['Eastern Australia', [41, 42], 6],
+	/*40*/	['Indonesia', [35, 41, 42], 6],
+			['New Guinea', [39, 40, 42], 6],
+	/*42*/	['Western Australia', [39, 40, 41], 6],
+	];
 
 
 	/** static protected property CARDS
@@ -149,53 +149,53 @@ class Risk
 	 *
 	 * @var array (index starts at 1)
 	 */
-	static public $CARDS = array( 1 =>
-			array(1, INFANTRY) ,
-			array(2, CAVALRY) ,
-			array(3, ARTILLERY) ,
-			array(4, ARTILLERY) ,
-			array(5, CAVALRY) ,
-			array(6, ARTILLERY) ,
-			array(7, CAVALRY) ,
-			array(8, CAVALRY) ,
-			array(9, ARTILLERY) ,
-			array(10, INFANTRY) ,
-			array(11, ARTILLERY) ,
-			array(12, INFANTRY) ,
-			array(13, INFANTRY) ,
-			array(14, ARTILLERY) ,
-			array(15, INFANTRY) ,
-			array(16, ARTILLERY) ,
-			array(17, CAVALRY) ,
-			array(18, ARTILLERY) ,
-			array(19, CAVALRY) ,
-			array(20, ARTILLERY) ,
-			array(21, INFANTRY) ,
-			array(22, INFANTRY) ,
-			array(23, INFANTRY) ,
-			array(24, CAVALRY) ,
-			array(25, CAVALRY) ,
-			array(26, ARTILLERY) ,
-			array(27, CAVALRY) ,
-			array(28, INFANTRY) ,
-			array(29, ARTILLERY) ,
-			array(30, CAVALRY) ,
-			array(31, CAVALRY) ,
-			array(32, INFANTRY) ,
-			array(33, INFANTRY) ,
-			array(34, INFANTRY) ,
-			array(35, INFANTRY) ,
-			array(36, CAVALRY) ,
-			array(37, CAVALRY) ,
-			array(38, CAVALRY) ,
-			array(39, ARTILLERY) ,
-			array(40, ARTILLERY) ,
-			array(41, INFANTRY) ,
-			array(42, ARTILLERY) ,
+	static public $CARDS = [ 1 =>
+		[1, INFANTRY],
+		[2, CAVALRY],
+		[3, ARTILLERY],
+		[4, ARTILLERY],
+		[5, CAVALRY],
+		[6, ARTILLERY],
+		[7, CAVALRY],
+		[8, CAVALRY],
+		[9, ARTILLERY],
+		[10, INFANTRY],
+		[11, ARTILLERY],
+		[12, INFANTRY],
+		[13, INFANTRY],
+		[14, ARTILLERY],
+		[15, INFANTRY],
+		[16, ARTILLERY],
+		[17, CAVALRY],
+		[18, ARTILLERY],
+		[19, CAVALRY],
+		[20, ARTILLERY],
+		[21, INFANTRY],
+		[22, INFANTRY],
+		[23, INFANTRY],
+		[24, CAVALRY],
+		[25, CAVALRY],
+		[26, ARTILLERY],
+		[27, CAVALRY],
+		[28, INFANTRY],
+		[29, ARTILLERY],
+		[30, CAVALRY],
+		[31, CAVALRY],
+		[32, INFANTRY],
+		[33, INFANTRY],
+		[34, INFANTRY],
+		[35, INFANTRY],
+		[36, CAVALRY],
+		[37, CAVALRY],
+		[38, CAVALRY],
+		[39, ARTILLERY],
+		[40, ARTILLERY],
+		[41, INFANTRY],
+		[42, ARTILLERY],
 
-			array(0, WILD) ,
-			array(0, WILD) ,
-		);
+		[0, WILD],
+		[0, WILD],
+	];
 
 
 	/** static public property EXTRA_INFO_DEFAULTS
@@ -230,7 +230,7 @@ class Risk
 	 *
 	 * @var array
 	 */
-	static public $EXTRA_INFO_DEFAULTS = array(
+	static public $EXTRA_INFO_DEFAULTS = [
 			'fortify' => true,
 			'multiple_fortify' => false,
 			'connected_fortify' => false,
@@ -247,7 +247,7 @@ class Risk
 			'conquer_start_at' => 0,
 			'conquer_minimum' => 1,
 			'conquer_maximum' => 42,
-		);
+	];
 
 
 	/** public property board
@@ -423,7 +423,7 @@ class Risk
 		$this->_game_id = (int) $game_id;
 		call($this->_game_id);
 
-		$this->players = array( );
+		$this->players = [];
 		$this->new_player = false;
 
 		if (defined('DEBUG')) {
@@ -540,10 +540,10 @@ class Risk
 		$i = 0;
 		foreach ($land_ids as $land_id) {
 			$player_id = (int) $player_ids[($i % $num_players)];
-			$board[$land_id] = array(
+			$board[$land_id] = [
 				'player_id' => $player_id ,
 				'armies' => 1 ,
-			);
+			];
 			++$i;
 
 			--$this->players[$player_id]['armies'];
@@ -578,12 +578,12 @@ class Risk
 		$board = explode(' ', $board);
 		$board = explode(',', ( ! empty($board[1])) ? $board[1] : $board[0]);
 
-		$this_board = array( );
+		$this_board = [];
 		foreach ($land_ids as $land_id) {
-			$this_board[$land_id] = array(
+			$this_board[$land_id] = [
 				'player_id' => $board[$land_id - 1],
 				'armies' => 1,
-			);
+			];
 
 			--$this->players[$board[$land_id - 1]]['armies'];
 		}
@@ -606,7 +606,7 @@ class Risk
 	public function place_start_armies( ) {
 		call(__METHOD__);
 
-		$placed = array( );
+		$placed = [];
 
 		// place the start armies randomly
 		foreach ($this->players as $player_id => $player) {
@@ -669,11 +669,11 @@ class Risk
 	public function set_game_type($value) {
 		call(__METHOD__);
 
-		$allowed = array(
+		$allowed = [
 			'Original',
 			'Secret Mission',
 			'Capital',
-		);
+		];
 
 		if ( ! in_array($value, $allowed)) {
 			$value = 'Original';
@@ -826,7 +826,7 @@ class Risk
 		// if we are calculating based on trade_value, trade_count, or continents
 		// the 1 point buffer needs to be added
 		$start_count = 1;
-		if (in_array($type, array('trade_value', 'trade_count', 'continents'))) {
+		if (in_array($type, ['trade_value', 'trade_count', 'continents'])) {
 			$start_count = 0;
 		}
 
@@ -920,7 +920,7 @@ class Risk
 
 		$count = (int) $count;
 
-		$start_armies = array(2 => 40, 35, 30, 25, 20);
+		$start_armies = [2 => 40, 35, 30, 25, 20];
 
 		if ( ! empty($count)) {
 			return $start_armies[$count];
@@ -945,7 +945,7 @@ class Risk
 		call(__METHOD__);
 
 		$avail_cards = array_keys(self::$CARDS);
-		$used_cards = array( );
+		$used_cards = [];
 
 		if (is_array($this->players)) {
 			foreach ($this->players as $player_id => $player) {
@@ -960,7 +960,7 @@ class Risk
 					}
 				}
 				else {
-					$this->players[$player_id]['cards'] = array( );
+					$this->players[$player_id]['cards'] = [];
 				}
 			}
 		}
@@ -1312,7 +1312,7 @@ class Risk
 			$this->_test_attack( );
 		}
 
-		return array($defend_id, $defeated);
+		return [$defend_id, $defeated];
 	}
 
 
@@ -1519,7 +1519,7 @@ class Risk
 		}
 
 		// the array of states that we can be in
-		$allowed_states = array(
+		$allowed_states = [
 			'Waiting' ,
 			'Trading' ,
 			'Placing' ,
@@ -1528,22 +1528,22 @@ class Risk
 			'Fortifying' ,
 			'Resigned' ,
 			'Dead' ,
-		);
+		];
 
 		// so we don't place ourselves into a state that does not directly follow
 		// another state, use this array to test our current state
 		// this stops state changes such as going from Trading to Fortifying
 		// NOTE the array_combine with the above array
-		$allowed_from_states = array_combine($allowed_states, array(
-			/* Waiting */    array('Fortifying', 'Placing') ,
-			/* Trading */    array('Waiting', 'Trading') ,
-			/* Placing */    array('Waiting', 'Trading') ,
-			/* Attacking */  array('Placing', 'Occupying') ,
-			/* Occupying */  array('Attacking') ,
-			/* Fortifying */ array('Attacking') ,
-			/* Resigned */   array('Waiting') ,
-			/* Dead */       array('Waiting') ,
-		));
+		$allowed_from_states = array_combine($allowed_states, [
+			/* Waiting */		['Fortifying', 'Placing'],
+			/* Trading */		['Waiting', 'Trading'],
+			/* Placing */		['Waiting', 'Trading'],
+			/* Attacking */		['Placing', 'Occupying'],
+			/* Occupying */		['Attacking'],
+			/* Fortifying */	['Attacking'],
+			/* Resigned */		['Waiting'],
+			/* Dead */			['Waiting'],
+		]);
 
 		// if the given state does not exist
 		if ( ! in_array($state, $allowed_states)) {
@@ -1663,7 +1663,7 @@ class Risk
 				// (we don't have to actually put them back in the deck,
 				// when the game auto-saves, it will remove them from the
 				// player and then the next time it loads, all will be well)
-				$this->players[$player_id]['cards'] = array( );
+				$this->players[$player_id]['cards'] = [];
 				break;
 
 			default :
@@ -1706,12 +1706,12 @@ class Risk
 			throw new MyException(__METHOD__.': Trying to skip trade in a warmonger game');
 		}
 
-		$next_states = array(
+		$next_states = [
 			'Trading' => 'Placing' ,
 			'Placing' => 'Attacking' ,
 			'Attacking' => 'Fortifying' ,
 			'Fortifying' => 'Waiting' ,
-		);
+		];
 
 		try {
 			$this->set_player_state($next_states[$this->players[$player_id]['state']], $player_id);
@@ -1741,7 +1741,7 @@ class Risk
 		}
 
 		// grab all the players land
-		$land = array( );
+		$land = [];
 		foreach ($this->board as $land_id => $territory) {
 			if ($player_id == $territory['player_id']) {
 				$land[$land_id] = self::$TERRITORIES[$land_id][NAME];
@@ -1775,7 +1775,7 @@ class Risk
 		$land_ids = array_keys($land);
 
 		// grab all the adjacent lands
-		$adjacent = array( );
+		$adjacent = [];
 		if (is_array($land_ids)) {
 			foreach ($land_ids as $land_id) {
 				$adjacent = array_merge($adjacent, self::$TERRITORIES[$land_id][ADJACENT]);
@@ -1810,7 +1810,7 @@ class Risk
 		}
 
 		// grab all the players land
-		$land = array( );
+		$land = [];
 		foreach ($this->board as $land_id => $territory) {
 			if ($player_id != $territory['player_id']) {
 				$land[$land_id] = self::$TERRITORIES[$land_id][NAME];
@@ -1842,10 +1842,10 @@ class Risk
 		}
 
 		// grab all the players land
-		$land = array( );
+		$land = [];
 		foreach ($this->board as $land_id => $territory) {
 
-			$ids = array( );
+			$ids = [];
 			foreach ($this->board as $data) {
 
 				if (count($this->get_players_territory($data['player_id'])) > 1) {
@@ -1884,7 +1884,7 @@ class Risk
 		}
 
 		// grab all the players cards
-		$cards = array( );
+		$cards = [];
 		foreach ($this->players[$player_id]['cards'] as $card_id) {
 			$cards[$card_id] = self::$CARDS[$card_id];
 		}
@@ -1932,7 +1932,7 @@ class Risk
 		}
 
 		// grab all the players land
-		$land = array( );
+		$land = [];
 		if (is_array($this->board)) {
 			foreach ($this->board as $land_id => $territory) {
 				if ($player_id == $territory['player_id']) {
@@ -1967,7 +1967,7 @@ class Risk
 		$land_ids = array_keys($land);
 
 		// calculate if the player controls any continents
-		$continents = array( );
+		$continents = [];
 		foreach (self::$CONTINENTS as $cont_id => $cont) {
 			$diff = array_diff($cont[TERRITORIES], $land_ids);
 
@@ -2012,7 +2012,7 @@ class Risk
 
 			Game::log_deferred($this->_game_id, 'E '.$attack_id.':'.$defend_id.':'.implode(',', $this->players[$defend_id]['cards']));
 
-			$this->players[$defend_id]['cards'] = array( );
+			$this->players[$defend_id]['cards'] = [];
 
 // TODO: if I want to make the forced value optional between 5 and 6, here is where I can do that
 			if (6 <= count($this->players[$attack_id]['cards'])) {
@@ -2037,11 +2037,11 @@ class Risk
 	protected function _test_win( ) {
 		call(__METHOD__);
 
-		$alive = array( );
+		$alive = [];
 
 		// check the board for any other viable players
 		foreach ($this->players as $player_id => $player) {
-			if ( ! in_array($player['state'], array('Resigned', 'Dead'))) {
+			if ( ! in_array($player['state'], ['Resigned', 'Dead'])) {
 				$alive[] = $player_id;
 			}
 		}
@@ -2148,7 +2148,7 @@ class Risk
 			throw new MyException(__METHOD__.': Missing required player id');
 		}
 
-		$land = array( );
+		$land = [];
 		foreach ($_SESSION['board'] as $land_id => $data) {
 			if ($data['player_id'] == $player_id) {
 				$land[$land_id] = $data['armies'];
@@ -2223,10 +2223,10 @@ class Risk
 		// loop through the adjacent territories, add them to the list,
 		// remove any that aren't controlled by the player, and if we
 		// find the TO land at some point, we have a success
-		$used = array( );
-		$adjacencies = array($from_land_id);
+		$used = [];
+		$adjacencies = [$from_land_id];
 		do {
-			$new_adj = array( );
+			$new_adj = [];
 
 			foreach ($adjacencies as $adj) {
 				// skip if we've already used this land
@@ -2297,7 +2297,7 @@ class Risk
 
 			// use random.orgs truly random number generator
 			case 'random' :
-				$rolls = array( );
+				$rolls = [];
 
 				$fp_random_org = fopen('http://www.random.org/integers/?num=5&min=1&max=6&col=5&base=8&format=plain&rnd=new', 'r');
 				$text_random_org = fread($fp_random_org, 20);
@@ -2306,7 +2306,7 @@ class Risk
 
 				// if this method didn't work, use the default
 				if (5 > count($rolls)) {
-					$rolls = array( );
+					$rolls = [];
 					for ($i = 0; $i < 5; ++$i) {
 						$rolls[] = (int) mt_rand(1, 6);
 					}
@@ -2316,7 +2316,7 @@ class Risk
 				break;
 
 			case 'hotbits' :
-				$rolls = array( );
+				$rolls = [];
 
 				// TODO: https://www.fourmilab.ch/cgi-bin/uncgi/Hotbits?nbytes=2048&fmt=bin
 				// then convert hex triples to base 8, and disregard any 0s or 7s, using only 1-6
@@ -2338,7 +2338,7 @@ class Risk
 			// inner workings of human perception...
 			case 'builtin' :
 			default :
-				$rolls = array( );
+				$rolls = [];
 				for ($i = 0; $i < 5; ++$i) {
 					$rolls[] = (int) mt_rand(1, 6);
 				}
@@ -2369,7 +2369,7 @@ class Risk
 			Game::log_roll($attack_roll, $defend_roll);
 		}
 
-		$this->previous_dice = array('attack' => $attack_roll, 'defend' => $defend_roll);
+		$this->previous_dice = ['attack' => $attack_roll, 'defend' => $defend_roll];
 
 		// now FIGHT !!
 		$attack_dead = 0;
@@ -2385,7 +2385,7 @@ class Risk
 			}
 		}
 
-		return array($attack_dead, $defend_dead);
+		return [$attack_dead, $defend_dead];
 	}
 
 
@@ -2402,7 +2402,7 @@ class Risk
 	protected function _test_board($board) {
 		call(__METHOD__);
 
-		$lands = array( );
+		$lands = [];
 
 		if ( ! is_array($board)) {
 			throw new MyException(__METHOD__.': No board data given');
@@ -2532,10 +2532,10 @@ class Risk
 
 		// test our key and if found, use that
 		// else, calculate by extrapolating from our current value
-		if (isset($trades[$key]) && ! in_array($trades[$key]{0}, array('+', '-'))) {
+		if (isset($trades[$key]) && ! in_array($trades[$key]{0}, ['+', '-'])) {
 			$value = $trades[$key];
 		}
-		elseif (in_array($trades[$count - 1]{0}, array('+', '-'))) {
+		elseif (in_array($trades[$count - 1]{0}, ['+', '-'])) {
 			// grab the second to last value
 			$value = $trades[$count - 2];
 			$increment = $trades[$count - 1];
@@ -2653,14 +2653,14 @@ class Risk
 	public function order_players( ) {
 		$players = $this->players;
 
-		$order = array( );
+		$order = [];
 		foreach ($players as $player) {
 			$order[$player['order_num']] = $player['player_id'];
 		}
 
 		ksort($order);
 
-		$this->players = array( );
+		$this->players = [];
 		foreach ($order as $player_id) {
 			$this->players[$player_id] = $players[$player_id];
 		}
@@ -2708,7 +2708,7 @@ class Risk
 			// and NOT dead, set them as the current player, and break out of the loop
 			foreach ($this->players as $player) {
 				if ($player['order_num'] == $next_order) {
-					if (in_array($player['state'], array('Resigned', 'Dead'))) {
+					if (in_array($player['state'], ['Resigned', 'Dead'])) {
 						++$next_order;
 						break; // just start the foreach over
 					}
@@ -2833,11 +2833,11 @@ class Risk
 		$single = (3 == $count);
 
 		// build all possible sets
-		$sets = array( );
+		$sets = [];
 		for ($i = 0; $i < ($count - 2); ++$i) {
 			for ($j = ($i + 1); $j < ($count - 1); ++$j) {
 				for ($k = ($j + 1); $k < $count; ++$k) {
-					$sets[] = array($i, $j, $k);
+					$sets[] = [$i, $j, $k];
 				}
 			}
 		}
@@ -2848,7 +2848,7 @@ class Risk
 			call( );
 			call($set);
 
-			$card_types = array( );
+			$card_types = [];
 			// make sure the cards are a set
 			foreach ($set as $index) {
 				$card_types[] = self::$CARDS[$cards[$index]][CARD_TYPE];
@@ -2982,7 +2982,7 @@ function card_type($input) {
  * @return string short territory name
  */
 function shorten_territory_name($name) {
-	$short_names = array(
+	$short_names = [
 			// North America
 //		'Alaska' => 'Alaska' ,
 //		'Alberta' => 'Alberta' ,
@@ -3036,7 +3036,7 @@ function shorten_territory_name($name) {
 //		'Indonesia' => 'Indonesia' ,
 //		'New Guinea' => 'New Guinea' ,
 		'Western Australia' => 'W. Australia' ,
-	);
+	];
 
 	if (array_key_exists($name, $short_names)) {
 		return $short_names[$name];

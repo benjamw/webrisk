@@ -13,17 +13,17 @@ try {
 	$Game = new Game((int) $_SESSION['game_id']);
 	$fog_of_war = $Game->get_fog_of_war( );
 
-	$table_format = array(
-		array('SPECIAL_CLASS', true, '[[[class]]]') ,
-		array('Date', '###@ldate(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', false, '', 'class="date"') ,
-		array('Message', 'message') ,
-	);
-	$table_meta = array(
+	$table_format = [
+		['SPECIAL_CLASS', true, '[[[class]]]'],
+		['Date', '###@ldate(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', false, '', 'class="date"'],
+		['Message', 'message'],
+	];
+	$table_meta = [
 		'no_data' => '<p>There is nothing to show yet</p>' ,
 		'caption' => 'Game History &nbsp; &nbsp; <span class="info">Newest entries on top</span>' ,
 		'class' => 'history' ,
 		'alt_class' => '' ,
-	);
+	];
 
 	if (('Finished' != $Game->state) && (('Show All' != $fog_of_war['armies']) || ('Show All' != $fog_of_war['colors']))) {
 		$history = '<p>The fog overcomes you...</p>';
@@ -37,7 +37,7 @@ try {
 		$logs = Game::get_logs($_SESSION['game_id']);
 		$players = $Game->get_players( );
 
-		$colors = array( );
+		$colors = [];
 		foreach ($players as $key => $player) {
 			$colors[$player['color']] = htmlentities($GLOBALS['_PLAYERS'][$key]).' ['.$key.']';
 		}

@@ -20,7 +20,7 @@ if ($not_admin && ($no_new_users || ($max_users_set && $max_users_reached))) {
 }
 
 if ($not_admin && isset($_SESSION['player_id'])) {
-	$GLOBALS['Player'] = array( );
+	$GLOBALS['Player'] = [];
 	$_SESSION['player_id'] = false;
 	unset($_SESSION['player_id']);
 	unset($GLOBALS['Player']);
@@ -66,10 +66,10 @@ $meta['head_data'] = '
 $meta['show_menu'] = false;
 echo get_header($meta);
 
-$hints = array(
+$hints = [
 	'Please Register' ,
 	'You must remember your username and password to be able to gain access to '.GAME_NAME.' later.' ,
-);
+];
 
 if (Settings::read('approve_users')) {
 	$hints[] = '<span class="notice">NOTE</span>: You will be unable to log in if your account has not been approved yet.';

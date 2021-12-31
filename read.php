@@ -142,7 +142,7 @@ echo get_header($meta);
 				continue;
 			}
 
-			$classes = array( );
+			$classes = [];
 			if (is_null($recipient['view_date'])) {
 				$classes[] = 'unread';
 			}

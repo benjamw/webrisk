@@ -39,7 +39,7 @@ class Settings
 	 *
 	 * @param array
 	 */
-	protected $_settings = array( );
+	protected $_settings = [];
 
 
 	/** protected property _defaults
@@ -49,7 +49,7 @@ class Settings
 	 *
 	 * @var array
 	 */
-	protected $_defaults = array(
+	protected $_defaults = [
 		'site_name' => 'This Website',
 		'default_color' => 'c_yellow_black.css',
 		'nav_links' => '',
@@ -71,7 +71,7 @@ class Settings
 		'debug_pass' => '',
 		'DB_error_log' => 0,
 		'DB_error_email' => 0,
-	);
+	];
 
 
 	/** protected property _notes
@@ -80,7 +80,7 @@ class Settings
 	 *
 	 * @param array
 	 */
-	protected $_notes = array( );
+	protected $_notes = [];
 
 
 	/** protected property _delete_missing
@@ -245,7 +245,7 @@ class Settings
 		";
 		$results = $this->_mysql->fetch_array($query);
 
-		$data = array( );
+		$data = [];
 		$settings = $this->_settings;
 		foreach ($results as $result) {
 			if (isset($settings[$result['setting']])) {

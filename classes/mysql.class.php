@@ -52,12 +52,12 @@ class Mysql {
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(
+	protected $defaults = [
 		'driver' => 'mysql',
 		'hostname' => 'localhost',
 		'port' => 3306,
 		'log_path' => './',
-	);
+	];
 
 	/**
 	 * Actual settings
@@ -114,22 +114,22 @@ class Mysql {
 	 *
 	 * @var array
 	 */
-	protected $email_settings = array(
+	protected $email_settings = [
 		'errors' => false,
 		'subject' => 'Query Error',
 		'from' => 'example@example.com',
 		'to' => 'example@example.com',
-	);
+	];
 
 	/**
 	 * Error log settings
 	 *
 	 * @var array
 	 */
-	protected $log_settings = array(
+	protected $log_settings = [
 		'errors' => false,
 		'path' => './',
-	);
+	];
 
 	/**
 	 * The number of queries run
@@ -303,14 +303,14 @@ class Mysql {
 	 * @return void
 	 */
 	public function set_settings($settings) {
-		$valid = array(
+		$valid = [
 			'log_errors',
 			'log_path',
 			'email_errors',
 			'email_subject',
 			'email_from',
 			'email_to',
-		);
+		];
 
 		foreach ($valid as $key) {
 			if (isset($settings[$key])) {
@@ -545,12 +545,12 @@ class Mysql {
 		}
 
 		$join = trim(strtoupper($join));
-		$clauses = array( );
+		$clauses = [];
 		foreach ($where as $clause => $value) {
 			if (is_numeric($clause) && is_array($value)) {
 				$clauses[] = '( '.$this->build_where($value).' )';
 			}
-			elseif (in_array(strtoupper(trim($clause)), array('AND', 'OR'))) {
+			elseif (in_array(strtoupper(trim($clause)), ['AND', 'OR'])) {
 				$clauses[] = '( '.$this->build_where($value, strtoupper(trim($clause))).' )';
 			}
 			else {
@@ -582,7 +582,7 @@ class Mysql {
 							$clauses[] = $value;
 						}
 						else {
-							if ( ! in_array($value, array('NULL', 'TRUE', 'FALSE')) && (0 !== strpos($value, ':')) && ('?' !== $value)) {
+							if ( ! in_array($value, ['NULL', 'TRUE', 'FALSE']) && (0 !== strpos($value, ':')) && ('?' !== $value)) {
 								$value = $this->conn->quote($value);
 							}
 
@@ -607,7 +607,7 @@ class Mysql {
 						}
 					}
 					else {
-						if ( ! in_array($value, array('NULL', 'TRUE', 'FALSE')) && (0 !== strpos($value, ':')) && ('?' !== $value)) {
+						if ( ! in_array($value, ['NULL', 'TRUE', 'FALSE']) && (0 !== strpos($value, ':')) && ('?' !== $value)) {
 							$value = "'{$value}'";
 						}
 
@@ -631,7 +631,7 @@ class Mysql {
 	 * @return array params
 	 */
 	protected function get_params(& $where, $level = 0) {
-		$params = array( );
+		$params = [];
 
 		if ( ! is_array($where)) {
 			return $params;
@@ -707,7 +707,7 @@ class Mysql {
 		}
 		else {
 			$query .= ' SET ';
-			$set = array( );
+			$set = [];
 			foreach ($data_array as $field => $value) {
 				if (is_null($value)) {
 					$value = 'NULL';
@@ -769,7 +769,7 @@ class Mysql {
 			throw new MySQLException(__METHOD__.': Trying to multi-insert non-array data');
 		}
 		else {
-			$result = array( );
+			$result = [];
 
 			foreach ($data_array as $key => $row) {
 				$where = (isset($row['DBWHERE'])) ? $row['DBWHERE'] : '';
@@ -847,15 +847,15 @@ class Mysql {
 			$key = $where_array_keys[0];
 			if (is_string($key)) {
 				$recursive = false;
-				$where_array = array($where_array);
+				$where_array = [$where_array];
 			}
 		}
 		else {
 			$recursive = false;
-			$where_array = array($where_array);
+			$where_array = [$where_array];
 		}
 
-		$result = array( );
+		$result = [];
 
 		if ($recursive) {
 			foreach ($table_array as $table) {
@@ -1076,7 +1076,7 @@ class Mysql {
 
 		$this->sth->setFetchMode($result_type);
 
-		$results = array( );
+		$results = [];
 		foreach ($this->sth as $row) {
 			if ( ! is_null($key) && array_key_exists($key, $row)) {
 				$results[$row[$key]] = $row;
@@ -1195,7 +1195,7 @@ class Mysql {
 
 			if ( ! $this->_page_result) {
 				// no data found
-				return array( );
+				return [];
 			}
 
 			$query = "
@@ -1207,7 +1207,7 @@ class Mysql {
 		}
 		else { // we are using the previous data
 			if ($this->_num_results < ($this->_num_per_page * ($this->_page - 1))) {
-				return array( );
+				return [];
 			}
 
 			$this->query = $this->_page_query;
@@ -1224,12 +1224,12 @@ class Mysql {
 
 			if ( ! $this->_page_result) {
 				// no data found
-				return array( );
+				return [];
 			}
 		}
 
 		// clean up the data and output to user
-		$output = array( );
+		$output = [];
 		$output['num_rows'] = $this->_num_results;
 		$output['num_per_page'] = $this->_num_per_page;
 		$output['num_pages'] = $this->_num_pages;
@@ -1282,7 +1282,7 @@ class Mysql {
 			$this->sth = null;
 
 			$this->query = $query;
-			$this->params = array( );
+			$this->params = [];
 		}
 
 		if ( ! empty($args)) {
@@ -1376,7 +1376,7 @@ class Mysql {
 		}
 
 		$this->sth = null;
-		$this->params = array( );
+		$this->params = [];
 		$this->query = false;
 		$this->prepared = false;
 	}

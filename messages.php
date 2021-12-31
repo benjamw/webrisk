@@ -41,23 +41,23 @@ $contents = '
 
 // INBOX
 $messages = $Message->get_inbox_list( );
-$table_format = array(
-	array('SPECIAL_CLASS', 'my_empty(\'[[[view_date]]]\')', 'highlight') ,
-	array('SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"') ,
+$table_format = [
+	['SPECIAL_CLASS', 'my_empty(\'[[[view_date]]]\')', 'highlight'],
+	['SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"'],
 
-	array('Id', 'message_id') ,
-	array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\', ENT_QUOTES), 25), ENT_QUOTES, \'UTF-8\', false)') ,
-	array('From', '###\'[[[sender]]]\'.(([[[global]]]) ? \' <span class="highlight">(<abbr title="GLOBAL">G</abbr>)</span>\' : \'\')') ,
-	array('Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))') ,
-	array('Date Read', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[view_date]]]\'), \'Never\')') ,
-	array('Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')') ,
-	array('<input type="checkbox" id="in_all" />', '<input type="checkbox" name="ids[]" value="[[[message_id]]]" class="in_box" />', 'false', 'class="edit"') ,
-);
-$table_meta = array(
+	['Id', 'message_id'],
+	['Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\', ENT_QUOTES), 25), ENT_QUOTES, \'UTF-8\', false)'],
+	['From', '###\'[[[sender]]]\'.(([[[global]]]) ? \' <span class="highlight">(<abbr title="GLOBAL">G</abbr>)</span>\' : \'\')'],
+	['Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
+	['Date Read', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[view_date]]]\'), \'Never\')'],
+	['Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
+	['<input type="checkbox" id="in_all" />', '<input type="checkbox" name="ids[]" value="[[[message_id]]]" class="in_box" />', 'false', 'class="edit"'],
+];
+$table_meta = [
 	'sortable' => true ,
 	'no_data' => '<p>There are no messages in your inbox.</p><!-- NO_INBOX -->' ,
 	'caption' => 'Inbox' ,
-);
+];
 $table = get_table($table_format, $messages, $table_meta);
 
 // add the message edit form if we have messages shown
@@ -81,22 +81,22 @@ else {
 
 // OUTBOX
 $result = $Message->get_outbox_list( );
-$table_format = array(
-	array('SPECIAL_CLASS', ' ! [[[sent]]]', 'unsent') ,
-	array('SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"') ,
+$table_format = [
+	['SPECIAL_CLASS', ' ! [[[sent]]]', 'unsent'],
+	['SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"'],
 
-	array('Id', 'message_id') ,
-	array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)') ,
-	array('To', 'recipients') ,
-	array('Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))') ,
-	array('Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')') ,
-	array('<input type="checkbox" id="out_all" />', '<input type="checkbox" name="ids[]" value="[[[message_id]]]" class="out_box" />', 'false', 'class="edit"') ,
-);
-$table_meta = array(
+	['Id', 'message_id'],
+	['Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)'],
+	['To', 'recipients'],
+	['Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
+	['Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
+	['<input type="checkbox" id="out_all" />', '<input type="checkbox" name="ids[]" value="[[[message_id]]]" class="out_box" />', 'false', 'class="edit"'],
+];
+$table_meta = [
 	'sortable' => true ,
 	'no_data' => '<p>There are no messages in your outbox.</p><!-- NO_OUTBOX -->' ,
 	'caption' => 'Outbox' ,
-);
+];
 $table = get_table($table_format, $result, $table_meta);
 
 // add the message edit form if we have messages shown
@@ -119,22 +119,22 @@ else {
 // ADMIN LIST
 if (false && $GLOBALS['Player']->is_admin) {
 	$result = $Message->get_admin_list( );
-	$table_format = array(
-		array('SPECIAL_CLASS', ' ! [[[sent]]]', 'unsent') ,
-		array('SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"') ,
+	$table_format = [
+		['SPECIAL_CLASS', ' ! [[[sent]]]', 'unsent'],
+		['SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"'],
 
-		array('Id', 'message_id') ,
-		array('Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)') ,
-		array('From', 'sender') ,
-		array('To', 'recipients') ,
-		array('Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))') ,
-		array('Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')') ,
-	);
-	$table_meta = array(
+		['Id', 'message_id'],
+		['Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)'],
+		['From', 'sender'],
+		['To', 'recipients'],
+		['Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
+		['Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
+	];
+	$table_meta = [
 		'sortable' => true ,
 		'no_data' => '<p>There are no messages in the admin list.</p><!-- NO_ADMIN -->' ,
 		'caption' => 'Admin List' ,
-	);
+	];
 	$table = get_table($table_format, $result, $table_meta);
 
 	// no form
@@ -142,14 +142,14 @@ if (false && $GLOBALS['Player']->is_admin) {
 }
 
 
-$hints = array(
+$hints = [
 	'Click anywhere on a row to read your messages.' ,
 	'<span class="highlight">Colored inbox entries</span> indicate messages that have not been read.' ,
 	'<span class="highlight">(<abbr title="GLOBAL">G</abbr>)</span> indicates a GLOBAL message sent by an administrator.',
 	'<span class="highlight">Colored outbox entries</span> indicate messages that have not been sent.' ,
 	'Colored outbox <span class="highlight">recipient</span> entries indicate messages that have not been read.' ,
 	'Colored outbox <span class="highlight">sent dates</span> indicate messages that have not been sent.' ,
-);
+];
 
 echo get_header($meta);
 echo get_item($contents, $hints, $meta['title']);

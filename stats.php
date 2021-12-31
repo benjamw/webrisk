@@ -21,32 +21,32 @@ $meta['head_data'] = '
 	//]]></script>
 ';
 
-$hints = array(
+$hints = [
 	'View '.GAME_NAME.' Player and Game statistics.' ,
 	'A Kill is when you eradicate a player from the game.' ,
-);
+];
 
 // grab the wins and losses for the players
 $list = GamePlayer::get_list(true);
 
-$table_meta = array(
-	'sortable' => true ,
-	'no_data' => '<p>There are no player stats to show</p>' ,
-	'caption' => 'Player Stats' ,
-	'init_sort_column' => array(1 => 1) ,
-);
-$table_format = array(
-	array('Player', 'username') ,
-	array('Wins', 'wins') ,
-	array('Kills', 'kills') ,
-	array('Losses', 'losses') ,
-	array('Win-Loss', '###([[[wins]]] - [[[losses]]])', null, ' class="color"') ,
-	array('Win %', '###((0 != ([[[wins]]] + [[[losses]]])) ? perc([[[wins]]] / ([[[wins]]] + [[[losses]]]), 1) : 0)') ,
-	array('Kill-Loss', '###([[[kills]]] - [[[losses]]])', null, ' class="color"') ,
-	array('Kill-Win', '###([[[kills]]] - [[[wins]]])', null, ' class="color"') ,
-	array('Kill %', '###((0 != ([[[wins]]] + [[[losses]]])) ? perc([[[kills]]] / ([[[wins]]] + [[[losses]]]), 1) : 0)') ,
-	array('Last Online', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"') ,
-);
+$table_meta = [
+	'sortable' => true,
+	'no_data' => '<p>There are no player stats to show</p>',
+	'caption' => 'Player Stats',
+	'init_sort_column' => [1 => 1],
+];
+$table_format = [
+	['Player', 'username'],
+	['Wins', 'wins'],
+	['Kills', 'kills'],
+	['Losses', 'losses'],
+	['Win-Loss', '###([[[wins]]] - [[[losses]]])', null, ' class="color"'],
+	['Win %', '###((0 != ([[[wins]]] + [[[losses]]])) ? perc([[[wins]]] / ([[[wins]]] + [[[losses]]]), 1) : 0)'],
+	['Kill-Loss', '###([[[kills]]] - [[[losses]]])', null, ' class="color"'],
+	['Kill-Win', '###([[[kills]]] - [[[wins]]])', null, ' class="color"'],
+	['Kill %', '###((0 != ([[[wins]]] + [[[losses]]])) ? perc([[[kills]]] / ([[[wins]]] + [[[losses]]]), 1) : 0)'],
+	['Last Online', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"'],
+];
 $contents = get_table($table_format, $list, $table_meta);
 
 extract(Game::get_roll_stats( )); // extracts $actual, $theor, and $values arrays

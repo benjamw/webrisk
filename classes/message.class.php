@@ -119,7 +119,7 @@ class Message
 		$message_ids = $this->_mysql->fetch_value_array($query);
 
 		if ($message_ids) {
-			$this->_mysql->multi_delete(array(self::GLUE_TABLE, self::MESSAGE_TABLE), " WHERE message_id IN (".implode(',', $message_ids).") ");
+			$this->_mysql->multi_delete([self::GLUE_TABLE, self::MESSAGE_TABLE], " WHERE message_id IN (".implode(',', $message_ids).") ");
 		}
 	}
 
@@ -256,20 +256,20 @@ class Message
 				if ($recipients) {
 					foreach ($recipients as $recipient) {
 						if (0 == $recipient['to_id']) {
-							$row['recipient_data'][] = array(
+							$row['recipient_data'][] = [
 								'id' => $recipient['to_id'] ,
 								'name' => 'GLOBAL' ,
 								'viewed' => true
-							);
+							];
 
 							break;
 						}
 
-						$row['recipient_data'][] = array(
+						$row['recipient_data'][] = [
 							'id' => $recipient['to_id'] ,
 							'name' => $GLOBALS['_PLAYERS'][$recipient['to_id']] ,
 							'viewed' => ( ! is_null($recipient['view_date']))
-						);
+						];
 
 						$result[$key] = $row;
 					}
@@ -357,20 +357,20 @@ class Message
 				if ($recipients) {
 					foreach ($recipients as $recipient) {
 						if (0 == $recipient['to_id']) {
-							$row['recipient_data'][] = array(
+							$row['recipient_data'][] = [
 								'id' => $recipient['to_id'] ,
 								'name' => 'GLOBAL' ,
 								'viewed' => true
-							);
+							];
 
 							break;
 						}
 
-						$row['recipient_data'][] = array(
+						$row['recipient_data'][] = [
 							'id' => $recipient['to_id'] ,
 							'name' => $GLOBALS['_PLAYERS'][$recipient['to_id']] ,
 							'viewed' => ( ! is_null($recipient['view_date']))
-						);
+						];
 
 						$result[$key] = $row;
 					}
@@ -556,7 +556,7 @@ class Message
 				WHERE to_id = '{$this->_user_id}'
 					AND message_id IN (".implode(',', $message_ids).")
 			";
-			$this->_mysql->insert(self::GLUE_TABLE, array('view_date ' => 'NOW( )'), $WHERE);
+			$this->_mysql->insert(self::GLUE_TABLE, ['view_date ' => 'NOW( )'], $WHERE);
 		}
 	}
 
@@ -579,7 +579,7 @@ class Message
 				WHERE to_id = '{$this->_user_id}'
 					AND message_id IN (".implode(',', $message_ids).")
 			";
-			$this->_mysql->insert(self::GLUE_TABLE, array('view_date' => NULL), $WHERE);
+			$this->_mysql->insert(self::GLUE_TABLE, ['view_date' => NULL], $WHERE);
 		}
 	}
 
@@ -615,7 +615,7 @@ class Message
 					if (strtotime($result['send_date']) > $now) {
 			 			// the message has not been sent yet, delete them all
 			 			// (use actual deletions here)
-						$this->_mysql->multi_delete(array(self::GLUE_TABLE, self::MESSAGE_TABLE), " WHERE message_id = '{$message_id}' ");
+						$this->_mysql->multi_delete([self::GLUE_TABLE, self::MESSAGE_TABLE], " WHERE message_id = '{$message_id}' ");
 			 		}
 
 			 		// check for global message and delete if found
@@ -634,7 +634,7 @@ class Message
 			 		WHERE to_id = '{$this->_user_id}'
 			 			AND message_id = '{$message_id}'
 			 	";
-			 	$this->_mysql->insert(self::GLUE_TABLE, array('deleted' => 1), $WHERE);
+			 	$this->_mysql->insert(self::GLUE_TABLE, ['deleted' => 1], $WHERE);
 			}
 		}
 	}
@@ -696,7 +696,7 @@ class Message
 		}
 		else { // this is not an admin
 			// remove all instances of 0 from the id list
-			$user_ids = array_diff(array_unique($user_ids), array(0));
+			$user_ids = array_diff(array_unique($user_ids), [0]);
 		}
 
 		if ( ! is_array($user_ids) || (0 == count($user_ids))) {
@@ -708,7 +708,7 @@ class Message
 		$message = htmlentities($message, ENT_QUOTES, 'UTF-8', false);
 
 		// save the message so we can grab the id
-		$message_id = $this->_mysql->insert(self::MESSAGE_TABLE, array('subject' => $subject, 'message' => $message));
+		$message_id = $this->_mysql->insert(self::MESSAGE_TABLE, ['subject' => $subject, 'message' => $message]);
 
 		// add ourselves to the recipient list and clean it up
 		$user_ids[] = $this->_user_id;
@@ -719,13 +719,13 @@ class Message
 		$expire_date = ( ! preg_match('%^(\\d+)/(\\d+)/(\\d+)$%', $expire_date)) ? NULL : preg_replace('%^(\\d+)/(\\d+)/(\\d+)$%', '$3-$1-$2', $expire_date);
 
 		foreach($user_ids as $user_id) {
-			$data = array(
+			$data = [
 				'message_id' => $message_id,
 				'from_id' => $this->_user_id,
 				'to_id' => $user_id,
 				'send_date' => $send_date,
 				'expire_date' => $expire_date,
-			);
+			];
 			$this->_mysql->insert(self::GLUE_TABLE, $data);
 		}
 	}
@@ -827,7 +827,7 @@ class Message
 		";
 		$new_msgs = $Mysql->fetch_value($query);
 
-		return array($msgs, $new_msgs);
+		return [$msgs, $new_msgs];
 	}
 
 

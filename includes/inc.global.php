@@ -73,16 +73,16 @@ $GLOBALS['_TZ'] = $GLOBALS['_DEFAULT_TIMEZONE'];
  * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 $Mysql = Mysql::get_instance( );
-$Mysql->set_settings(array(
+$Mysql->set_settings([
 	'log_path' => LOG_DIR,
 	'email_subject' => GAME_NAME.' Query Error',
-));
+]);
 
 $GLOBALS['_&_DEBUG_QUERY'] = '';
 $GLOBALS['_?_DEBUG_QUERY'] = '';
 
 // make a list of all the color files available to use
-$GLOBALS['_COLORS'] = array( );
+$GLOBALS['_COLORS'] = [];
 
 $dh = opendir(realpath(dirname(__FILE__).'/../css'));
 while (false !== ($file = readdir($dh))) {
@@ -128,7 +128,7 @@ session_start( );
 
 // make sure we don't cross site session steal in our own site
 if ( ! isset($_SESSION['PWD']) || (__FILE__ != $_SESSION['PWD'])) {
-	$_SESSION = array( );
+	$_SESSION = [];
 }
 $_SESSION['PWD'] = __FILE__;
 
@@ -160,12 +160,12 @@ if ( ! defined('DEBUG')) {
 $GLOBALS['_LOGGING'] = DEBUG; // do not change, rather, change debug value
 
 if (class_exists('Settings') && Settings::test( )) {
-	$Mysql->set_settings(array(
+	$Mysql->set_settings([
 		'log_errors' => Settings::read('DB_error_log'),
 		'email_errors' => Settings::read('DB_error_email'),
 		'email_from' => Settings::read('from_email'),
 		'email_to' => Settings::read('to_email'),
-	));
+	]);
 }
 
 if (defined('DEBUG') && DEBUG) {

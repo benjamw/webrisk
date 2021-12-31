@@ -89,7 +89,7 @@ class Gravatar
 	 * @action instantiates object
 	 * @return void
 	 */
-	public function __construct($settings = array( ))
+	public function __construct($settings = [])
 	{
 		foreach ($settings as $key => $value) {
 			switch ($key) {
@@ -113,7 +113,7 @@ class Gravatar
 				case 'rating' :
 					$value = strtolower($value);
 
-					if ( ! in_array($value, array('g', 'pg', 'r', 'x'))) {
+					if ( ! in_array($value, ['g', 'pg', 'r', 'x'])) {
 						unset($settings[$key]);
 						break;
 					}
@@ -122,7 +122,7 @@ class Gravatar
 				case 'default' :
 					$value = strtolower($value);
 
-					if ( ! in_array($value, array('identicon', 'monsterid', 'wavatar', ''))
+					if ( ! in_array($value, ['identicon', 'monsterid', 'wavatar', ''])
 						&& ! preg_match('%^http://%i', $value))
 					{
 						unset($settings[$key]);
@@ -138,11 +138,11 @@ class Gravatar
 
 		// you can set your own default settings here
 		// or leave blank to use gravatar.com's defaults
-		$defaults = array(
+		$defaults = [
 			'size' => 45,
 			'rating' => 'pg',
 			'default' => 'identicon',
-		);
+		];
 
 		$opts = array_merge($defaults, $settings);
 
@@ -239,7 +239,7 @@ class Gravatar
 	 * @action optionally creates the instance
 	 * @return Log Object reference
 	 */
-	static public function get_instance($settings = array( ))
+	static public function get_instance($settings = [])
 	{
 		if (is_null(self::$_instance)) {
 			self::$_instance = new Gravatar($settings);
@@ -256,7 +256,7 @@ class Gravatar
 	 * @param array optional settings
 	 * @return string image src
 	 */
-	static public function src($email = null, $settings = array( ))
+	static public function src($email = null, $settings = [])
 	{
 		$_this = self::get_instance($settings);
 

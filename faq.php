@@ -53,10 +53,10 @@ $contents = '
 	</div>
 ';
 
-$hints = array(
+$hints = [
 	'<span class="highlight">Have a question?</span>',
 	'Contact the administrator or ask your question in the game chat or main lobby',
-);
+];
 
 echo get_header($meta);
 echo get_item($contents, $hints, $meta['title']);

@@ -308,11 +308,11 @@ class Player
 
 		// clear player session data, but...
 		// keep the items that we need
-		$kill = array(
+		$kill = [
 			'player_id',
 			'PID',
 			'admin_id',
-		);
+		];
 
 		foreach (array_keys($_SESSION) as $key) {
 			if (in_array($key, $kill)) {
@@ -351,16 +351,16 @@ class Player
 	{
 		call(__METHOD__);
 
-		$required = array(
+		$required = [
 			'username' ,
 			'email' ,
-		);
+		];
 
-		$key_list = array_merge($required, array(
+		$key_list = array_merge($required, [
 			'first_name' ,
 			'last_name' ,
 			'timezone' ,
-		));
+		]);
 
 		if ($_DATA = array_clean($_POST, $key_list, $required)) {
 			// remove any html
@@ -396,7 +396,7 @@ class Player
 
 			if ($this->id) {
 				if ((bool) (int) Settings::read('approve_users')) {
-					Email::send('register', explode(',', Settings::read('to_email')), array_merge(array('page' => 'admin.php', 'id' => $this->id), $_DATA));
+					Email::send('register', explode(',', Settings::read('to_email')), array_merge(['page' => 'admin.php', 'id' => $this->id], $_DATA));
 				}
 
 				return $this->_set_password($_POST['password']);
@@ -420,15 +420,15 @@ class Player
 	{
 		call(__METHOD__);
 
-		$required = array(
+		$required = [
 			'email' ,
-		);
+		];
 
-		$key_list = array_merge($required, array(
+		$key_list = array_merge($required, [
 			'first_name' ,
 			'last_name' ,
 			'timezone' ,
-		));
+		]);
 
 		if ($_DATA = array_clean($_POST, $key_list, $required)) {
 			// remove any html
@@ -501,7 +501,7 @@ class Player
 		$player_ids[] = 0;
 		$player_ids = implode(',', $player_ids);
 
-		$this->_mysql->insert(self::PLAYER_TABLE, array('is_approved' => 1), " WHERE player_id IN ({$player_ids}) ");
+		$this->_mysql->insert(self::PLAYER_TABLE, ['is_approved' => 1], " WHERE player_id IN ({$player_ids}) ");
 
 		Email::send('approved', $player_ids);
 	}
@@ -551,10 +551,10 @@ class Player
 
 		array_trim($player_ids, 'int');
 
-		$data = array(
+		$data = [
 			'password' => self::hash_password(Settings::read('default_pass')),
 			'alt_pass' => self::hash_alt_pass(Settings::read('default_pass')),
-		);
+		];
 		$this->_mysql->insert(self::PLAYER_TABLE, $data, " WHERE player_id IN (0,".implode(',', $player_ids).") ");
 	}
 
@@ -569,7 +569,7 @@ class Player
 	 */
 	public function save( )
 	{
-		$data = array( );
+		$data = [];
 		$data['username'] = $this->username;
 		$data['first_name'] = $this->firstname;
 		$data['last_name'] = $this->lastname;
@@ -631,10 +631,10 @@ class Player
 	 */
 	protected function _set_password($password)
 	{
-		$data = array(
+		$data = [
 			'password' => self::hash_password($password),
 			'alt_pass' => self::hash_alt_pass($password),
-		);
+		];
 		return $this->_mysql->insert(self::PLAYER_TABLE, $data, " WHERE player_id = '{$this->id}' ");
 	}
 
@@ -687,9 +687,9 @@ class Player
 				FROM ".self::PLAYER_TABLE."
 				WHERE username = :username
 			";
-			$params = array(
+			$params = [
 				':username' => $_POST['username'],
-			);
+			];
 			$result = $this->_mysql->fetch_row($query, $params);
 
 			if ($result) {
@@ -780,7 +780,7 @@ class Player
 		$this->_token = md5(uniqid(mt_rand( ), true));
 
 		// save the new token to the database
-		$this->_mysql->insert(self::PLAYER_TABLE, array('token' => $this->_token), " WHERE player_id = '{$this->id}' ");
+		$this->_mysql->insert(self::PLAYER_TABLE, ['token' => $this->_token], " WHERE player_id = '{$this->id}' ");
 
 		// submit the new cookie
 		$data = base64_encode($this->_token . $this->_ident);
@@ -929,9 +929,9 @@ class Player
 			FROM ".self::PLAYER_TABLE."
 			WHERE username = :username
 		";
-		$params = array(
+		$params = [
 			':username' => $username,
-		);
+		];
 		$result = $Mysql->fetch_value($query, $params);
 
 		if ($result) {
@@ -950,10 +950,10 @@ class Player
 				WHERE email = :email
 					AND player_id <> :player_id
 			";
-			$params = array(
+			$params = [
 				':email' => $email,
 				':player_id' => $player_id,
-			);
+			];
 			$result = $Mysql->fetch_value($query, $params);
 
 			if ($result) {
@@ -1045,7 +1045,7 @@ class Player
 	{
 		$players = Player::get_list( );
 
-		$array = array(0 => 'The Nothing');
+		$array = [0 => 'The Nothing'];
 		foreach ((array) $players as $player) {
 			$array[$player['player_id']] = $player['username'];
 		}

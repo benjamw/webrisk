@@ -56,7 +56,7 @@ if ( ! function_exists('call')) {
 
 		$j = 0;
 		$html = '';
-		$debug_funcs = array('dump', 'debug');
+		$debug_funcs = ['dump', 'debug'];
 		if ((bool) $show_from) {
 			$called_from = debug_backtrace();
 
@@ -276,12 +276,12 @@ function pack_replace_callback($match) {
  * @return int the FEN string index
  */
 function get_index($i, $j, $blocks = 3, $elems = 3) {
-	$bits = array(
+	$bits = [
 		($j % $elems), // across within block (across elems)
 		((int) floor($j / $elems) * $blocks * $elems), // down within block (down elems)
 		(($i % $blocks) * $elems), // across blocks
 		((int) floor($i / $blocks) * $blocks * $elems * $elems), // down blocks
-	);
+  ];
 
 	return array_sum($bits);
 }

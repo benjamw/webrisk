@@ -63,7 +63,7 @@ class Schema extends Mysql
 		$tables = $_this->fetch_array($query);
 debug($tables);
 
-		$tables_schema = array( );
+		$tables_schema = [];
 		foreach ($tables as $table) {
 			$query = "
 				DESCRIBE {$table}

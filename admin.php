@@ -97,10 +97,10 @@ $meta['head_data'] = '
 	<script type="text/javascript" src="scripts/admin.js"></script>
 ';
 
-$hints = array(
+$hints = [
 	'Here you can administrate your '.GAME_NAME.' installation.' ,
 	'Click anywhere on a row to mark that row for action.' ,
-);
+];
 
 $contents = '';
 
@@ -126,23 +126,23 @@ foreach ($player_list as $key => $player) {
 	$player_list[$key] = $player;
 }
 
-$table_meta = array(
+$table_meta = [
 	'sortable' => true ,
 	'no_data' => '<p>There are no players to show</p><!-- NO_PLAYERS -->' ,
 	'caption' => 'Players' ,
-);
-$table_format = array(
-	array('ID', 'player_id') ,
-	array('Player', 'username') ,
-	array('First Name', 'first_name') ,
-	array('Last Name', 'last_name') ,
-	array('Email', 'email') ,
-	array(array('Games', '(Total | Current | Turn)'), '[[[played]]]&nbsp;|&nbsp;[[[games]]]&nbsp;|&nbsp;[[[turn]]]') ,
-	array('Admin', '###(([[[full_admin]]] | [[[half_admin]]]) ? \'<span class="notice">Yes</span>\' : \'No\')') ,
-	array('Approved', '###(([[[is_approved]]]) ? \'Yes\' : \'<span class="notice">No</span>\')') ,
-	array('Last Online', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"') ,
-	array('<input type="checkbox" id="player_all" />', '<input type="checkbox" name="ids[]" value="[[[player_id]]]" class="player_box" />', 'false', 'class="edit"') ,
-);
+];
+$table_format = [
+	['ID', 'player_id'],
+	['Player', 'username'],
+	['First Name', 'first_name'],
+	['Last Name', 'last_name'],
+	['Email', 'email'],
+	[['Games', '(Total | Current | Turn)'], '[[[played]]]&nbsp;|&nbsp;[[[games]]]&nbsp;|&nbsp;[[[turn]]]'],
+	['Admin', '###(([[[full_admin]]] | [[[half_admin]]]) ? \'<span class="notice">Yes</span>\' : \'No\')'],
+	['Approved', '###(([[[is_approved]]]) ? \'Yes\' : \'<span class="notice">No</span>\')'],
+	['Last Online', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_online]]]\'))', null, ' class="date"'],
+	['<input type="checkbox" id="player_all" />', '<input type="checkbox" name="ids[]" value="[[[player_id]]]" class="player_box" />', 'false', 'class="edit"'],
+];
 $table = get_table($table_format, $player_list, $table_meta);
 
 if (false === strpos($table, 'NO_PLAYERS')) {
@@ -167,22 +167,22 @@ else {
 // get the games
 $game_list = Game::get_list( );
 
-$table_meta = array(
+$table_meta = [
 	'sortable' => true ,
 	'no_data' => '<p>There are no games to show</p><!-- NO_GAMES -->' ,
 	'caption' => 'Games' ,
-);
-$table_format = array(
-	array('ID', 'game_id') ,
-	array('Name', 'name') ,
-	array('Host', 'hostname') ,
-	array('Current', 'username') ,
-	array('State', '###(([[[paused]]]) ? \'<span class="notice">Paused</span>\' : \'[[[state]]]\')') ,
-	array('Players', '[[[players]]] / [[[capacity]]]') ,
-	array('Created', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', null, ' class="date"') ,
-	array('Last Move', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"') ,
-	array('<input type="checkbox" id="game_all" />', '<input type="checkbox" name="ids[]" value="[[[game_id]]]" class="game_box" />', 'false', 'class="edit"') ,
-);
+];
+$table_format = [
+	['ID', 'game_id'],
+	['Name', 'name'],
+	['Host', 'hostname'],
+	['Current', 'username'],
+	['State', '###(([[[paused]]]) ? \'<span class="notice">Paused</span>\' : \'[[[state]]]\')'],
+	['Players', '[[[players]]] / [[[capacity]]]'],
+	['Created', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[create_date]]]\'))', null, ' class="date"'],
+	['Last Move', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"'],
+	['<input type="checkbox" id="game_all" />', '<input type="checkbox" name="ids[]" value="[[[game_id]]]" class="game_box" />', 'false', 'class="edit"'],
+];
 $table = get_table($table_format, $game_list, $table_meta);
 
 if (false === strpos($table, 'NO_GAMES')) {

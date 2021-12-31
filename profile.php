@@ -40,10 +40,10 @@ $meta['head_data'] = '
 	<script type="text/javascript" src="scripts/register.js"></script>
 ';
 
-$hints = array(
+$hints = [
 	'<span class="notice">GLOBAL SETTINGS</span><br />These setting affect ALL iohelix games that also display the GLOBAL SETTINGS text.' ,
 	'Here you can update your name, email address, and password.' ,
-);
+];
 
 $contents = <<< EOF
 	<form method="post" action="{$_SERVER['REQUEST_URI']}"><div class="formdiv">

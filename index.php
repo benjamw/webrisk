@@ -28,24 +28,24 @@ $list = Game::get_list($_SESSION['player_id']);
 
 $contents = '';
 
-$table_meta = array(
+$table_meta = [
 	'sortable' => true ,
 	'no_data' => '<p>There are no games to show</p>' ,
 	'caption' => 'Current Games' ,
-);
-$table_format = array(
-	array('SPECIAL_HTML', 'true', 'id="g[[[game_id]]]"') ,
-	array('SPECIAL_CLASS', '(1 == \'[[[highlight]]]\')', 'highlight') ,
+];
+$table_format = [
+	['SPECIAL_HTML', 'true', 'id="g[[[game_id]]]"'],
+	['SPECIAL_CLASS', '(1 == \'[[[highlight]]]\')', 'highlight'],
 
-	array('ID', 'game_id') ,
-	array('Name', 'clean_name') ,
-	array('State', '###(([[[paused]]]) ? \'Paused\' : ((\'Waiting\' == \'[[[state]]]\') ? ((\'\' != \'[[[password]]]\') ? \'<span class="highlight password">[[[state]]]</span>\' : \'<span class="highlight">[[[state]]]</span>\') : \'[[[state]]]\'))') ,
-	array('Current Player', '###((\'\' == \'[[[username]]]\') ? \'[[[hostname]]]\' : \'[[[username]]]\')') ,
-//	array('Game Type', 'game_type') ,
-	array('Extra Info', '<abbr title="Fortify: [[[get_fortify]]] | Kamikaze: [[[get_kamikaze]]] | Warmonger: [[[get_warmonger]]] | Nuke: [[[get_nuke]]] | Turncoat: [[[get_turncoat]]] | FoW Armies: [[[get_fog_of_war_armies]]] | FoW Colors: [[[get_fog_of_war_colors]]] | Conquer Limit: [[[get_conquer_limit]]] | Custom Rules: [[[clean_custom_rules]]]">Hover</abbr>') ,
-	array('Players', '[[[players]]] / [[[capacity]]]') ,
-	array('Last Move', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"') ,
-);
+	['ID', 'game_id'],
+	['Name', 'clean_name'],
+	['State', '###(([[[paused]]]) ? \'Paused\' : ((\'Waiting\' == \'[[[state]]]\') ? ((\'\' != \'[[[password]]]\') ? \'<span class="highlight password">[[[state]]]</span>\' : \'<span class="highlight">[[[state]]]</span>\') : \'[[[state]]]\'))'],
+	['Current Player', '###((\'\' == \'[[[username]]]\') ? \'[[[hostname]]]\' : \'[[[username]]]\')'],
+//	['Game Type', 'game_type'] ,
+	['Extra Info', '<abbr title="Fortify: [[[get_fortify]]] | Kamikaze: [[[get_kamikaze]]] | Warmonger: [[[get_warmonger]]] | Nuke: [[[get_nuke]]] | Turncoat: [[[get_turncoat]]] | FoW Armies: [[[get_fog_of_war_armies]]] | FoW Colors: [[[get_fog_of_war_colors]]] | Conquer Limit: [[[get_conquer_limit]]] | Custom Rules: [[[clean_custom_rules]]]">Hover</abbr>'],
+	['Players', '[[[players]]] / [[[capacity]]]'],
+	['Last Move', '###ldate(Settings::read(\'long_date\'), strtotime(\'[[[last_move]]]\'))', null, ' class="date"'],
+];
 $contents .= '
 	<div class="tableholder">
 		'.get_table($table_format, $list, $table_meta).'
@@ -56,7 +56,7 @@ $Chat = new Chat($_SESSION['player_id'], 0);
 $chat_data = $Chat->get_box_list( );
 
 // temp storage for gravatar imgs
-$gravatars = array( );
+$gravatars = [];
 
 $lobby = '
 	<div id="lobby">
@@ -101,13 +101,13 @@ $lobby = '
 
 $contents .= $lobby;
 
-$hints = array(
+$hints = [
 	'Select a game from the list and resume play by clicking anywhere on the row.' ,
 	'<span class="highlight">Colored entries</span> indicate that it is your turn.' ,
 	'Games that are displayed: <span class="highlight password">Waiting</span>, are password protected' ,
 	'<span class="warning">WARNING!</span><br />Games will be deleted after '.Settings::read('expire_games').' days of inactivity.' ,
 	'Finished games will be deleted after '.Settings::read('expire_finished_games').' days.' ,
-);
+];
 
 echo get_header($meta);
 echo get_item($contents, $hints, $meta['title']);
