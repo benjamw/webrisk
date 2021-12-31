@@ -100,10 +100,10 @@ $meta['show_menu'] = false;
 $meta['head_data'] = '
 	<link rel="stylesheet" type="text/css" media="screen" href="css/game.css" />
 
-	<script type="text/javascript">//<![CDATA[
+	<script>//<![CDATA[
 		var state = "'.(( ! $Game->watch_mode) ? (( ! $Game->paused) ? strtolower($Game->get_player_state($_SESSION['player_id'])) : 'paused') : 'watching').'";
 	/*]]>*/</script>
-	<script type="text/javascript" src="scripts/game.js"></script>
+	<script src="scripts/game.js"></script>
 ';
 
 $player_state = $Game->get_player_state($_SESSION['player_id']);
@@ -192,7 +192,7 @@ echo get_header($meta);
 
 			<?php echo game_info($Game); ?>
 
-			<script type="text/javascript">
+			<script>
 				$('#game_info').hide( );
 			</script>
 

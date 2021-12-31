@@ -4,7 +4,7 @@ require_once 'includes/inc.global.php';
 
 $meta['title'] = 'Statistics';
 $meta['head_data'] = '
-	<script type="text/javascript">//<![CDATA[
+	<script>//<![CDATA[
 		$(document).ready( function( ) {
 			$("td.color, .color td").each( function(i, elem) {
 				var $elem = $(elem);

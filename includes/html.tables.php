@@ -350,7 +350,7 @@ function get_sort_script($table_id, $sort_types = '', $alt_class = 'alt', $init_
 	}
 
 	$html = '
-		<script type="text/javascript">//<![CDATA[';
+		<script>//<![CDATA[';
 
 	if ( ! is_null($init_sort_column)) {
 		$html .= '

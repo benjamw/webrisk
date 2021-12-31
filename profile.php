@@ -34,10 +34,10 @@ foreach ($zones as $zone) {
 
 $meta['title'] = 'Update Profile';
 $meta['head_data'] = '
-	<script type="text/javascript">//<![CDATA[
+	<script>//<![CDATA[
 		var profile = 1;
 	//]]></script>
-	<script type="text/javascript" src="scripts/register.js"></script>
+	<script src="scripts/register.js"></script>
 ';
 
 $hints = [

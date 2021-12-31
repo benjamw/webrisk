@@ -30,7 +30,7 @@ if (isset($_POST['action'])) {
 
 $meta['title'] = 'Message Center';
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/messages.js"></script>
+	<script src="scripts/messages.js"></script>
 ';
 
 $contents = '

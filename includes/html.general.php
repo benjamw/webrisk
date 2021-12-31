@@ -77,7 +77,7 @@ function get_header($meta = null) {
 	$admin_css = $admin_div = '';
 	if (isset($_SESSION['admin_id']) && isset($_SESSION['player_id']) && ($_SESSION['player_id'] != $_SESSION['admin_id'])) {
 		$admin_css = '
-			<style type="text/css">
+			<style>
 				html { border: 5px solid red; }
 				#admin_username {
 					background: red;
@@ -116,19 +116,19 @@ function get_header($meta = null) {
 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<script type="text/javascript">
+	<script>
 		{$debug_string}
 		{$query_strings}
 	</script>
 
 	<script src="//code.jquery.com/jquery-1.11.2.js"></script>
 	<script src="//code.jquery.com/jquery-migrate-1.2.1.js"></script>
-	<script type="text/javascript" src="scripts/jquery.tablesorter.js"></script>
+	<script src="scripts/jquery.tablesorter.js"></script>
 
 	<!-- fancybox -->
 	<link rel="stylesheet" type="text/css" media="screen" href="scripts/jquery.fancybox/jquery.fancybox.css" />
-	<script type="text/javascript" src="scripts/jquery.fancybox/jquery.fancybox.js"></script>
-	<script type="text/javascript">
+	<script src="scripts/jquery.fancybox/jquery.fancybox.js"></script>
+	<script>
 		$(document).ready( function( ) {
 			// set fancybox defaults
 //			$.fn.fancybox.defaults['overlayColor'] = '#000';
@@ -142,7 +142,7 @@ function get_header($meta = null) {
 		});
 	</script>
 	<!-- hide the fancybox titles -->
-	<style type="text/css">
+	<style>
 		#fancy_title { display: none !important; }
 	</style>
 

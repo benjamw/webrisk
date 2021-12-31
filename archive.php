@@ -8,7 +8,7 @@ unset($_SESSION['step']);
 
 $meta['title'] = 'Archive List';
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/archive.js"></script>
+	<script src="scripts/archive.js"></script>
 ';
 
 

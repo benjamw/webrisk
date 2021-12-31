@@ -12,9 +12,9 @@ $turn_msg_count = $message_count + $turn_count;
 
 $meta['title'] = 'Game List';
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/jquery.jplayer.min.js"></script>
-	<script type="text/javascript" src="scripts/index.js"></script>
-	<script type="text/javascript">//<![CDATA[
+	<script src="scripts/jquery.jplayer.min.js"></script>
+	<script src="scripts/index.js"></script>
+	<script>//<![CDATA[
 		var turn_msg_count = '.$turn_msg_count.';
 	//]]></script>
 ';

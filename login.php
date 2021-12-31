@@ -11,16 +11,16 @@ $GLOBALS['Player']->log_out(false, true);
 $meta['title'] = 'Login';
 $meta['show_menu'] = false;
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/jquery.overlabel.js"></script>
-	<script type="text/javascript" src="scripts/jquery.showpass.js"></script>
-	<script type="text/javascript">//<![CDATA[
+	<script src="scripts/jquery.overlabel.js"></script>
+	<script src="scripts/jquery.showpass.js"></script>
+	<script>//<![CDATA[
 		jQuery(document).ready( function($) {
 			$("div.formdiv label").not(".inline").overlabel( );
 			$("div.formdiv input").showpass( );
 		});
 	//]]></script>
 
-	<style type="text/css">
+	<style>
 		.formdiv div {
 			position: relative;
 		}

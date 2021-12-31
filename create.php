@@ -35,7 +35,7 @@ foreach ($Game->get_avail_colors( ) as $color) {
 
 $meta['title'] = 'Create Game';
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/create.js"></script>
+	<script src="scripts/create.js"></script>
 ';
 
 $hints = [

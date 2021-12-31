@@ -94,7 +94,7 @@ if (isset($_POST['submit'])) {
 
 $meta['title'] = GAME_NAME.' Administration';
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/admin.js"></script>
+	<script src="scripts/admin.js"></script>
 ';
 
 $hints = [

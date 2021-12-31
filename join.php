@@ -92,7 +92,7 @@ if ('' != $Game->passhash) {
 
 $meta['title'] = 'Join Game';
 $meta['head_data'] = '
-	<script type="text/javascript">//<![CDATA[
+	<script>//<![CDATA[
 		$(document).ready( function( ) {
 			$("#show_conquer_limit_table").fancybox({
 				title: null,

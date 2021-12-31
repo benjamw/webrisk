@@ -5,7 +5,7 @@ require_once 'includes/inc.global.php';
 
 $meta['title'] = 'Frequently Asked Questions';
 $meta['head_data'] = '
-	<script type="text/javascript" src="scripts/messages.js"></script>
+	<script src="scripts/messages.js"></script>
 ';
 
 $contents = '

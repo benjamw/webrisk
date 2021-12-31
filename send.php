@@ -58,9 +58,9 @@ if (isset($_GET['id'])) {
 $meta['title'] = 'Message Writer';
 $meta['show_menu'] = false;
 $meta['head_data'] = '
-	<style type="text/css">@import url(css/ui.datepicker.css);</style>
-	<script type="text/javascript" src="scripts/ui.datepicker.js"></script>
-	<script type="text/javascript" src="scripts/messages.js"></script>
+	<style>@import url(css/ui.datepicker.css);</style>
+	<script src="scripts/ui.datepicker.js"></script>
+	<script src="scripts/messages.js"></script>
 ';
 
 if (isset($sent)) {

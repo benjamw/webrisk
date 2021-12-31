@@ -233,7 +233,7 @@ class Flash
 		$html = '';
 		if (isset($_this->_messages) && is_array($_this->_messages) && count($_this->_messages)) {
 			$html = '
-				<script type="text/javascript">//<![CDATA[
+				<script>//<![CDATA[
 					alert("';
 
 			foreach ($_this->_messages as $message) {

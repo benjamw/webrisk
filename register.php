@@ -58,10 +58,10 @@ if (isset($_POST['register'])) {
 
 $meta['title'] = 'Registration';
 $meta['head_data'] = '
-	<script type="text/javascript">//<![CDATA[
+	<script>//<![CDATA[
 		var profile = 0;
 	//]]></script>
-	<script type="text/javascript" src="scripts/register.js"></script>
+	<script src="scripts/register.js"></script>
 ';
 $meta['show_menu'] = false;
 echo get_header($meta);
