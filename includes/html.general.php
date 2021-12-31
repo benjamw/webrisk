@@ -48,8 +48,8 @@ function get_header($meta = null) {
 			$menu_data['archive'] = Archive::get_count( );
 
 			$messages = Message::get_count($_SESSION['player_id']);
-			$menu_data['msgs'] = (int) @$messages[0];
-			$menu_data['new_msgs'] = (int) @$messages[1];
+			$menu_data['msgs'] = (int) $messages[0] ?? 0;
+			$menu_data['new_msgs'] = (int) $messages[1] ?? 0;
 
 			$allow_blink = ('index.php' == basename($_SERVER['PHP_SELF']));
 		}

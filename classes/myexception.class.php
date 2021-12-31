@@ -104,7 +104,7 @@ class MyException
 			$str .= "-------- [ END BACKTRACE ] --------\n\n";
 		}
 
-		if ($fp = @fopen(LOG_DIR.$log_name, 'a')) {
+		if ($fp = fopen(LOG_DIR.$log_name, 'a')) {
 			fwrite($fp, $str);
 			fclose($fp);
 		}

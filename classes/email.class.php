@@ -153,7 +153,7 @@ class Email
 		$replace = [
 			'/\[\[\[GAME_NAME\]\]\]/' => GAME_NAME,
 			'/\[\[\[site_name\]\]\]/' => $site_name,
-			'/\[\[\[extra_text\]\]\]/' => $this->_strip(@$_POST['extra_text']),
+			'/\[\[\[extra_text\]\]\]/' => $this->_strip($_POST['extra_text'] ?? ''),
 			'/\[\[\[export_data\]\]\]/' => var_export($data, true),
 		];
 

@@ -215,7 +215,7 @@ if (isset($_POST['state'])) {
 
 		case 'trading' :
 			try {
-				$Game->trade_cards($player_id, $_POST['cards'], @$_POST['bonus_card']);
+				$Game->trade_cards($player_id, $_POST['cards'], $_POST['bonus_card'] ?? null);
 				$return['action'] = 'RELOAD';
 			}
 			catch (MyException $e) {

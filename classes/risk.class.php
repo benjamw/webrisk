@@ -2532,7 +2532,7 @@ class Risk
 
 		// test our key and if found, use that
 		// else, calculate by extrapolating from our current value
-		if (isset($trades[$key]) && ! in_array($trades[$key][0], ['+', '-'])) {
+		if (isset($trades[$key]) && ! in_array(((string) $trades[$key])[0], ['+', '-'])) {
 			$value = $trades[$key];
 		}
 		elseif (in_array($trades[$count - 1][0], ['+', '-'])) {

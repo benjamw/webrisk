@@ -19,10 +19,11 @@ function array_trim( & $array, $type = null)
 	$types = [
 		'int' , 'integer' ,
 		'bool' , 'boolean' ,
-		'float' , 'double' , 'real' ,
+		'float' , 'double' ,
 		'string' ,
 		'array' ,
 		'object' ,
+		'null' ,
 	];
 
 	// if a non-empty string value comes through, don't erase it
@@ -41,10 +42,10 @@ function array_trim( & $array, $type = null)
 	}
 
 	if ( ! is_null($type)) {
-		array_walk_recursive($array, create_function('&$v', '$v = ('.$type.') trim($v);'));
+		array_walk_recursive($array, function(& $v) use ($type) { $v = trim($v); settype($v, $type); });
 	}
 	else {
-		array_walk_recursive($array, create_function('&$v', '$v = trim($v);'));
+		array_walk_recursive($array, function(& $v) { $v = trim($v); });
 	}
 
 	return $array; // returns by reference as well
@@ -272,7 +273,7 @@ function explodeFull($separator, $divider, $string, $url = false) { return explo
  */
 function kshuffle( & $array)
 {
-	uasort($array, create_function('$a,$b', 'rand(1, -1);'));
+	uasort($array, function($a, $b) { return rand(1, -1); });
 }
 
 

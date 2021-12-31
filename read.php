@@ -94,7 +94,7 @@ echo get_header($meta);
 	<div id="content" class="msg">
 		<div class="link_date">
 			<a href="messages.php">Return to Inbox</a>
-			Sent: <?php echo @ifdateor(Settings::read('long_date'), strtotime($message['send_date']), strtotime($message['create_date'])); ?>
+			Sent: <?php echo ifdateor(Settings::read('long_date'), strtotime($message['send_date']), strtotime($message['create_date'])); ?>
 		</div>
 		<h2 class="subject"><?php echo $message['subject']; ?> <span class="sender">From: <?php echo $message['recipients'][0]['sender']; ?></span></h2>
 		<div class="sidebar">

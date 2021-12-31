@@ -46,11 +46,11 @@ $table_format = [
 	['SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"'],
 
 	['Id', 'message_id'],
-	['Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\', ENT_QUOTES), 25), ENT_QUOTES, \'UTF-8\', false)'],
+	['Subject', '###htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\', ENT_QUOTES), 25), ENT_QUOTES, \'UTF-8\', false)'],
 	['From', '###\'[[[sender]]]\'.(([[[global]]]) ? \' <span class="highlight">(<abbr title="GLOBAL">G</abbr>)</span>\' : \'\')'],
-	['Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
-	['Date Read', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[view_date]]]\'), \'Never\')'],
-	['Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
+	['Date Sent', '###ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
+	['Date Read', '###ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[view_date]]]\'), \'Never\')'],
+	['Date Expires', '###ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
 	['<input type="checkbox" id="in_all" />', '<input type="checkbox" name="ids[]" value="[[[message_id]]]" class="in_box" />', 'false', 'class="edit"'],
 ];
 $table_meta = [
@@ -86,10 +86,10 @@ $table_format = [
 	['SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"'],
 
 	['Id', 'message_id'],
-	['Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)'],
+	['Subject', '###htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)'],
 	['To', 'recipients'],
-	['Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
-	['Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
+	['Date Sent', '###ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
+	['Date Expires', '###ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
 	['<input type="checkbox" id="out_all" />', '<input type="checkbox" name="ids[]" value="[[[message_id]]]" class="out_box" />', 'false', 'class="edit"'],
 ];
 $table_meta = [
@@ -124,11 +124,11 @@ if (false && $GLOBALS['Player']->is_admin) {
 		['SPECIAL_HTML', 'true', 'id="msg[[[message_id]]]"'],
 
 		['Id', 'message_id'],
-		['Subject', '###@htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)'],
+		['Subject', '###htmlentities(strmaxlen(html_entity_decode(\'[[[subject]]]\'), 25), ENT_QUOTES, \'UTF-8\', false)'],
 		['From', 'sender'],
 		['To', 'recipients'],
-		['Date Sent', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
-		['Date Expires', '###@ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
+		['Date Sent', '###ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[send_date]]]\'), strtotime(\'[[[create_date]]]\'))'],
+		['Date Expires', '###ifdateor(Settings::read(\'long_date\'), strtotime(\'[[[expire_date]]]\'), \'Never\')'],
 	];
 	$table_meta = [
 		'sortable' => true ,

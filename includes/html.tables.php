@@ -497,8 +497,8 @@ if ( ! function_exists('ifenr')) {
 
 
 if ( ! function_exists('ifdateor')) {
-	function ifdateor($date_format, & $if, $or) {
-		$date = (isset($if) && is_int($if)) ? $if : $or;
+	function ifdateor($date_format, $if, $or) {
+		$date = ($if ?? false) ?: $or;
 
 		if (is_int($date)) {
 			$date = ldate($date_format, $date);

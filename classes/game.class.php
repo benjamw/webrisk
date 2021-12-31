@@ -335,7 +335,7 @@ class Game
 		$error = error_get_last( );
 		call($error);
 
-		if (0 == ((E_ERROR | E_WARNING | E_PARSE) & $error['type'])) {
+		if (0 == ((E_ERROR | E_WARNING | E_PARSE) & ($error['type'] ?? 0))) {
 			try {
 				$this->_save( );
 			}
