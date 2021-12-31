@@ -18,11 +18,11 @@ function get_header($meta = null) {
 	}
 
 	$title = ( ! empty($meta['title'])) ? GAME_NAME.' :: '.$meta['title'] : GAME_NAME;
-	$show_menu = (isset($meta['show_menu'])) ? (bool) $meta['show_menu'] : true;
-	$show_nav_links = (isset($meta['show_nav_links'])) ? (bool) $meta['show_nav_links'] : true;
-	$menu_data = (isset($meta['menu_data'])) ? $meta['menu_data'] : false;
-	$head_data = (isset($meta['head_data'])) ? $meta['head_data'] : '';
-	$file_name = (isset($meta['file_name'])) ? $meta['file_name'] : basename($_SERVER['SCRIPT_NAME']);
+	$show_menu = $meta['show_menu'] ?? true;
+	$show_nav_links = $meta['show_nav_links'] ?? true;
+	$menu_data = $meta['menu_data'] ?? false;
+	$head_data = $meta['head_data'] ?? '';
+	$file_name = $meta['file_name'] ?? basename($_SERVER['SCRIPT_NAME']);
 	$file_name = substr($file_name, 0, strrpos($file_name, '.'));
 
 	// make sure we have these

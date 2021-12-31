@@ -128,10 +128,8 @@ class Archive extends Game {
 								break;
 
 							default :
-								continue;
 								break;
 						}
-						break;
 
 					case 1 : // extra info section
 						$entry['extra_info'] = array_merge_plus(self::$_EXTRA_INFO_DEFAULTS, json_decode($line, true));

@@ -959,7 +959,7 @@ fix_extra_info($player['extra_info']);
 		try {
 			// get the player into the correct state
 			if (in_array($type, ['A', 'F', 'O']) && (0 !== $this->_risk->current_player)) {
-				while ($type !== strtoupper($this->_risk->players[$this->_risk->current_player]['state']{0})) {
+				while ($type !== strtoupper($this->_risk->players[$this->_risk->current_player]['state'][0])) {
 					$this->_risk->set_player_next_state($this->_risk->players[$this->_risk->current_player]['state'], $this->_risk->current_player);
 				}
 			}

@@ -4503,8 +4503,7 @@ fix_extra_info($game['extra_info']);
 				switch ($game['g_state']) {
 					case 'Finished' :
 						// doesn't matter, the game is over
-						continue;
-						break;
+						continue 2;
 
 					case 'Waiting' :
 						// just remove them from the game completely
@@ -4515,8 +4514,7 @@ fix_extra_info($game['extra_info']);
 								AND `game_id` = '{$game['game_id']}'
 						";
 						$Mysql->query($query);
-						continue;
-						break;
+						continue 2;
 
 					case 'Placing' :
 					case 'Playing' :
@@ -4634,7 +4632,7 @@ fix_extra_info($game['extra_info']);
 		}
 
 		$winner = 'Unknown';
-		if ('D' === $logs[0]['data']{0}) {
+		if ('D' === $logs[0]['data'][0]) {
 			$winner = (int) trim($logs[0]['data'], 'D ');
 			$winner = "{$winner} - {$players[$winner]['username']}";
 		}
