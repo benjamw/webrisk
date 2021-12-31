@@ -201,4 +201,3 @@ console.log('updating buttons');
 	update_buttons( );
 
 });
-
