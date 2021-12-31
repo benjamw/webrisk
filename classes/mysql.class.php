@@ -45,7 +45,7 @@ class Mysql {
 	 *
 	 * @var string
 	 */
-	protected $conn_config;
+	protected $conn_string;
 
 	/**
 	 * Default settings
@@ -145,6 +145,62 @@ class Mysql {
 	 */
 	public $query_time = 0;
 
+	/**
+	 * The number of tries attempted
+	 *
+	 * @var int
+	 */
+	public $tries = 0;
+
+	/**
+	 * The current page for pagination
+	 *
+	 * @var int
+	 */
+	protected $_page;
+
+	/**
+	 * The number of items per page
+	 *
+	 * @var int
+	 */
+	protected $_num_per_page;
+
+	/**
+	 * The query used to pull the paginated data
+	 *
+	 * @var string
+	 */
+	protected $_page_query;
+
+	/**
+	 * The pagination query parameters
+	 *
+	 * @var array
+	 */
+	protected $_page_params;
+
+	/**
+	 * The pagination query results
+	 *
+	 * @var array
+	 */
+	protected $_page_result;
+
+	/**
+	 * The num ber of total results in the dataset
+	 *
+	 * @var int
+	 */
+	protected $_num_results;
+
+	/**
+	 * The number of total pages in the dataset
+	 *
+	 * @var int
+	 */
+	protected $_num_pages;
+
 
 	/**
 	 *		METHODS
@@ -156,8 +212,7 @@ class Mysql {
 	 *
 	 * @param array $settings optional
 	 *
-	 * @return Mysql Object
-	 * @throws Exception
+	 * @return void
 	 * @throws MySQLException
 	 */
 	protected function __construct($settings = null) {
@@ -174,14 +229,7 @@ class Mysql {
 
 		$this->conn_string = "{$settings['driver']}:host={$settings['hostname']};port={$settings['port']};dbname={$settings['database']};charset=utf8";
 
-		$this->log_path = $settings['log_path'];
-
-		try {
-			$this->connect( );
-		}
-		catch (MySQLException $up) {
-			throw $up;
-		}
+		$this->connect( );
 	}
 
 
@@ -206,16 +254,10 @@ class Mysql {
 	 *
 	 * @return Mysql Singleton Reference
 	 * @throws MySQLException
-	 * @throws \Exception
 	 */
 	public static function get_instance($config = null) {
-		try {
-			if (is_null(self::$instance)) {
-				self::$instance = new Mysql($config);
-			}
-		}
-		catch (MySQLException $e) {
-			throw $e;
+		if (is_null(self::$instance)) {
+			self::$instance = new Mysql($config);
 		}
 
 		return self::$instance;
@@ -235,16 +277,21 @@ class Mysql {
 			throw new MySQLException(__METHOD__.': Missing MySQL user data');
 		}
 
-		$this->conn = new PDO($this->conn_string, $this->settings['username'], $this->settings['password']);
+		try {
+			$this->conn = new PDO($this->conn_string, $this->settings['username'], $this->settings['password']);
 
-		if (empty($this->conn)) {
-			throw new MySQLException(__METHOD__.': Unable to connect to database');
+			if (empty($this->conn)) {
+				throw new MySQLException(__METHOD__.': Unable to connect to database');
+			}
+
+			$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+			// set the DB server timezone to UTC
+			$this->conn->query(" SET time_zone = '+00:00'; ");
 		}
-
-		$this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-		// set the DB server timezone to UTC
-		$this->conn->query(" SET time_zone = '+00:00'; ");
+		catch (Exception $e) {
+			throw new MySQLException(__METHOD__.': '.$e->getMessage(), $e->getCode());
+		}
 	}
 
 
@@ -299,13 +346,19 @@ class Mysql {
      * @param void
      *
      * @return bool
+	 * @throws MySQLException
      */
 	public function support_microseconds( ) {
 	    $query = "
 	        SELECT NOW(6)
 	    ";
 
-        $return = $this->fetch_value($query);
+	    try {
+			$return = $this->fetch_value($query);
+		}
+		catch (MySQLException $e) {
+			throw $e;
+		}
 
         if ( ! $return) {
             return false;
@@ -753,12 +806,7 @@ class Mysql {
 			{$where}
 		";
 
-		try {
-			return $this->query( );
-		}
-		catch (MySQLException $crap) {
-			throw $crap;
-		}
+		return $this->query( );
 	}
 
 
@@ -795,7 +843,8 @@ class Mysql {
 		}
 
 		if (is_array($where_array)) {
-			list($key,) = each($where_array);
+			$where_array_keys = array_keys($where_array);
+			$key = $where_array_keys[0];
 			if (is_string($key)) {
 				$recursive = false;
 				$where_array = array($where_array);
@@ -1366,7 +1415,7 @@ class MySQLException extends Exception {
 	 * @action instantiates object
 	 * @action writes the exception to the log
 	 *
-	 * @return MySQLException
+	 * @return void
 	 */
 	public function __construct($message, $code = 1) {
 		parent::__construct($message, $code);
@@ -1426,26 +1475,3 @@ class MySQLException extends Exception {
 	}
 
 }
-
-
-/*
- +---------------------------------------------------------------------------
- |   > Extra SQL Functions
- +---------------------------------------------------------------------------
-*/
-
-if ( ! function_exists('microtime_float')) {
-// TODO: convert this to ' microtime(true) ' anywhere it's used
-	function microtime_float( ) {
-		Log::write('Deprecated function "microtime_float( )" used', 'error', true);
-		trigger_error('Deprecated function "microtime_float( )" used', E_USER_ERROR);
-	}
-}
-
-if ( ! function_exists('sani')) {
-	function sani( ) {
-		Log::write('Deprecated function "sani( )" used', 'error', true);
-		trigger_error('Deprecated function "sani( )" used', E_USER_ERROR);
-	}
-}
-

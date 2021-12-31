@@ -380,7 +380,7 @@ function ldate($format, $timestamp = null) {
  * @param string $extra_info reference
  */
 function fix_extra_info(& $extra_info) {
-	if ( ! empty($extra_info) && is_string($extra_info) && ('a' === $extra_info{0})) {
+	if ( ! empty($extra_info) && is_string($extra_info) && ('a' === $extra_info[0])) {
 		$extra_info = unserialize($extra_info);
 		$extra_info = json_encode($extra_info);
 	}

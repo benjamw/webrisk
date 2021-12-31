@@ -108,7 +108,7 @@ echo get_header($meta);
 				<div id="dice"><?php
 					$move = $Review->get_step( );
 
-					if ('A' === $move{0}) {
+					if ('A' === $move[0]) {
 						list($type, $action) = explode(' ', $move);
 						$action = explode(':', $action);
 						$rolls = explode(',', $action[4]);

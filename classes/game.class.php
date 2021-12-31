@@ -1685,21 +1685,23 @@ class Game
 					if ('Wild' != $type) {
 						$type = substr($type, 0, 3);
 					}
-					if ( $this->_extra_info['nuke'] || $this->_extra_info['turncoat']) {
-                        		$turncoat_territory = $this->_risk->get_turncoat_territory($_SESSION['player_id']);
-                 
-                        			if (('Wild' != $type) && (array_key_exists($card_id, $turncoat_territory)) && (count($turncoat_territory) > 1)) {
-                            			$bonus_land[$card_id] = Risk::$TERRITORIES[$card_id];
-					    	} 
-					}					
-                    			if ( !$this->_extra_info['nuke'] && !$this->_extra_info['turncoat'] ) {
-						if (('Wild' != $type) && (array_key_exists($card_id, $players_territory))) {
-						$bonus_land[$card_id] = Risk::$TERRITORIES[$card_id];
-					    	}
-                    			}					
 
-					$html .= '<div class="card"><label class="inline"><input type="checkbox" name="cards[]" value="'.$card_id.'" />'
-								.$type.' - '.(('Wild' == $type) ? 'None' : shorten_territory_name(Risk::$TERRITORIES[$card_id][NAME])).'</label></div>';
+					if ($this->_extra_info['nuke'] || $this->_extra_info['turncoat']) {
+						$turncoat_territory = $this->_risk->get_turncoat_territory($_SESSION['player_id']);
+
+						if (('Wild' !== $type) && (array_key_exists($card_id, $turncoat_territory)) && (count($turncoat_territory) > 1)) {
+							$bonus_land[ $card_id ] = Risk::$TERRITORIES[ $card_id ];
+						}
+					}
+
+					if ( ! $this->_extra_info['nuke'] && ! $this->_extra_info['turncoat']) {
+						if (('Wild' !== $type) && (array_key_exists($card_id, $players_territory))) {
+							$bonus_land[ $card_id ] = Risk::$TERRITORIES[ $card_id ];
+						}
+					}
+
+					$html .= '<div class="card"><label class="inline"><input type="checkbox" name="cards[]" value="' . $card_id . '" />'
+						. $type . ' - ' . (('Wild' == $type) ? 'None' : shorten_territory_name(Risk::$TERRITORIES[ $card_id ][ NAME ])) . '</label></div>';
 				}
 
 				if (0 != count($bonus_land)) {
@@ -3027,21 +3029,21 @@ fix_extra_info($player['extra_info']);
 			}
 		}
 
-		if ( ! $this->_extra_info['nuke'] || ! $this->_extra_info['turncoat'] ) {
+		if ( ! $this->_extra_info['nuke'] || ! $this->_extra_info['turncoat']) {
 			if ('Waiting' != $this->state) {
-			// update the land data
-			$query = "
-				SELECT *
-				FROM `".self::GAME_LAND_TABLE."`
-				WHERE game_id = :game_id
-			";
-			$params = array(
-				':game_id' => $this->id,
-			);
-			$db_lands = $Mysql->fetch_array($query, $params);
+				// update the land data
+				$query = "
+					SELECT *
+					FROM `".self::GAME_LAND_TABLE."`
+					WHERE game_id = :game_id
+				";
+				$params = array(
+					':game_id' => $this->id,
+				);
+				$db_lands = $Mysql->fetch_array($query, $params);
 
 				if ( ! $db_lands) {
-				$board = $this->_risk->board;
+					$board = $this->_risk->board;
 
 					foreach ($board as $land_id => $land) {
 						$land['game_id'] = $this->id;
@@ -3073,9 +3075,8 @@ fix_extra_info($player['extra_info']);
 					}
 				}
 			}
-    	}
-    else
-    {
+		}
+		else {
 			// update the land data
 			$query = "
 				SELECT *
@@ -3119,8 +3120,7 @@ fix_extra_info($player['extra_info']);
 					}
 				}
 			}
-		
-    }
+		}
 
 		// update the game modified date
 		if ($update_modified) {
@@ -3429,34 +3429,34 @@ if (isset($data[7])) {
 				break;
 
 			case 'T' : // Trade
-		            	$message = "TRADE: {$player[0]} traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
-                
-                		// add traded cards to message    
-                		if (isset($data[1])) {
+				$message = "TRADE: {$player[0]} traded in cards for {$data[2]} ".plural($data[2], 'army', 'armies');
+
+				// add traded cards to message
+				if (isset($data[1])) {
 					$data[1] = explode(',', $data[1]);
 					foreach ($data[1] as $card_id) {
-		            			$message .= ' ( '.Risk::$TERRITORIES[$card_id][NAME] .' ) ';
+						$message .= ' ( '.Risk::$TERRITORIES[ $card_id ][ NAME ].' ) ';
 					}
-		
+
 				}
 
-			    	if ( 0 == (int) $data[4] && 0 == (int) $data[5] && (0 !== (int) $trade_bonus)) {	
-			    		if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
-						$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-				    	}
-				} else
-				{
-					if (1 == (int) $data[4] && 0 == (int) $data[5]){    
-				 		$message .= " and nuked the armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." [{$data[3]}]";
-					}
-					if (0 == (int) $data[4] && 1 == (int) $data[5]){    
-			     			$message .= " and turned the armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." ";
-					}
-					if (1 == (int) $data[4] && 1 == (int) $data[5]){    
-			     			$message .= " and nuked and turned the armies on ".shorten_territory_name(Risk::$TERRITORIES[$data[3]][NAME])." ";
+				if (0 == (int) $data[4] && 0 == (int) $data[5] && (0 !== (int) $trade_bonus)) {
+					if ( ! empty($data[3]) && (0 !== (int) $trade_bonus)) {
+						$message .= " and got {$trade_bonus} bonus armies on ".shorten_territory_name(Risk::$TERRITORIES[ $data[3] ][ NAME ])." [{$data[3]}]";
 					}
 				}
-			   	
+				else {
+					if (1 == (int) $data[4] && 0 == (int) $data[5]) {
+						$message .= " and nuked the armies on ".shorten_territory_name(Risk::$TERRITORIES[ $data[3] ][ NAME ])." [{$data[3]}]";
+					}
+					if (0 == (int) $data[4] && 1 == (int) $data[5]) {
+						$message .= " and turned the armies on ".shorten_territory_name(Risk::$TERRITORIES[ $data[3] ][ NAME ])." ";
+					}
+					if (1 == (int) $data[4] && 1 == (int) $data[5]) {
+						$message .= " and nuked and turned the armies on ".shorten_territory_name(Risk::$TERRITORIES[ $data[3] ][ NAME ])." ";
+					}
+				}
+
 				break;
 
 			case 'V' : // Value
@@ -3475,6 +3475,7 @@ if (isset($data[7])) {
 	 * @param array $defend_roll
 	 *
 	 * @return void
+	 * @throws MySQLException
 	 */
 	public static function log_roll($attack_roll, $defend_roll)
 	{
@@ -3496,7 +3497,9 @@ if (isset($data[7])) {
 	 *		Grabs the roll stats from the database
 	 *
 	 * @param void
+	 *
 	 * @return array roll data
+	 * @throws MySQLException
 	 */
 	static public function get_roll_stats( )
 	{

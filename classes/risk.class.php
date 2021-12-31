@@ -220,8 +220,8 @@ class Risk
 	 *			any fortifications possible
 	 *		- kamikaze: If you can attack, you must attack
 	 *		- warmonger: If you can trade, you must trade
-	 *      	- nuke:  Use trade card bonus to DEDUCT from ENEMY land!
-	 *      	- turncoat:  Use trade card to shift enemy allegiance to your army
+	 *		- nuke: Use trade card bonus to DEDUCT from ENEMY land!
+	 *		- turncoat: Use trade card to shift enemy allegiance to your army
 	 *		- initial_army_limit: Set a limit on the number of armies
 	 *			that can be placed in any single territory during
 	 *			the initial game placement
@@ -1079,23 +1079,26 @@ class Risk
 		// check the bonus card ownership
 		$is_nuke = 0;
 		$is_turncoat = 0;
-        	
-		if ( $this->_extra_info['nuke'] || $this->_extra_info['turncoat']) {
+
+		if ($this->_extra_info['nuke'] || $this->_extra_info['turncoat']) {
 			if ( ! empty($bonus_card) && $this->_extra_info['nuke']) {
-				$nuked_land_armies= ($this->board[$bonus_card]['armies'] -= $this->_trade_bonus);
-				if (1 > $nuked_land_armies){
+				$nuked_land_armies = ($this->board[$bonus_card]['armies'] -= $this->_trade_bonus);
+				if (1 > $nuked_land_armies) {
 					$this->board[$bonus_card]['armies'] = 1;
-				} 
+				}
 				$is_nuke = 1;
 			}
-		   
+
 			// playing turncoat card
 			if ( ! empty($bonus_card) && $this->_extra_info['turncoat']) {
 				$is_turncoat = 1;
 			}
-		} else
-			// not using nuke or turncoat game config
-		{
+			else {
+				// if the bonus card is not owned by the player, just disregard
+				$bonus_card = 0;
+			}
+		}
+		else { // not using nuke or turncoat game config
 			if ( ! empty($bonus_card) && ($player_id == $this->board[$bonus_card]['player_id'])) {
 				$this->board[$bonus_card]['armies'] += $this->_trade_bonus;
 			}
@@ -1160,10 +1163,9 @@ class Risk
 		}
 
 		// make sure this player is placing armies
- 		if (0 === $num_armies) {
- 			return $num_armies;
- 		}
-
+		if (0 === $num_armies) {
+			return $num_armies;
+		}
 
 		// make sure this player has enough armies to place
 		if ($num_armies > $this->players[$player_id]['armies']) {
@@ -1819,19 +1821,19 @@ class Risk
 
 		return $land;
 	}
-	
+
 	/** public function get_turncoat_territory
 	 *		Grab all the land NOT owned by the current player
 	 *		and return it as an array where the land_id is the key
 	 *		and the land_name is the value
-	 *      and opponent land count greater than one
+	 *		and opponent land count greater than one
+	 *
 	 * @param int $player_id optional
 	 *
 	 * @return array players land
 	 */
-
 	public function get_turncoat_territory($player_id = 0) {
-	   call(__METHOD__);
+		call(__METHOD__);
 
 		$player_id = (int) $player_id;
 
@@ -1841,23 +1843,25 @@ class Risk
 
 		// grab all the players land
 		$land = array( );
-		
 		foreach ($this->board as $land_id => $territory) {
-			$ids = array();
-			
+
+			$ids = array( );
 			foreach ($this->board as $data) {
-				
-				if (count($this->get_players_territory($data['player_id']))>1){
+
+				if (count($this->get_players_territory($data['player_id'])) > 1) {
 					$ids[] = $data['player_id'];
 				}
 			}
+
 			$opponent = $ids;
-			
-			if ($player_id != $territory['player_id'] && in_array($territory['player_id'],($opponent))) {
+
+			if ($player_id != $territory['player_id'] && in_array($territory['player_id'], ($opponent))) {
 				$land[$land_id] = self::$TERRITORIES[$land_id][NAME];
 			}
 		}
+
 		asort($land);
+
 		return $land;
 	}
 
