@@ -1,11 +1,11 @@
 
 $(document).ready( function( ) {
 	$('#player_all').click( function( ) {
-		$('.player_box').attr('checked', $(this).attr('checked'));
+		$('.player_box').prop('checked', $(this).prop('checked'));
 	});
 
 	$('#game_all').click( function( ) {
-		$('.game_box').attr('checked', $(this).attr('checked'));
+		$('.game_box').prop('checked', $(this).prop('checked'));
 	});
 
 	$('tbody tr').click( function(event) {
@@ -16,7 +16,7 @@ $(document).ready( function( ) {
 		$input = $(this).find('input');
 
 		if ($input.length) {
-			$input.attr('checked', ! $input.attr('checked'));
+			$input.prop('checked', ! $input.prop('checked'));
 		}
 	});
 
@@ -26,7 +26,7 @@ $(document).ready( function( ) {
 		if (('delete' == val) && ! confirm('Are you sure?')) {
 			$(this)
 				.find('option[value=""]')
-				.attr('selected', 'selected')
+				.prop('selected', true);
 			return false;
 		}
 

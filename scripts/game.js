@@ -10,7 +10,7 @@ $(document).ready( function( ) {
 			$('#board span').not('#players span').add('area').click( function( ) {
 				var id = $(this).attr('id').substr(2);
 
-				if (0 == $('#land_id option[value='+id+']').attr('selected', true).length) {
+				if (0 === $('#land_id option[value='+id+']').prop('selected', true).length) {
 					alert('That is not your territory');
 				}
 				else if ( ! $('#num_armies').val( )) {
@@ -20,15 +20,15 @@ $(document).ready( function( ) {
 			break;
 
 		case 'attacking' :
-			$('#use_attack_path').parent( ).css('display', $('#till_dead').attr('checked') ? 'block' : 'none');
-			$('#attack_path').parent( ).css('display', $('#use_attack_path').attr('checked') ? 'block' : 'none');
+			$('#use_attack_path').parent( ).css('display', $('#till_dead').prop('checked') ? 'block' : 'none');
+			$('#attack_path').parent( ).css('display', $('#use_attack_path').prop('checked') ? 'block' : 'none');
 
 			$('#till_dead').change( function( ) {
 				$this = $(this);
-				$('#use_attack_path').parent( ).css('display', $this.attr('checked') ? 'block' : 'none');
+				$('#use_attack_path').parent( ).css('display', $this.prop('checked') ? 'block' : 'none');
 
-				if ( ! $this.attr('checked')) {
-					$('#use_attack_path').attr('checked', false);
+				if ( ! $this.prop('checked')) {
+					$('#use_attack_path').prop('checked', false);
 					$('#attack_path').val('').parent( ).css('display', 'none');
 					$('div#pathmarkers div').text('').hide( )
 				}
@@ -36,9 +36,9 @@ $(document).ready( function( ) {
 
 			$('#use_attack_path').change( function( ) {
 				$this = $(this);
-				$('#attack_path').parent( ).css('display', $this.attr('checked') ? 'block' : 'none');
+				$('#attack_path').parent( ).css('display', $this.prop('checked') ? 'block' : 'none');
 
-				if ($this.attr('checked')) {
+				if ($this.prop('checked')) {
 					// fill the attack path with the selected defend id (if any)
 					if ($('#defend_id').val( )) {
 						$('#attack_path').val($('#defend_id').val( ));
@@ -55,10 +55,10 @@ $(document).ready( function( ) {
 			$('#board span').not('#players span').add('area').add('#pathmarkers div').click( function( ) {
 				var id = $(this).attr('id').substr(2);
 
-				if (0 == $('#attack_id option[value='+id+']').attr('selected', true).length) {
-					$('#defend_id option[value='+id+']').attr('selected', true);
+				if (0 == $('#attack_id option[value='+id+']').prop('selected', true).length) {
+					$('#defend_id option[value='+id+']').prop('selected', true);
 
-					if ($('#use_attack_path').attr('checked')) {
+					if ($('#use_attack_path').prop('checked')) {
 						var attack_path = $('#attack_path').val( );
 						var regex = new RegExp('\\b'+id+'\\b', 'i');
 
@@ -91,10 +91,10 @@ $(document).ready( function( ) {
 
 					if (0 == armies) {
 						alert('You cannot attack from this territory');
-						$('#attack_id option').attr('selected', false);
+						$('#attack_id option').prop('selected', false);
 					}
 
-					$('#num_armies option[value='+armies+']').attr('selected', true);
+					$('#num_armies option[value='+armies+']').prop('selected', true);
 				}
 			}).css('cursor', 'pointer');
 			break;
@@ -104,7 +104,7 @@ $(document).ready( function( ) {
 				var id = $(this).attr('id').substr(2);
 
 				if ( ! stage_1) {
-					if (0 == $('#from_id option[value='+id+']').attr('selected', true).length) {
+					if (0 === $('#from_id option[value='+id+']').prop('selected', true).length) {
 						alert('That is not your territory');
 					}
 					else {
@@ -115,9 +115,9 @@ $(document).ready( function( ) {
 							$('#num_armies').val(armies);
 						}
 
-						if (0 == armies) {
+						if (0 === armies) {
 							alert('You cannot fortify from this territory');
-							$('#from_id option').attr('selected', false);
+							$('#from_id option').prop('selected', false);
 							$('#num_armies').val('')
 							stage_1 = false
 						}
@@ -127,10 +127,10 @@ $(document).ready( function( ) {
 					// if we click the from territory again, switch back to stage 0 and unselect the from territory
 					if ($('#from_id option:selected').val( ) == id) {
 						stage_1 = false;
-						$('#from_id option:selected').attr('selected', false);
-						$('#from_id option[value=""]').attr('selected', true);
+						$('#from_id option:selected').prop('selected', false);
+						$('#from_id option[value=""]').prop('selected', true);
 					}
-					else if (0 == $('#to_id option[value='+id+']').attr('selected', true).length) {
+					else if (0 === $('#to_id option[value='+id+']').prop('selected', true).length) {
 						alert('That is not your territory');
 					}
 				}
@@ -218,7 +218,7 @@ $(document).ready( function( ) {
 				if (1 == avail_armies) {
 					go = false;
 					alert('You do not have enough armies to attack'+msg_tail);
-					$('#attack_id option').attr('selected', false);
+					$('#attack_id option').prop('selected', false);
 				}
 				break;
 

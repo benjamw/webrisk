@@ -9,11 +9,11 @@ $(document).ready( function( ) {
 	}).css({cursor:'pointer'});
 
 	$('#in_all').click( function( ) {
-		$('.in_box').attr('checked', (true == $(this).attr('checked')) ? 'checked' : '');
+		$('.in_box').prop('checked', (true == $(this).prop('checked')) ? 'checked' : '');
 	});
 
 	$('#out_all').click( function( ) {
-		$('.out_box').attr('checked', (true == $(this).attr('checked')) ? 'checked' : '');
+		$('.out_box').prop('checked', (true == $(this).prop('checked')) ? 'checked' : '');
 	});
 
 	$('#send').click( function( ) {
