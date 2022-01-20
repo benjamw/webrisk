@@ -1091,6 +1091,7 @@ class Risk
 
 			// playing turncoat card
 			if ( ! empty($bonus_card) && $this->_extra_info['turncoat']) {
+				$turncoat_land_player = ($this->board[$bonus_card]['player_id'] = $this->current_player);
 				$is_turncoat = 1;
 			}
 			else {
